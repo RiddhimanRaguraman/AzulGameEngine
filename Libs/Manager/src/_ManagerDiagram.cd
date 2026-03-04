@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Azul::ManBase">
+    <Position X="0.75" Y="0.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>CIAAAIAFAAACgCgAAgAAIoQAUAAIAgAAABAAAAAAAAI=</HashCode>
+      <FileName>include\ManBase.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="poActive" />
+      <Field Name="poReserve" />
+      <Field Name="pCompareStrategy" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Azul::DLinkMan">
+    <Position X="6.25" Y="3" Width="1.75" />
+    <Members>
+      <Method Name="~DLinkMan" Hidden="true" />
+      <Method Name="DLinkMan" Hidden="true" />
+      <Method Name="operator=" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>IAABAAAAAAAAAAAAAAAABgAAAAAABAACAAAgAAAAAAs=</HashCode>
+      <FileName>include\DLinkMan.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="poIterator" />
+      <Field Name="poHead" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Azul::CompareStrategyBase">
+    <Position X="4" Y="3.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgBABgAAAAAAA=</HashCode>
+      <FileName>include\CompareStrategyBase.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Azul::DLinkIterator" Collapsed="true">
+    <Position X="9" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAECACACAAhQAAAAAAAgAAAAAACAAAAAAAAAAAAAA=</HashCode>
+      <FileName>include\DLinkIterator.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Azul::Iterator">
+    <Position X="9" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAECAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>include\Iterator.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Azul::ListBase">
+    <Position X="6.25" Y="0.5" Width="1.75" />
+    <Members>
+      <Method Name="~ListBase" Hidden="true" />
+      <Method Name="ListBase" Hidden="true" />
+      <Method Name="operator=" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAABCAAAAAAAAAAAAAACBAAAAAAAAAAAAAAgAAAAAAs=</HashCode>
+      <FileName>include\ListBase.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Azul::DLink" Collapsed="true">
+    <Position X="9" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAAAAAgAAAAIAAQAAAAABgAIBBBAA=</HashCode>
+      <FileName>include\DLink.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

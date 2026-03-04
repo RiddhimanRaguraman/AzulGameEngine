@@ -1,0 +1,154 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\GLTF">
+      <UniqueIdentifier>{17ec8e02-896b-47b1-bc33-9710812c7365}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Mesh">
+      <UniqueIdentifier>{08518ce6-204d-43f7-a9de-36a23e3e14b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Texture">
+      <UniqueIdentifier>{b32e4a9d-b2e0-4455-9c62-dd815503e728}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TinyGLTF_Converter">
+      <UniqueIdentifier>{51ed7d83-f20d-4a82-abc9-f9423e30d1e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Primitive_Mesh">
+      <UniqueIdentifier>{759f4c59-a203-4ad7-897f-f3b8a9cc82b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Anim">
+      <UniqueIdentifier>{f9c0223c-7d06-443d-b104-17320a01420d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SpriteMesh">
+      <UniqueIdentifier>{72f5de7d-b3e6-40d9-a7e3-6cf26f38f2ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Bounding Sphere">
+      <UniqueIdentifier>{3f2340cb-2a9a-42f2-a0ea-af36d3f3f0ca}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GLTF.h">
+      <Filter>Source Files\GLTF</Filter>
+    </ClInclude>
+    <ClInclude Include="GLTF_Helper.h">
+      <Filter>Source Files\GLTF</Filter>
+    </ClInclude>
+    <ClInclude Include="meshDataConverter.h">
+      <Filter>Source Files\TinyGLTF_Converter</Filter>
+    </ClInclude>
+    <ClInclude Include="vboDataConverter.h">
+      <Filter>Source Files\TinyGLTF_Converter</Filter>
+    </ClInclude>
+    <ClInclude Include="ConvertMesh.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="textureDataConverter.h">
+      <Filter>Source Files\TinyGLTF_Converter</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateTexture.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="CubeMesh.h">
+      <Filter>Source Files\Primitive_Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="PyramidMesh.h">
+      <Filter>Source Files\Primitive_Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereMesh.h">
+      <Filter>Source Files\Primitive_Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="ConvertAnim.h">
+      <Filter>Source Files\Anim</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteMesh.h">
+      <Filter>Source Files\SpriteMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="ConvertXML.h">
+      <Filter>Source Files\SpriteMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingSphere.h">
+      <Filter>Source Files\Bounding Sphere</Filter>
+    </ClInclude>
+    <ClInclude Include="Anim.h">
+      <Filter>Source Files\Anim</Filter>
+    </ClInclude>
+    <ClInclude Include="ConvertSkeleton.h">
+      <Filter>Source Files\Anim</Filter>
+    </ClInclude>
+    <ClInclude Include="Skeleton.h">
+      <Filter>Source Files\Anim</Filter>
+    </ClInclude>
+    <ClInclude Include="ConvertSkin.h">
+      <Filter>Source Files\Anim</Filter>
+    </ClInclude>
+    <ClInclude Include="ConvertJoint.h">
+      <Filter>Source Files\Anim</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLTF.cpp">
+      <Filter>Source Files\GLTF</Filter>
+    </ClCompile>
+    <ClCompile Include="GLTF_Helper.cpp">
+      <Filter>Source Files\GLTF</Filter>
+    </ClCompile>
+    <ClCompile Include="meshDataConverter.cpp">
+      <Filter>Source Files\TinyGLTF_Converter</Filter>
+    </ClCompile>
+    <ClCompile Include="vboDataConverter.cpp">
+      <Filter>Source Files\TinyGLTF_Converter</Filter>
+    </ClCompile>
+    <ClCompile Include="ConvertMesh.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="textureDataConverter.cpp">
+      <Filter>Source Files\TinyGLTF_Converter</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateTexture.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="CubeMesh.cpp">
+      <Filter>Source Files\Primitive_Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="PyramidMesh.cpp">
+      <Filter>Source Files\Primitive_Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="SphereMesh.cpp">
+      <Filter>Source Files\Primitive_Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="ConvertAnim.cpp">
+      <Filter>Source Files\Anim</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteMesh.cpp">
+      <Filter>Source Files\SpriteMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="ConvertXML.cpp">
+      <Filter>Source Files\SpriteMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingSphere.cpp">
+      <Filter>Source Files\Bounding Sphere</Filter>
+    </ClCompile>
+    <ClCompile Include="Anim.cpp">
+      <Filter>Source Files\Anim</Filter>
+    </ClCompile>
+    <ClCompile Include="ConvertSkeleton.cpp">
+      <Filter>Source Files\Anim</Filter>
+    </ClCompile>
+    <ClCompile Include="Skeleton.cpp">
+      <Filter>Source Files\Anim</Filter>
+    </ClCompile>
+    <ClCompile Include="ConvertSkin.cpp">
+      <Filter>Source Files\Anim</Filter>
+    </ClCompile>
+    <ClCompile Include="ConvertJoint.cpp">
+      <Filter>Source Files\Anim</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

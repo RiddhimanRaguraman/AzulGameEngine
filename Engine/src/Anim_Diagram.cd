@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Azul::Anim">
+    <Position X="3.5" Y="2.75" Width="1.5" />
+    <Members>
+      <Method Name="~Anim" Hidden="true" />
+      <Method Name="Anim" Hidden="true" />
+      <Method Name="operator=" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABABABAAAQAAAAAAAAQAAAggAEAAAE=</HashCode>
+      <FileName>Anim.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="pClip" />
+      <Field Name="poBoneResult" />
+      <Field Name="poSkeleton" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Azul::Skeleton">
+    <Position X="6" Y="0.5" Width="1.75" />
+    <Members>
+      <Method Name="~Skeleton" Hidden="true" />
+      <Method Name="operator=" Hidden="true" />
+      <Method Name="privFindBoneByIndex" Hidden="true" />
+      <Method Name="privSetAnimationHierarchy" Hidden="true" />
+      <Method Name="Skeleton" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Struct Name="Azul::Skeleton::Data">
+        <TypeIdentifier>
+          <NewMemberFileName>Skeleton.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>BEAAAAAAgAAAAAAAICAAAAAQAAAAAAAAAAAgAAAAAAE=</HashCode>
+      <FileName>Skeleton.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="pFirstBone" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Azul::GameObjectControlled" Collapsed="true">
+    <Position X="9.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAQAEAAAAAAAAAAAAAAACgAAABAAA=</HashCode>
+      <FileName>GameObjectControlled.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Azul::AnimController">
+    <Position X="0.5" Y="2" Width="1.5" />
+    <Members>
+      <Method Name="~AnimController" Hidden="true" />
+      <Method Name="AnimController" Hidden="true" />
+      <Method Name="operator=" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAgAAAAAAACAAAAAABAAAAAAAABgAAAAAAA=</HashCode>
+      <FileName>AnimController.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="poTimerControl" />
+      <Field Name="poAnim" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Azul::TimerController">
+    <Position X="3.5" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAQGAIABAEQAAQAAQAAAQAAAAAAABAAQAAAkAAAAAAA=</HashCode>
+      <FileName>TimerController.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Azul::GameObject" Collapsed="true">
+    <Position X="9.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABQAQAAAAAAgAkAAAARAAAAAABAAAAAAAAAhEAIAAAA=</HashCode>
+      <FileName>GameObject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Azul::PCSNode" Collapsed="true">
+    <Position X="9.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAQAhEAIAAAgAAIwKAgABgCgGAAIAMAkQEQCjAA=</HashCode>
+      <FileName>C:\Users\ragur\OneDrive\Desktop\New stuff\Libs\PCSTree\include\PCSNode.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Azul::Clip">
+    <Position X="6" Y="4.25" Width="1.75" />
+    <Members>
+      <Method Name="~Clip" Hidden="true" />
+      <Method Name="Clip" Hidden="true" />
+      <Method Name="GetTotalTime" Hidden="true" />
+      <Method Name="operator=" Hidden="true" />
+      <Method Name="privFindMaxTime" Hidden="true" />
+      <Method Name="privFindNumFrames" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Struct Name="Azul::Clip::FrameBucket">
+        <Compartments>
+          <Compartment Name="Methods" Collapsed="true" />
+        </Compartments>
+        <TypeIdentifier>
+          <NewMemberFileName>Clip.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAABABAAAAAAEAAAAAAIAAECAgAgIAAAAAk=</HashCode>
+      <FileName>Clip.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="Azul::Bone">
+    <Position X="3.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACkAAA=</HashCode>
+      <FileName>Bone.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

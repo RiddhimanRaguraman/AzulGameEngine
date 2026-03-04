@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+option optimize_for = LITE_RUNTIME;
+
+import "AnimVec3.proto";
+import "AnimQuat.proto";
+
+message AnimBone_proto
+{
+	// Define Message here:  
+	optional AnimVec3_proto S = 1;
+	optional AnimQuat_proto Q = 2;
+	optional AnimVec3_proto T = 3;
+}

@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Azul::GameObjectMan">
+    <Position X="1" Y="2" Width="1.5" />
+    <Members>
+      <Method Name="~GameObjectMan" Hidden="true" />
+      <Method Name="GameObjectMan" Hidden="true" />
+      <Method Name="operator=" Hidden="true" />
+      <Method Name="privGetInstance" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AIYAAAAAAAAAAgAABAABBAAAAABAAEAAAAAgAAACAAE=</HashCode>
+      <FileName>src\GameObjectMan.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="poRootTree" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Azul::PCSTree">
+    <Position X="3.5" Y="2" Width="1.5" />
+    <Members>
+      <Method Name="~PCSTree" Hidden="true" />
+      <Method Name="GetInfo" Hidden="true" />
+      <Method Name="operator=" Hidden="true" />
+      <Method Name="PCSTree" Hidden="true" />
+      <Method Name="privDepthFirst" Hidden="true" />
+      <Method Name="privDumpTreeDepthFirst" Hidden="true" />
+      <Method Name="privInfoAddNewLevel" Hidden="true" />
+      <Method Name="privInfoAddNode" Hidden="true" />
+      <Method Name="privInfoRemoveNewLevel" Hidden="true" />
+      <Method Name="privInfoRemoveNode" Hidden="true" />
+      <Method Name="privRecalculateLevel" Hidden="true" />
+    </Members>
+    <NestedTypes>
+      <Struct Name="Azul::PCSTree::Info" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>C:\code\keenan2024spring_gam475\instructor\Week_09\Engine - 4.1.0 - model rename Mesh\PCSTree\include\PCSTree.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AMBAAMABAAAAAAAAAAIABAhAAAAAAEAAAIAgoAAEAAA=</HashCode>
+      <FileName>C:\code\keenan2024fall_gam575\instructor\Lecture\Week_09\w9(5)  GameObjectControlled\PCSTree\include\PCSTree.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="pRoot" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Azul::PCSNode" Collapsed="true">
+    <Position X="6" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAQAhEAIAAAgAAIwKAgABgCgGAAIAMAkQEQCjAA=</HashCode>
+      <FileName>C:\code\keenan2024fall_gam575\instructor\Lecture\Week_09\w9(5)  GameObjectControlled\PCSTree\include\PCSNode.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Azul::GameObject">
+    <Position X="6" Y="3" Width="1.5" />
+    <Members>
+      <Method Name="~GameObject" Hidden="true" />
+      <Method Name="DrawDisable" Hidden="true" />
+      <Method Name="DrawEnable" Hidden="true" />
+      <Method Name="GameObject" Hidden="true" />
+      <Method Name="GetGraphicsObject" Hidden="true" />
+      <Method Name="GetWorld" Hidden="true" />
+      <Method Name="operator=" Hidden="true" />
+      <Method Name="SetWorld" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>ABQAQAAAAAAgAkAAAARAAAAAABAAAAAAAAAhEAIAAAA=</HashCode>
+      <FileName>src\GameObject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Azul::GameObjectRigid" Collapsed="true">
+    <Position X="0.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAQAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>src\GameObjectRigid.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Azul::GameObjectBasic" Collapsed="true">
+    <Position X="0.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIRAUADQIgAAAAAggAAAAAAAAAAAAAAAAAIgAgAAAAA=</HashCode>
+      <FileName>src\GameObjectBasic.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Azul::GameObjectAnim" Collapsed="true">
+    <Position X="3.25" Y="7.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AIRAEAAAIgAAAAAAAAEgAAAAAAEIAQQAAAIgEgABAAA=</HashCode>
+      <FileName>src\GameObjectAnim.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Azul::GameObjectControlledSkeleton" Collapsed="true">
+    <Position X="5.5" Y="7.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AIRAEAAAIgAAAAAAAAEAAgAAAAEIgQAAAAIgEgABAAA=</HashCode>
+      <FileName>src\GameObjectControlledSkeleton.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Azul::GameObjectControlled" Collapsed="true">
+    <Position X="4.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAQAEAAAAAAAAAAAAAAACgAAAAAAA=</HashCode>
+      <FileName>src\GameObjectControlled.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

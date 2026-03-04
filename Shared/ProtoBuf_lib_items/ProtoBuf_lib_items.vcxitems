@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{8A87816D-275A-4F54-8D98-3C660CB103C1}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\any.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\any.pb.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\api.pb.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\arena.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\arenastring.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\arenaz_sampler.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\arena_align.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\arena_allocation_policy.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\arena_cleanup.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\arena_test_util.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\cpp_edition_defaults.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\cpp_features.pb.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\descriptor.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\descriptor.pb.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\descriptor_database.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\descriptor_legacy.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\descriptor_lite.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\descriptor_visitor.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\duration.pb.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\dynamic_message.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\empty.pb.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\endian.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\explicitly_constructed.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\extension_set.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\extension_set_inl.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\feature_resolver.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\field_access_listener.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\field_mask.pb.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\generated_enum_reflection.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\generated_enum_util.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\generated_message_bases.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\generated_message_reflection.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\generated_message_tctable_decl.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\generated_message_tctable_gen.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\generated_message_tctable_impl.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\generated_message_util.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\has_bits.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\implicit_weak_message.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\inlined_string_field.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\internal_feature_helper.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\internal_visibility.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\internal_visibility_for_testing.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\map.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\map_entry.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\map_field.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\map_field_lite.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\map_test_util.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\map_type_handler.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\message.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\message_lite.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\metadata.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\metadata_lite.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\micro_string.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\package_info.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\parse_context.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\port.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\raw_ptr.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\reflection.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\reflection_internal.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\reflection_mode.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\reflection_ops.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\reflection_tester.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\reflection_visit_fields.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\reflection_visit_field_info.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\repeated_field.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\repeated_ptr_field.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\runtime_version.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\serial_arena.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\service.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\source_context.pb.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\string_block.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\string_member_robber.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\struct.pb.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\test_textproto.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\test_util.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\test_util2.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\test_util_lite.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\text_format.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\thread_safe_arena.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\timestamp.pb.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\type.pb.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\unknown_field_set.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\unredacted_debug_format_for_test.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\varint_shuffle.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\wire_format.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\wire_format_lite.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\wire_format_unittest.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\wrappers.pb.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ProtoBuf.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)utf8_range\utf8_range.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)utf8_range\utf8_validity.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)google\protobuf\map_test.inc" />
+    <None Include="$(MSBuildThisFileDirectory)google\protobuf\message_unittest.inc" />
+    <None Include="$(MSBuildThisFileDirectory)google\protobuf\message_unittest_legacy_apis.inc" />
+    <None Include="$(MSBuildThisFileDirectory)google\protobuf\port_def.inc" />
+    <None Include="$(MSBuildThisFileDirectory)google\protobuf\port_undef.inc" />
+    <None Include="$(MSBuildThisFileDirectory)google\protobuf\proto3_lite_unittest.inc" />
+    <None Include="$(MSBuildThisFileDirectory)google\protobuf\repeated_field_reflection_unittest.inc" />
+    <None Include="$(MSBuildThisFileDirectory)libs\debug\abseil_dll.dll">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)libs\debug\abseil_dll.exp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)libs\debug\libprotobuf-lited.dll">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)libs\debug\libprotobuf-lited.exp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)libs\debug\libutf8_range.dll">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)libs\debug\libutf8_range.exp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)libs\debug\libutf8_validity.dll">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)libs\debug\libutf8_validity.exp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)libs\release\abseil_dll.dll" />
+    <None Include="$(MSBuildThisFileDirectory)libs\release\abseil_dll.exp" />
+    <None Include="$(MSBuildThisFileDirectory)libs\release\libprotobuf-lite.dll" />
+    <None Include="$(MSBuildThisFileDirectory)libs\release\libprotobuf-lite.exp" />
+    <None Include="$(MSBuildThisFileDirectory)libs\release\libutf8_range.dll" />
+    <None Include="$(MSBuildThisFileDirectory)libs\release\libutf8_range.exp" />
+    <None Include="$(MSBuildThisFileDirectory)libs\release\libutf8_validity.dll" />
+    <None Include="$(MSBuildThisFileDirectory)libs\release\libutf8_validity.exp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="$(MSBuildThisFileDirectory)libs\debug\abseil_dll.lib">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)libs\debug\libprotobuf-lited.lib">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)libs\debug\libutf8_range.lib">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)libs\debug\libutf8_validity.lib">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)libs\release\abseil_dll.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)libs\release\libprotobuf-lite.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)libs\release\libutf8_range.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)libs\release\libutf8_validity.lib" />
+  </ItemGroup>
+</Project>

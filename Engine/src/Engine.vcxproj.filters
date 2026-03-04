@@ -1,0 +1,940 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{018c6f9a-3b75-4b64-9e16-5ef5fc18a3c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Compiled">
+      <UniqueIdentifier>{c9098c9a-8b93-4fbd-9966-9a803ee39556}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Original">
+      <UniqueIdentifier>{3c7a2d86-b6b5-4627-9f08-50ba20e402ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{e92ca29b-4937-4528-bd5c-8e9a35ac565c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Shader">
+      <UniqueIdentifier>{d0429324-dcbd-44c6-b7a3-b3267735b517}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\GraphicsObject">
+      <UniqueIdentifier>{bec0f949-a684-4f8c-9be7-41c91c09194c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\GameObject">
+      <UniqueIdentifier>{017d30f9-48f1-4ef4-a229-0b6ca7440deb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Engine">
+      <UniqueIdentifier>{ea003685-6202-45f5-bb0b-4ed8c9710be5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\_Diagrams">
+      <UniqueIdentifier>{698a83b1-612c-44be-9c3f-47d6e6d2107e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Mesh">
+      <UniqueIdentifier>{d3cce37e-5bec-4afc-9fb1-51eced8ebbe3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Common">
+      <UniqueIdentifier>{f4ea93fe-c012-480e-a09c-5fbc02b42e25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Buffers">
+      <UniqueIdentifier>{f8181c29-651e-4c5f-8ea2-60aba4d2543b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\State">
+      <UniqueIdentifier>{e2712dc5-6c92-4846-84d1-a2a3aabff216}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Texture">
+      <UniqueIdentifier>{31c3ffdc-d501-4d3e-9fff-2bb2fff71365}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Anim">
+      <UniqueIdentifier>{d4b03518-b725-4e06-aa55-b6b468c9b1e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Prefabs">
+      <UniqueIdentifier>{d6b1b11f-4590-4885-8cf2-9c94273b44d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Sprite">
+      <UniqueIdentifier>{2f403fac-b164-4112-9971-4292e6552b5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Font">
+      <UniqueIdentifier>{10a09aa7-04f7-45b6-a4d1-30c0ed09cc78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Skeleton">
+      <UniqueIdentifier>{57067e32-cf84-4d71-84ee-44a91e66f73c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Clip">
+      <UniqueIdentifier>{74d0267c-6922-4a03-900d-24ecb2022f55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Camera">
+      <UniqueIdentifier>{82b668b6-71f8-45a1-9004-b5a051b6417a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\JointTable">
+      <UniqueIdentifier>{9293a47d-06ec-4a42-814e-b23eb123ac2f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\shaders\Compiled\Null.Px.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shaders\Compiled\Null.Vx.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shaders\Compiled\ColorByVertex.Px.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shaders\Compiled\ColorByVertex.Vx.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsObject.h">
+      <Filter>src\GraphicsObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsObject_Abstract.h">
+      <Filter>src\GraphicsObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsObject_ColorByVertex.h">
+      <Filter>src\GraphicsObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsObject_Null.h">
+      <Filter>src\GraphicsObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsObject_Wireframe.h">
+      <Filter>src\GraphicsObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderObject.h">
+      <Filter>src\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderObject_ColorByVertex.h">
+      <Filter>src\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderObject_Null.h">
+      <Filter>src\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>src\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>src\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectMan.h">
+      <Filter>src\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine.h">
+      <Filter>src\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>src\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>src\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshNull.h">
+      <Filter>src\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshNode.h">
+      <Filter>src\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshNodeMan.h">
+      <Filter>src\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="StringThis.h">
+      <Filter>src\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Colors.h">
+      <Filter>src\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderObjectNode.h">
+      <Filter>src\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderObjectNodeMan.h">
+      <Filter>src\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderMappings.h">
+      <Filter>src\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferCBV_vs.h">
+      <Filter>src\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferIBV.h">
+      <Filter>src\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferInputLayout.h">
+      <Filter>src\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferPixelShader.h">
+      <Filter>src\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferVBV.h">
+      <Filter>src\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferVertexShader.h">
+      <Filter>src\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="StateRenderTargetView.h">
+      <Filter>src\State</Filter>
+    </ClInclude>
+    <ClInclude Include="StateBlend.h">
+      <Filter>src\State</Filter>
+    </ClInclude>
+    <ClInclude Include="StateDepthStencil.h">
+      <Filter>src\State</Filter>
+    </ClInclude>
+    <ClInclude Include="StateDepthStencilBuffer.h">
+      <Filter>src\State</Filter>
+    </ClInclude>
+    <ClInclude Include="StateDepthStencilView.h">
+      <Filter>src\State</Filter>
+    </ClInclude>
+    <ClInclude Include="StateRasterizer.h">
+      <Filter>src\State</Filter>
+    </ClInclude>
+    <ClInclude Include="StateViewport.h">
+      <Filter>src\State</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferTexture2D.h">
+      <Filter>src\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="StateSwapChain.h">
+      <Filter>src\State</Filter>
+    </ClInclude>
+    <ClInclude Include="StateDeviceContext.h">
+      <Filter>src\State</Filter>
+    </ClInclude>
+    <ClInclude Include="StateDevice.h">
+      <Filter>src\State</Filter>
+    </ClInclude>
+    <ClInclude Include="StateDirectXMan.h">
+      <Filter>src\State</Filter>
+    </ClInclude>
+    <ClInclude Include="StateAdapterOutput.h">
+      <Filter>src\State</Filter>
+    </ClInclude>
+    <ClInclude Include="StateAdapter.h">
+      <Filter>src\State</Filter>
+    </ClInclude>
+    <ClInclude Include="StateFactory.h">
+      <Filter>src\State</Filter>
+    </ClInclude>
+    <ClInclude Include="StateDebug.h">
+      <Filter>src\State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shaders\Compiled\FlatTexture.Px.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shaders\Compiled\FlatTexture.Vx.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderObject_FlatTexture.h">
+      <Filter>src\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsObject_FlatTexture.h">
+      <Filter>src\GraphicsObject</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureObject.h">
+      <Filter>src\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsObject_LightTexture.h">
+      <Filter>src\GraphicsObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderObject_LightTexture.h">
+      <Filter>src\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shaders\Compiled\LightTexture.Px.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shaders\Compiled\LightTexture.Vx.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraUtility.h">
+      <Filter>src\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsObject_ConstColor.h">
+      <Filter>src\GraphicsObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderObject_ConstColor.h">
+      <Filter>src\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Ritter.h">
+      <Filter>src\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshProto.h">
+      <Filter>src\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingSphere.h">
+      <Filter>src\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraNode.h">
+      <Filter>src\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraNull.h">
+      <Filter>src\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="TexNode.h">
+      <Filter>src\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="TexNodeMan.h">
+      <Filter>src\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureNull.h">
+      <Filter>src\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="GameMan.h">
+      <Filter>src\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Anim.h">
+      <Filter>src\Anim</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferSRV_ps.h">
+      <Filter>src\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferSamplerState.h">
+      <Filter>src\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectRigidBody.h">
+      <Filter>src\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectControlled.h">
+      <Filter>src\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectAnimSkin.h">
+      <Filter>src\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectAnimSkeleton.h">
+      <Filter>src\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerController.h">
+      <Filter>src\Anim</Filter>
+    </ClInclude>
+    <ClInclude Include="Mixer.h">
+      <Filter>src\Anim</Filter>
+    </ClInclude>
+    <ClInclude Include="Bone.h">
+      <Filter>src\Anim</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimController.h">
+      <Filter>src\Anim</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimMan.h">
+      <Filter>src\Anim</Filter>
+    </ClInclude>
+    <ClInclude Include="Prefab.h">
+      <Filter>src\Prefabs</Filter>
+    </ClInclude>
+    <ClInclude Include="Prefab_Abstract.h">
+      <Filter>src\Prefabs</Filter>
+    </ClInclude>
+    <ClInclude Include="Prefab_FiboSpiral.h">
+      <Filter>src\Prefabs</Filter>
+    </ClInclude>
+    <ClInclude Include="Prefab_Pendulum.h">
+      <Filter>src\Prefabs</Filter>
+    </ClInclude>
+    <ClInclude Include="Prefab_Pivot.h">
+      <Filter>src\Prefabs</Filter>
+    </ClInclude>
+    <ClInclude Include="Prefab_Pulse.h">
+      <Filter>src\Prefabs</Filter>
+    </ClInclude>
+    <ClInclude Include="Prefab_RoatateSpin.h">
+      <Filter>src\Prefabs</Filter>
+    </ClInclude>
+    <ClInclude Include="Prefab_Rotate.h">
+      <Filter>src\Prefabs</Filter>
+    </ClInclude>
+    <ClInclude Include="PrefabAnim.h">
+      <Filter>src\Prefabs</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderObject_ConstColorLight.h">
+      <Filter>src\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsObject_ConstColorLight.h">
+      <Filter>src\GraphicsObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderObject_Sprite.h">
+      <Filter>src\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsObject_Sprite.h">
+      <Filter>src\GraphicsObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>src\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageMan.h">
+      <Filter>src\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Rect.h">
+      <Filter>src\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectSprite.h">
+      <Filter>src\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraNodeMan.h">
+      <Filter>src\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Color.h">
+      <Filter>src\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowColors.h">
+      <Filter>src\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="FontSprite.h">
+      <Filter>src\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="Glyph.h">
+      <Filter>src\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="GlyphMan.h">
+      <Filter>src\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="GlyphProto.h">
+      <Filter>src\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferCBV_ps.h">
+      <Filter>src\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="Skel.h">
+      <Filter>src\Skeleton</Filter>
+    </ClInclude>
+    <ClInclude Include="SkelMan.h">
+      <Filter>src\Skeleton</Filter>
+    </ClInclude>
+    <ClInclude Include="SkelProto.h">
+      <Filter>src\Skeleton</Filter>
+    </ClInclude>
+    <ClInclude Include="Skeleton.h">
+      <Filter>src\Skeleton</Filter>
+    </ClInclude>
+    <ClInclude Include="ClipMan.h">
+      <Filter>src\Clip</Filter>
+    </ClInclude>
+    <ClInclude Include="ClipProto.h">
+      <Filter>src\Clip</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameBucket.h">
+      <Filter>src\Clip</Filter>
+    </ClInclude>
+    <ClInclude Include="Clip.h">
+      <Filter>src\Clip</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraNodeCompareStrategyEnumName.h">
+      <Filter>src\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="ClipCompareStrategyEnumName.h">
+      <Filter>src\Clip</Filter>
+    </ClInclude>
+    <ClInclude Include="GlyphCompareStrategyEnumName.h">
+      <Filter>src\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshNodeCompareStrategyCharName.h">
+      <Filter>src\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshNodeCompareStrategyEnumName.h">
+      <Filter>src\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="SkelCompareStrategyEnumName.h">
+      <Filter>src\Skeleton</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderObjectNodeCompareStrategyEnumName.h">
+      <Filter>src\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageCompareStrategyEnumName.h">
+      <Filter>src\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="TexNodeCompareStrategyEnumName.h">
+      <Filter>src\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimManCompareStrategyEnumName.h">
+      <Filter>src\Anim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shaders\Compiled\ConstColor.Px.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shaders\Compiled\ConstColor.Vx.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shaders\Compiled\ConstColorLight.px.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shaders\Compiled\ConstColorLight.Vx.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shaders\Compiled\Sprite.Px.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shaders\Compiled\Sprite.Vx.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shaders\Compiled\SkinFlatTexture.Px.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shaders\Compiled\SkinFlatTexture.Vx.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderObject_SkinFlatTexture.h">
+      <Filter>src\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsObject_SkinFlatTexture.h">
+      <Filter>src\GraphicsObject</Filter>
+    </ClInclude>
+    <ClInclude Include="JointTable.h">
+      <Filter>src\JointTable</Filter>
+    </ClInclude>
+    <ClInclude Include="JointTableCompareStrategyEnumName.h">
+      <Filter>src\JointTable</Filter>
+    </ClInclude>
+    <ClInclude Include="JointTableMan.h">
+      <Filter>src\JointTable</Filter>
+    </ClInclude>
+    <ClInclude Include="JointTableProto.h">
+      <Filter>src\JointTable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shaders\Compiled\SkinLightTexture.Vx.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shaders\Compiled\SkinLightTexture.Px.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsObject_SkinLightTexture.h">
+      <Filter>src\GraphicsObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderObject_SkinLightTexture.h">
+      <Filter>src\Shader</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsObject.cpp">
+      <Filter>src\GraphicsObject</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsObject_ColorByVertex.cpp">
+      <Filter>src\GraphicsObject</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsObject_Null.cpp">
+      <Filter>src\GraphicsObject</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsObject_Wireframe.cpp">
+      <Filter>src\GraphicsObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderObject.cpp">
+      <Filter>src\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderObject_ColorByVertex.cpp">
+      <Filter>src\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderObject_Null.cpp">
+      <Filter>src\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>src\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>src\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectMan.cpp">
+      <Filter>src\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine.cpp">
+      <Filter>src\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>src\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="GameHelper.cpp">
+      <Filter>src\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>src\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshNull.cpp">
+      <Filter>src\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshNode.cpp">
+      <Filter>src\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshNodeMan.cpp">
+      <Filter>src\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="StringThis.cpp">
+      <Filter>src\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderObjectNode.cpp">
+      <Filter>src\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderObjectNodeMan.cpp">
+      <Filter>src\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferCBV_vs.cpp">
+      <Filter>src\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferIBV.cpp">
+      <Filter>src\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferInputLayout.cpp">
+      <Filter>src\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferPixelShader.cpp">
+      <Filter>src\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferVBV.cpp">
+      <Filter>src\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferVertexShader.cpp">
+      <Filter>src\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="StateRenderTargetView.cpp">
+      <Filter>src\State</Filter>
+    </ClCompile>
+    <ClCompile Include="StateBlend.cpp">
+      <Filter>src\State</Filter>
+    </ClCompile>
+    <ClCompile Include="StateDepthStencil.cpp">
+      <Filter>src\State</Filter>
+    </ClCompile>
+    <ClCompile Include="StateDepthStencilBuffer.cpp">
+      <Filter>src\State</Filter>
+    </ClCompile>
+    <ClCompile Include="StateDepthStencilView.cpp">
+      <Filter>src\State</Filter>
+    </ClCompile>
+    <ClCompile Include="StateRasterizer.cpp">
+      <Filter>src\State</Filter>
+    </ClCompile>
+    <ClCompile Include="StateViewport.cpp">
+      <Filter>src\State</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferTexture2D.cpp">
+      <Filter>src\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="StateSwapChain.cpp">
+      <Filter>src\State</Filter>
+    </ClCompile>
+    <ClCompile Include="StateDeviceContext.cpp">
+      <Filter>src\State</Filter>
+    </ClCompile>
+    <ClCompile Include="StateDevice.cpp">
+      <Filter>src\State</Filter>
+    </ClCompile>
+    <ClCompile Include="StateDirectXMan.cpp">
+      <Filter>src\State</Filter>
+    </ClCompile>
+    <ClCompile Include="StateAdapterOutput.cpp">
+      <Filter>src\State</Filter>
+    </ClCompile>
+    <ClCompile Include="StateAdapter.cpp">
+      <Filter>src\State</Filter>
+    </ClCompile>
+    <ClCompile Include="StateFactory.cpp">
+      <Filter>src\State</Filter>
+    </ClCompile>
+    <ClCompile Include="StateDebug.cpp">
+      <Filter>src\State</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderObject_FlatTexture.cpp">
+      <Filter>src\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsObject_FlatTexture.cpp">
+      <Filter>src\GraphicsObject</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureObject.cpp">
+      <Filter>src\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsObject_LightTexture.cpp">
+      <Filter>src\GraphicsObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderObject_LightTexture.cpp">
+      <Filter>src\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraUtiliity.cpp">
+      <Filter>src\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsObject_ConstColor.cpp">
+      <Filter>src\GraphicsObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderObject_ConstColor.cpp">
+      <Filter>src\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Ritter.cpp">
+      <Filter>src\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshProto.cpp">
+      <Filter>src\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingSphere.cpp">
+      <Filter>src\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraNode.cpp">
+      <Filter>src\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraNull.cpp">
+      <Filter>src\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="TexNode.cpp">
+      <Filter>src\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="TexNodeMan.cpp">
+      <Filter>src\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureNull.cpp">
+      <Filter>src\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="GameMan.cpp">
+      <Filter>src\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Anim.cpp">
+      <Filter>src\Anim</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimMan.cpp">
+      <Filter>src\Anim</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferSRV_ps.cpp">
+      <Filter>src\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferSamplerState.cpp">
+      <Filter>src\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectRigidBody.cpp">
+      <Filter>src\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectControlled.cpp">
+      <Filter>src\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectAnimSkin.cpp">
+      <Filter>src\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectAnimSkeleton.cpp">
+      <Filter>src\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="TimerController.cpp">
+      <Filter>src\Anim</Filter>
+    </ClCompile>
+    <ClCompile Include="Mixer.cpp">
+      <Filter>src\Anim</Filter>
+    </ClCompile>
+    <ClCompile Include="Bone.cpp">
+      <Filter>src\Anim</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimController.cpp">
+      <Filter>src\Anim</Filter>
+    </ClCompile>
+    <ClCompile Include="Prefab.cpp">
+      <Filter>src\Prefabs</Filter>
+    </ClCompile>
+    <ClCompile Include="Prefab_FiboSpiral.cpp">
+      <Filter>src\Prefabs</Filter>
+    </ClCompile>
+    <ClCompile Include="Prefab_Pendulum.cpp">
+      <Filter>src\Prefabs</Filter>
+    </ClCompile>
+    <ClCompile Include="Prefab_Pivot.cpp">
+      <Filter>src\Prefabs</Filter>
+    </ClCompile>
+    <ClCompile Include="Prefab_Pulse.cpp">
+      <Filter>src\Prefabs</Filter>
+    </ClCompile>
+    <ClCompile Include="Prefab_RoatateSpin.cpp">
+      <Filter>src\Prefabs</Filter>
+    </ClCompile>
+    <ClCompile Include="Prefab_Rotate.cpp">
+      <Filter>src\Prefabs</Filter>
+    </ClCompile>
+    <ClCompile Include="PrefabAnim.cpp">
+      <Filter>src\Prefabs</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderObject_ConstColorLight.cpp">
+      <Filter>src\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsObject_ConstColorLight.cpp">
+      <Filter>src\GraphicsObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderObject_Sprite.cpp">
+      <Filter>src\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsObject_Sprite.cpp">
+      <Filter>src\GraphicsObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Image.cpp">
+      <Filter>src\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageMan.cpp">
+      <Filter>src\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Rect.cpp">
+      <Filter>src\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectSprite.cpp">
+      <Filter>src\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraNodeMan.cpp">
+      <Filter>src\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Color.cpp">
+      <Filter>src\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="FontSprite.cpp">
+      <Filter>src\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="Glyph.cpp">
+      <Filter>src\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="GlyphMan.cpp">
+      <Filter>src\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="GlyphProto.cpp">
+      <Filter>src\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferCBV_ps.cpp">
+      <Filter>src\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="Skel.cpp">
+      <Filter>src\Skeleton</Filter>
+    </ClCompile>
+    <ClCompile Include="SkelMan.cpp">
+      <Filter>src\Skeleton</Filter>
+    </ClCompile>
+    <ClCompile Include="SkelProto.cpp">
+      <Filter>src\Skeleton</Filter>
+    </ClCompile>
+    <ClCompile Include="Skeleton.cpp">
+      <Filter>src\Skeleton</Filter>
+    </ClCompile>
+    <ClCompile Include="ClipMan.cpp">
+      <Filter>src\Clip</Filter>
+    </ClCompile>
+    <ClCompile Include="ClipProto.cpp">
+      <Filter>src\Clip</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameBucket.cpp">
+      <Filter>src\Clip</Filter>
+    </ClCompile>
+    <ClCompile Include="Clip.cpp">
+      <Filter>src\Clip</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraNodeCompareStrategyEnumName.cpp">
+      <Filter>src\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="ClipCompareStrategyEnumName.cpp">
+      <Filter>src\Clip</Filter>
+    </ClCompile>
+    <ClCompile Include="GlyphCompareStrategyEnumName.cpp">
+      <Filter>src\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshNodeCompareStrategyCharName.cpp">
+      <Filter>src\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshNodeCompareStrategyEnumName.cpp">
+      <Filter>src\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="SkelCompareStrategyEnumName.cpp">
+      <Filter>src\Skeleton</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderObjectNodeCompareStrategyEnumName.cpp">
+      <Filter>src\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageCompareStrategyEnumName.cpp">
+      <Filter>src\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="TexNodeCompareStrategyEnumName.cpp">
+      <Filter>src\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimManCompareStrategyEnumName.cpp">
+      <Filter>src\Anim</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderObject_SkinFlatTexture.cpp">
+      <Filter>src\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsObject_SkinFlatTexture.cpp">
+      <Filter>src\GraphicsObject</Filter>
+    </ClCompile>
+    <ClCompile Include="JointTable.cpp">
+      <Filter>src\JointTable</Filter>
+    </ClCompile>
+    <ClCompile Include="JointTableCompareStrategyEnumName.cpp">
+      <Filter>src\JointTable</Filter>
+    </ClCompile>
+    <ClCompile Include="JointTableMan.cpp">
+      <Filter>src\JointTable</Filter>
+    </ClCompile>
+    <ClCompile Include="JointTableProto.cpp">
+      <Filter>src\JointTable</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsObject_SkinLightTexture.cpp">
+      <Filter>src\GraphicsObject</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderObject_SkinLightTexture.cpp">
+      <Filter>src\Shader</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Game_Diagram.cd">
+      <Filter>src\_Diagrams</Filter>
+    </None>
+    <None Include="GraphicsObject_Diagram.cd">
+      <Filter>src\_Diagrams</Filter>
+    </None>
+    <None Include="Mesh_Diagram.cd">
+      <Filter>src\_Diagrams</Filter>
+    </None>
+    <None Include="Engine_Diagram.cd">
+      <Filter>src\_Diagrams</Filter>
+    </None>
+    <None Include="Anim_Diagram.cd">
+      <Filter>src\_Diagrams</Filter>
+    </None>
+    <None Include="..\shaders\original\ShaderMappings.hlsli">
+      <Filter>Shaders\Original</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\shaders\original\ColorByVertex.Px.hlsl">
+      <Filter>Shaders\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="..\shaders\original\ColorByVertex.Vx.hlsl">
+      <Filter>Shaders\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="..\shaders\original\Null.Px.hlsl">
+      <Filter>Shaders\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="..\shaders\original\Null.Vx.hlsl">
+      <Filter>Shaders\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="..\shaders\original\FlatTexture.Px.hlsl">
+      <Filter>Shaders\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="..\shaders\original\FlatTexture.Vx.hlsl">
+      <Filter>Shaders\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="..\shaders\original\LightTexture.Px.hlsl">
+      <Filter>Shaders\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="..\shaders\original\LightTexture.Vx.hlsl">
+      <Filter>Shaders\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="..\shaders\original\ConstColor.Px.hlsl">
+      <Filter>Shaders\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="..\shaders\original\ConstColor.Vx.hlsl">
+      <Filter>Shaders\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="..\shaders\original\ConstColorLight.Px.hlsl">
+      <Filter>Shaders\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="..\shaders\original\ConstColorLight.Vx.hlsl">
+      <Filter>Shaders\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="..\shaders\original\Sprite.Px.hlsl">
+      <Filter>Shaders\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="..\shaders\original\Sprite.Vx.hlsl">
+      <Filter>Shaders\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="..\shaders\original\SkinFlatTexture.Px.hlsl">
+      <Filter>Shaders\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="..\shaders\original\SkinFlatTexture.Vx.hlsl">
+      <Filter>Shaders\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="..\shaders\original\SkinLightTexture.Px.hlsl">
+      <Filter>Shaders\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="..\shaders\original\SkinLightTexture.Vx.hlsl">
+      <Filter>Shaders\Original</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Azul::Mesh">
+    <Position X="2.5" Y="2" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="Azul::Mesh::Name" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Mesh.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAUAAAAAgAAEAAAAAAAEQAAAAQBgQAAABAA=</HashCode>
+      <FileName>Mesh.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Azul::BufferIBV">
+    <Position X="6.5" Y="3.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQQAAIIAAAAAAAAAAAAAAAAAgAIIUAAA=</HashCode>
+      <FileName>BufferIBV.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="poBufferIBV" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Azul::BufferVBV">
+    <Position X="6.5" Y="5.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AACAAAAAEAAASUAAAIAAAAAAAAAAAAAAAAAgAIAUAAA=</HashCode>
+      <FileName>BufferVBV.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="poBufferVBV" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Azul::MeshNode">
+    <Position X="0.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAACAABhAAAAAAAgAAAAAAAQAAAAABgCAAABAA=</HashCode>
+      <FileName>MeshNode.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="poMesh" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Azul::MeshProto">
+    <Position X="2.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAKAQAAAQAAAAAAAAEAAAAAAABAAAABgAgAAAAAAA=</HashCode>
+      <FileName>MeshProto.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="IBVBuffer" />
+      <Field Name="VBVBuffer_color" />
+      <Field Name="VBVBuffer_norm" />
+      <Field Name="VBVBuffer_pos" />
+      <Field Name="VBVBuffer_tex" />
+    </ShowAsAssociation>
+  </Class>
+  <Struct Name="ID3D11Buffer">
+    <Position X="9" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\d3d11.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Azul::Vec2f" Collapsed="true">
+    <Position X="6.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAACAAAAAAAAAAAAAAAABIgAAAAAAA=</HashCode>
+      <FileName>Mesh.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Azul::Vec3f" Collapsed="true">
+    <Position X="8" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAAAAAASIAQAAAAAAAAAAAAFgAQAAAAA=</HashCode>
+      <FileName>Mesh.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Azul::VertexColor" Collapsed="true">
+    <Position X="9.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Mesh.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Azul::VertexPos" Collapsed="true">
+    <Position X="8" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Mesh.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Azul::VertexNorm" Collapsed="true">
+    <Position X="6.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>Mesh.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Azul::VertexTexCoord" Collapsed="true">
+    <Position X="9.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Mesh.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

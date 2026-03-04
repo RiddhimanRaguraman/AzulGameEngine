@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Azul::GameObject">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <Members>
+      <Method Name="~GameObject" Hidden="true" />
+      <Method Name="GameObject" Hidden="true" />
+      <Method Name="operator=" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>ABQAQAAAAAAgAkAAAARAAAAAABAAAAAAAAAhEAIAAAA=</HashCode>
+      <FileName>GameObject.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="poGraphicsObject" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Azul::GraphicsObject">
+    <Position X="3.5" Y="2.75" Width="2.5" />
+    <Members>
+      <Method Name="~GraphicsObject" Hidden="true" />
+      <Method Name="GetWorld" Hidden="true" />
+      <Method Name="GraphicsObject" Hidden="true" />
+      <Method Name="operator=" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABBAAAAAYABAgAAAAAAAAAABAhEAAAAAA=</HashCode>
+      <FileName>GraphicsObject.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="pMesh" />
+      <Field Name="pShaderObj" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Azul::GraphicsObject_ColorByVertex">
+    <Position X="3.5" Y="5.5" Width="2.5" />
+    <Members>
+      <Method Name="~GraphicsObject_ColorByVertex" Hidden="true" />
+      <Method Name="GraphicsObject_ColorByVertex" Hidden="true" />
+      <Method Name="operator=" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AIAABAAAABAAIgEAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>GraphicsObject_ColorByVertex.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Azul::ShaderObject" Collapsed="true">
+    <Position X="7.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAQQCAAiAAAAAAAAEQAAAAAAgQCEABAA=</HashCode>
+      <FileName>ShaderObject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Azul::ShaderObject_ColorByVertex">
+    <Position X="6.75" Y="5.5" Width="2.5" />
+    <Members>
+      <Method Name="~ShaderObject_ColorByVertex" Hidden="true" />
+      <Method Name="operator=" Hidden="true" />
+      <Method Name="ShaderObject_ColorByVertex" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAQAAAAwQAAABAABAAAAAAAAAAAAQgAgBAIAA=</HashCode>
+      <FileName>ShaderObject_ColorByVertex.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="ConstantBuff_Projection" />
+      <Field Name="ConstantBuff_World" />
+      <Field Name="ConstantBuff_View" />
+      <Field Name="VertexShader" />
+      <Field Name="PixelShader" />
+      <Field Name="InputLayout" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Azul::GraphicsObject_Abstract">
+    <Position X="3.5" Y="0.5" Width="2.5" />
+    <Members>
+      <Method Name="~GraphicsObject_Abstract" Hidden="true" />
+      <Method Name="GraphicsObject_Abstract" Hidden="true" />
+      <Method Name="operator=" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AJAABAAAABAAAgAAAAAAAAAAAAAAAAQAAAAgAAAAAAA=</HashCode>
+      <FileName>GraphicsObject_Abstract.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Azul::Mesh" Collapsed="true">
+    <Position X="7.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAUAAAAAgAAEAAAAAAAEQAAAAQBgQAAABAA=</HashCode>
+      <FileName>Mesh.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Azul::BufferCBV_vs">
+    <Position X="11.25" Y="5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAIAAAQQAAAAAAAAAAAAgAKAUAAA=</HashCode>
+      <FileName>BufferCBV_vs.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="poBufferCBV" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Azul::BufferInputLayout">
+    <Position X="5.75" Y="8" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>QAIAAAAAAAAiAAEAAAAAAAAAAAAAAAAAAAAoAIAUAAA=</HashCode>
+      <FileName>BufferInputLayout.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="poInputLayout" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Azul::BufferVertexShader">
+    <Position X="9.75" Y="8" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>ABAABAAAAAAgAIAAAAAAAAAAAAAAAAAAAAAgAIAUAAA=</HashCode>
+      <FileName>BufferVertexShader.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="poVertexShader" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Azul::BufferPixelShader">
+    <Position X="7.75" Y="8" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAgAAAAAAAAAAAAABAAAAAAAAAgAYAUAAA=</HashCode>
+      <FileName>BufferPixelShader.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="poPixelShader" />
+    </ShowAsAssociation>
+  </Class>
+  <Struct Name="ID3D11VertexShader" Collapsed="true">
+    <Position X="10" Y="10.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\d3d11.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="ID3D11PixelShader" Collapsed="true">
+    <Position X="7.75" Y="10.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\d3d11.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="ID3D11InputLayout" Collapsed="true">
+    <Position X="5.5" Y="10.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\d3d11.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="ID3D11Buffer" Collapsed="true">
+    <Position X="11.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\d3d11.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

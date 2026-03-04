@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Azul::Engine">
+    <Position X="1.5" Y="1" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AATAERAAAEQAABAYAAELAAAEAkA0AEAgBBAgQEACAEc=</HashCode>
+      <FileName>Engine.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="mBlendStateAlpha" />
+      <Field Name="mDepthStencilBuffer" />
+      <Field Name="mDepthStencilView" />
+      <Field Name="mStateRasterizerSolid" />
+      <Field Name="mStateRenderTargetView" />
+      <Field Name="mStateRasterizerWireframe" />
+      <Field Name="mStateDepthStencil" />
+      <Field Name="mBlendStateOff" />
+      <Field Name="mViewport" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Azul::Game">
+    <Position X="1.5" Y="7.25" Width="2" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>ACQAEBAAAAAAAAAAAAAAAAAAABiAAAAAABAgAAAAAAQ=</HashCode>
+      <FileName>Game.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Azul::StateBlend" Collapsed="true">
+    <Position X="5.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAIAAAAIQBAAAAAAAAAAAAAAAAAAAAggAAAAAA=</HashCode>
+      <FileName>StateBlend.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Azul::StateDepthStencilBuffer" Collapsed="true">
+    <Position X="5.5" Y="2.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAQAAAAAAAAAAAAAAAAABAAAgAAAAAAE=</HashCode>
+      <FileName>StateDepthStencilBuffer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Azul::StateDepthStencilView" Collapsed="true">
+    <Position X="5.5" Y="3" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAQAAAAAABAAAAAAAAAAAAQAgAABAAAA=</HashCode>
+      <FileName>StateDepthStencilView.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Azul::StateRasterizer" Collapsed="true">
+    <Position X="5.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQBAACAQAAAAAAAAAAAAAAAgAAAAAAQ=</HashCode>
+      <FileName>StateRasterizer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Azul::StateRenderTargetView" Collapsed="true">
+    <Position X="5.5" Y="4.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQBAAAAAAAAAAABAAAAAAAIgAAFAAAA=</HashCode>
+      <FileName>StateRenderTargetView.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Azul::StateDepthStencil" Collapsed="true">
+    <Position X="5.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQBAABAAAAAAAAAQAAAAAAAgAAAQAAA=</HashCode>
+      <FileName>StateDepthStencil.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Azul::StateViewport" Collapsed="true">
+    <Position X="5.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEQBAAAAAAAAAAAAgAAABAAAgAAAAAAA=</HashCode>
+      <FileName>StateViewport.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

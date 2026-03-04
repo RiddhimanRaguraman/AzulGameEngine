@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+option optimize_for = LITE_RUNTIME;
+
+import "AnimBone.proto";
+
+message AnimFrameBucket_proto
+{
+    optional uint32             keyFrame = 1;
+	optional uint32             numBones = 2;
+	optional float              keyTime = 3;
+	optional int32				keyTimeIndex = 4;
+	repeated AnimBone_proto		poBone = 5;
+}

@@ -1,0 +1,17 @@
+//----------------------------------------------------------------------------
+// Copyright 2026, Ed Keenan, all rights reserved.
+//----------------------------------------------------------------------------
+
+syntax = "proto3";
+
+option optimize_for = LITE_RUNTIME;
+
+message SkelEntry_proto
+{
+	optional sint32   nodeIndex = 1;
+	optional sint32   parentIndex = 2;
+	optional bytes    pNodeName = 3;
+
+}
+
+// -- End of File ---

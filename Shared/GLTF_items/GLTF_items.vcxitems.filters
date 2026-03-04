@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="libs">
+      <UniqueIdentifier>{6dc8ad46-84a3-464f-b153-a477185d3e90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\debug">
+      <UniqueIdentifier>{2ce18bf3-2cb2-46db-9bd6-6b7391229628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\release">
+      <UniqueIdentifier>{2afaecde-f008-43f0-a1c5-1b8ca29d90aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{48c465b8-6a07-4abd-86b9-62271781e96d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\json.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\stb_image.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\stb_image_write.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\tiny_gltf.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="$(MSBuildThisFileDirectory)libs\debug\tinygltf_DebugX64.lib">
+      <Filter>libs\debug</Filter>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)libs\release\tinygltf_ReleaseX64.lib">
+      <Filter>libs\release</Filter>
+    </Library>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)libs\debug\tinygltf_DebugX64.pdb">
+      <Filter>libs\debug</Filter>
+    </None>
+  </ItemGroup>
+</Project>

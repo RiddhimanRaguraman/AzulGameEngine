@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+option optimize_for = LITE_RUNTIME;
+
+import "AnimFrameBucket.proto";
+
+message AnimClip_proto
+{
+	optional bytes                           pVersion  = 1;
+    optional uint32                       numKeyFrames = 2;
+	optional uint32                           numBones = 3;
+	repeated AnimFrameBucket_proto  poFrameBucketEntry = 4;
+}

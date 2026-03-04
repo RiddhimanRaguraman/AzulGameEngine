@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{BF29AED6-5F5C-4AE1-A4DC-767B5EAEE755}</ItemsProjectGuid>
+    <ItemsProjectName>ProtoBuf_pb_items</ItemsProjectName>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)AnimBone.pb.cc" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)AnimClip.pb.cc" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)AnimFrameBucket.pb.cc" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)AnimQuat.pb.cc" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)AnimVec3.pb.cc" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)FontData.pb.cc" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)FontEntry.pb.cc" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)JointData.pb.cc" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)meshData.pb.cc" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)SkelData.pb.cc" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)SkelEntry.pb.cc" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)textureData.pb.cc" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)vboData.pb.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)AnimBone.pb.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)AnimClip.pb.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)AnimFrameBucket.pb.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)AnimQuat.pb.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)AnimVec3.pb.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)FontData.pb.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)FontEntry.pb.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)JointData.pb.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)meshData.pb.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)SkelData.pb.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)SkelEntry.pb.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)textureData.pb.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)vboData.pb.h" />
+  </ItemGroup>
+</Project>

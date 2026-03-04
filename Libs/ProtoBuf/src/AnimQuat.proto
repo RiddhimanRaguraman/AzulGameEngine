@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option optimize_for = LITE_RUNTIME;
+
+message AnimQuat_proto
+{
+	// Define Message here:  
+	optional float qx = 1;
+	optional float qy = 2;
+	optional float qz = 3;
+	optional float qw = 4;
+}

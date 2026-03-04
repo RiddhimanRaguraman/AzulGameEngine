@@ -1,0 +1,18 @@
+//----------------------------------------------------------------------------
+// Copyright 2026, Ed Keenan, all rights reserved.
+//----------------------------------------------------------------------------
+
+syntax = "proto3";
+
+import "FontEntry.proto"; 
+
+option optimize_for = LITE_RUNTIME;
+
+message FontData_proto
+{
+	optional bytes             pVersion  = 1;
+	optional uint32              numKeys = 2;
+	repeated FontEntry_proto poFontEntry = 3;
+}
+
+// -- End of File ---

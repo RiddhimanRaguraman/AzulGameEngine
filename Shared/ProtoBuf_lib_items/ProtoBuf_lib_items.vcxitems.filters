@@ -1,0 +1,396 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="utf8_range">
+      <UniqueIdentifier>{0db0da69-635a-40be-a2e7-552758cbd17e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="google">
+      <UniqueIdentifier>{b3fe5443-77f4-4d13-8ac0-6fca673d037a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="google\protobuf">
+      <UniqueIdentifier>{753db17d-3616-4f5a-978c-baf13c386552}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="absl">
+      <UniqueIdentifier>{82f4cf21-434c-43db-8bf7-6ccd2b3870af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs">
+      <UniqueIdentifier>{741d73cd-46b0-4044-ae86-c31bd2689154}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\debug">
+      <UniqueIdentifier>{009a55ba-2bf1-4e3a-80c1-7bb83f6fa79b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\release">
+      <UniqueIdentifier>{d3394c83-0105-4a55-9fe2-4565f836ad46}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)utf8_range\utf8_range.h">
+      <Filter>utf8_range</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)utf8_range\utf8_validity.h">
+      <Filter>utf8_range</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\any.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\any.pb.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\api.pb.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\arena.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\arena_align.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\arena_allocation_policy.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\arena_cleanup.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\arena_test_util.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\arenastring.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\arenaz_sampler.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\cpp_edition_defaults.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\cpp_features.pb.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\descriptor.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\descriptor.pb.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\descriptor_database.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\descriptor_legacy.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\descriptor_lite.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\descriptor_visitor.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\duration.pb.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\dynamic_message.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\empty.pb.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\endian.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\explicitly_constructed.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\extension_set.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\extension_set_inl.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\feature_resolver.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\field_access_listener.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\field_mask.pb.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\generated_enum_reflection.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\generated_enum_util.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\generated_message_bases.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\generated_message_reflection.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\generated_message_tctable_decl.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\generated_message_tctable_gen.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\generated_message_tctable_impl.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\generated_message_util.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\has_bits.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\implicit_weak_message.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\inlined_string_field.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\internal_feature_helper.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\internal_visibility.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\internal_visibility_for_testing.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\map.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\map_entry.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\map_field.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\map_field_lite.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\map_test_util.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\map_type_handler.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\message.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\message_lite.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\metadata.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\metadata_lite.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\micro_string.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\package_info.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\parse_context.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\port.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\raw_ptr.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\reflection.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\reflection_internal.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\reflection_mode.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\reflection_ops.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\reflection_tester.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\reflection_visit_field_info.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\reflection_visit_fields.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\repeated_field.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\repeated_ptr_field.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\runtime_version.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\serial_arena.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\service.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\source_context.pb.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\string_block.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\string_member_robber.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\struct.pb.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\test_textproto.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\test_util.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\test_util_lite.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\test_util2.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\text_format.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\thread_safe_arena.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\timestamp.pb.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\type.pb.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\unknown_field_set.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\unredacted_debug_format_for_test.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\varint_shuffle.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\wire_format.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\wire_format_lite.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\wire_format_unittest.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)google\protobuf\wrappers.pb.h">
+      <Filter>google\protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ProtoBuf.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)google\protobuf\map_test.inc">
+      <Filter>google\protobuf</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)google\protobuf\message_unittest.inc">
+      <Filter>google\protobuf</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)google\protobuf\message_unittest_legacy_apis.inc">
+      <Filter>google\protobuf</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)google\protobuf\port_def.inc">
+      <Filter>google\protobuf</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)google\protobuf\port_undef.inc">
+      <Filter>google\protobuf</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)google\protobuf\proto3_lite_unittest.inc">
+      <Filter>google\protobuf</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)google\protobuf\repeated_field_reflection_unittest.inc">
+      <Filter>google\protobuf</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)libs\debug\abseil_dll.dll">
+      <Filter>libs\debug</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)libs\debug\abseil_dll.exp">
+      <Filter>libs\debug</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)libs\debug\libprotobuf-lited.dll">
+      <Filter>libs\debug</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)libs\debug\libprotobuf-lited.exp">
+      <Filter>libs\debug</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)libs\debug\libutf8_range.dll">
+      <Filter>libs\debug</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)libs\debug\libutf8_range.exp">
+      <Filter>libs\debug</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)libs\debug\libutf8_validity.dll">
+      <Filter>libs\debug</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)libs\debug\libutf8_validity.exp">
+      <Filter>libs\debug</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)libs\release\abseil_dll.dll">
+      <Filter>libs\release</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)libs\release\abseil_dll.exp">
+      <Filter>libs\release</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)libs\release\libprotobuf-lite.dll">
+      <Filter>libs\release</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)libs\release\libprotobuf-lite.exp">
+      <Filter>libs\release</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)libs\release\libutf8_range.dll">
+      <Filter>libs\release</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)libs\release\libutf8_range.exp">
+      <Filter>libs\release</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)libs\release\libutf8_validity.dll">
+      <Filter>libs\release</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)libs\release\libutf8_validity.exp">
+      <Filter>libs\release</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="$(MSBuildThisFileDirectory)libs\debug\abseil_dll.lib">
+      <Filter>libs\debug</Filter>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)libs\debug\libprotobuf-lited.lib">
+      <Filter>libs\debug</Filter>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)libs\debug\libutf8_range.lib">
+      <Filter>libs\debug</Filter>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)libs\debug\libutf8_validity.lib">
+      <Filter>libs\debug</Filter>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)libs\release\abseil_dll.lib">
+      <Filter>libs\release</Filter>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)libs\release\libprotobuf-lite.lib">
+      <Filter>libs\release</Filter>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)libs\release\libutf8_range.lib">
+      <Filter>libs\release</Filter>
+    </Library>
+    <Library Include="$(MSBuildThisFileDirectory)libs\release\libutf8_validity.lib">
+      <Filter>libs\release</Filter>
+    </Library>
+  </ItemGroup>
+</Project>

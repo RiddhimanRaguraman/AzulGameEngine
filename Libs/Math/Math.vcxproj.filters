@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{0aea2f72-a713-48ca-af27-704fec902c58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{38ce3814-666d-47e6-aa6c-23e83e381247}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dll">
+      <UniqueIdentifier>{ed53a06a-2d2b-414f-9a6e-8cb0460e5514}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Constants.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Enum.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Mat3.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Mat4.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Mat4Hint.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MathApp.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MathEngine.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Rot.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Scale.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Trans.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Trig.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Util.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Vec3.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Mat4Proxy.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Vec3App.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Vec3Proxy.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Vec4.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Vec4Proxy.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Math_DLLInterface.h">
+      <Filter>dll</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Quat.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\QuatApp.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\--- Add Source files here ---.txt">
+      <Filter>src</Filter>
+    </Text>
+    <Text Include="include\--- Add include files here ---.txt">
+      <Filter>include</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\ClassDiagram.cd">
+      <Filter>include</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Mat3.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mat4.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mat4Proxy.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Math_DLLMain.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Quat.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\QuatApp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Rot.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scale.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Trans.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Trig.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Util.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vec3.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vec3App.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vec3Proxy.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vec4.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vec4Proxy.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

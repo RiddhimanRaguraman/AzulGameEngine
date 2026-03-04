@@ -1,0 +1,18 @@
+//----------------------------------------------------------------------------
+// Copyright 2026, Ed Keenan, all rights reserved.
+//----------------------------------------------------------------------------
+
+syntax = "proto3";
+ 
+option optimize_for = LITE_RUNTIME;
+
+message FontEntry_proto
+{
+	optional uint32   key = 1;
+	optional float      x = 2;
+	optional float      y = 3;
+	optional float  width = 4;
+	optional float height = 5;
+}
+
+// -- End of File ---

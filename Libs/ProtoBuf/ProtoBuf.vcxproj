@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="include\--- Add include files here ---.txt" />
+    <Text Include="src\--- Add Source files here ---.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\AnimBone.cpp" />
+    <ClCompile Include="src\AnimClip.cpp" />
+    <ClCompile Include="src\AnimFrameBucket.cpp" />
+    <ClCompile Include="src\AnimQuat.cpp" />
+    <ClCompile Include="src\AnimVec3.cpp" />
+    <ClCompile Include="src\FontData.cpp" />
+    <ClCompile Include="src\FontEntry.cpp" />
+    <ClCompile Include="src\JointData.cpp" />
+    <ClCompile Include="src\meshData.cpp" />
+    <ClCompile Include="src\ProtoBufEngine_DLLMain.cpp" />
+    <ClCompile Include="src\SkelData.cpp" />
+    <ClCompile Include="src\SkelEntry.cpp" />
+    <ClCompile Include="src\textureData.cpp" />
+    <ClCompile Include="src\vboData.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\AnimBone.h" />
+    <ClInclude Include="include\AnimClip.h" />
+    <ClInclude Include="include\AnimFrameBucket.h" />
+    <ClInclude Include="include\AnimQuat.h" />
+    <ClInclude Include="include\AnimVec3.h" />
+    <ClInclude Include="include\FontData.h" />
+    <ClInclude Include="include\FontEntry.h" />
+    <ClInclude Include="include\JointData.h" />
+    <ClInclude Include="include\meshData.h" />
+    <ClInclude Include="include\MeshLayout.h" />
+    <ClInclude Include="include\ProtoBufEngine_DLLInterface.h" />
+    <ClInclude Include="include\ProtoVersion.h" />
+    <ClInclude Include="include\SkelData.h" />
+    <ClInclude Include="include\SkelEntry.h" />
+    <ClInclude Include="include\textureData.h" />
+    <ClInclude Include="include\vboData.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\AnimBone.proto" />
+    <None Include="src\AnimClip.proto" />
+    <None Include="src\AnimFrameBucket.proto" />
+    <None Include="src\AnimQuat.proto" />
+    <None Include="src\AnimVec3.proto" />
+    <None Include="src\FontData.proto" />
+    <None Include="src\FontEntry.proto" />
+    <None Include="src\JointData.proto" />
+    <None Include="src\meshData.proto" />
+    <None Include="src\SkelData.proto" />
+    <None Include="src\SkelEntry.proto" />
+    <None Include="src\textureData.proto" />
+    <None Include="src\vboData.proto" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Math\Math.vcxproj">
+      <Project>{d7d06599-0296-4d33-a65a-74aa813cb753}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{E05CD5A7-56A9-4CFC-8D9C-FF1D5E3E207F}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Basics1</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+    <Import Project="..\..\Shared\Framework_items\Framework_items.vcxitems" Label="Shared" />
+    <Import Project="..\..\Shared\ProtoBuf_pb_items\ProtoBuf_pb_items.vcxitems" Label="Shared" />
+    <Import Project="..\..\Shared\ProtoBuf_lib_items\ProtoBuf_lib_items.vcxitems" Label="Shared" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <EnableMicrosoftCodeAnalysis>false</EnableMicrosoftCodeAnalysis>
+    <TargetName>$(ProjectName)DebugX64</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <EnableMicrosoftCodeAnalysis>false</EnableMicrosoftCodeAnalysis>
+    <TargetName>$(ProjectName)ReleaseX64</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;BEAUCERON;WINDOWS_TARGET_PLATFORM="$(TargetPlatformVersion)";SOLUTION_DIR=R"($(SolutionDir))";TOOLS_VERSION=R"($(VCToolsVersion))";LOCAL_WORKING_DIR=R"($(LocalDebuggerWorkingDirectory))";PROTOBUF_USE_DLLS;ABSL_CONSUME_DLL;PROTOBUF_ENGINE_USE_DLL;PROTOBUF_ENGINE_LIBRARY_EXPORTS</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(SolutionDir)Shared\Framework_items;$(SolutionDir)Shared\ProtoBuf_pb_items;$(SolutionDir)Shared\ProtoBuf_lib_items;$(SolutionDir)Shared\ProtoBuf_lib_items\absl;$(SolutionDir)Shared\ProtoBuf_lib_items\utf8_range;$(ProjectDir)include;$(ProjectDir)src;$(SolutionDir)Libs\Math\include</AdditionalIncludeDirectories>
+      <WarningVersion>
+      </WarningVersion>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <PrecompiledHeaderOutputFile>
+      </PrecompiledHeaderOutputFile>
+      <ForcedIncludeFiles>Framework.h</ForcedIncludeFiles>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <DisableSpecificWarnings>
+      </DisableSpecificWarnings>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+    <PreLinkEvent>
+      <Command>
+      </Command>
+    </PreLinkEvent>
+    <PreBuildEvent>
+      <Command>if exist "$(SolutionDir)Azul" rmdir /S /Q "$(SolutionDir)Azul"
+"$(SolutionDir)Shared\ProtoBuf_lib_items\tools\protoc.exe" --cpp_out=.\..\..\Shared\ProtoBuf_pb_items --proto_path=.\src .\src\*.proto</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>copy "$(SolutionDir)Shared\ProtoBuf_lib_items\libs\debug\*.dll" "$(SolutionDir)$(Platform)\$(Configuration)\."</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;BEAUCERON;WINDOWS_TARGET_PLATFORM="$(TargetPlatformVersion)";SOLUTION_DIR=R"($(SolutionDir))";TOOLS_VERSION=R"($(VCToolsVersion))";LOCAL_WORKING_DIR=R"($(LocalDebuggerWorkingDirectory))";PROTOBUF_USE_DLLS;ABSL_CONSUME_DLL;PROTOBUF_ENGINE_USE_DLL;PROTOBUF_ENGINE_LIBRARY_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(SolutionDir)Shared\Framework_items;$(SolutionDir)Shared\ProtoBuf_pb_items;$(SolutionDir)Shared\ProtoBuf_lib_items;$(SolutionDir)Shared\ProtoBuf_lib_items\absl;$(SolutionDir)Shared\ProtoBuf_lib_items\utf8_range;$(ProjectDir)include;$(ProjectDir)src;$(SolutionDir)Libs\Math\include</AdditionalIncludeDirectories>
+      <WarningVersion>
+      </WarningVersion>
+      <PrecompiledHeaderOutputFile>
+      </PrecompiledHeaderOutputFile>
+      <ForcedIncludeFiles>Framework.h</ForcedIncludeFiles>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DisableSpecificWarnings>
+      </DisableSpecificWarnings>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
+    </Link>
+    <PreLinkEvent>
+      <Command>
+      </Command>
+    </PreLinkEvent>
+    <PreBuildEvent>
+      <Command>if exist "$(SolutionDir)Azul" rmdir /S /Q "$(SolutionDir)Azul"
+"$(SolutionDir)Shared\ProtoBuf_lib_items\tools\protoc.exe" --cpp_out=.\..\..\Shared\ProtoBuf_pb_items --proto_path=.\src .\src\*.proto</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>copy "$(SolutionDir)Shared\ProtoBuf_lib_items\libs\release\*.dll" "$(SolutionDir)$(Platform)\$(Configuration)\."</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
