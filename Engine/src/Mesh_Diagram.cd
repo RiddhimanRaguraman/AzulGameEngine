@@ -17,30 +17,30 @@
       <FileName>Mesh.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Azul::BufferIBV">
+  <Class Name="Azul::BufferIBV_ia">
     <Position X="6.5" Y="3.5" Width="1.5" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAQQAAIIAAAAAAAAAAAAAAAAAgAIIUAAA=</HashCode>
-      <FileName>BufferIBV.h</FileName>
+      <FileName>BufferIBV_ia.h</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Field Name="poBufferIBV" />
+      <Field Name="poBufferIBV_ia" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="Azul::BufferVBV">
+  <Class Name="Azul::BufferVBV_ia">
     <Position X="6.5" Y="5.25" Width="1.5" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
       <HashCode>AACAAAAAEAAASUAAAIAAAAAAAAAAAAAAAAAgAIAUAAA=</HashCode>
-      <FileName>BufferVBV.h</FileName>
+      <FileName>BufferVBV_ia.h</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Field Name="poBufferVBV" />
+      <Field Name="poBufferVBV_ia" />
     </ShowAsAssociation>
   </Class>
   <Class Name="Azul::MeshNode">

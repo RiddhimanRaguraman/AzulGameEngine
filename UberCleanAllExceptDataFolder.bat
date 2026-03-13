@@ -24,8 +24,8 @@ REM cleanup root directory
     if exist x64 rmdir /S /Q x64
     if exist ipch rmdir /S /Q ipch
     if exist .vs rmdir /S /Q .vs
-    REM del /F /q .\Data\*.azul -- it wont delete azul files
-    del /F /q .\Data\*.json
+    REM del /F /q .\Data\*.azul -- dont delete the azul files
+    del /F /q .\Data\*.json 
     del /F /q .\Data\*.xml
     del /F /q .\Libs\ProtoBuf\src\*.pb.*
 
@@ -42,11 +42,7 @@ cd Engine
 call "CleanMe.Bat"
 cd ..
 
-cd Converter_3dModel
-call "CleanMe.Bat"
-cd ..
-
-cd Converter_Anim
+cd Converter
 call "CleanMe.Bat"
 cd ..
 

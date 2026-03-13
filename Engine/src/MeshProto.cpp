@@ -209,13 +209,7 @@ namespace Azul
 			}
 
 			// Copy the data over
-			size_t copySize = mB.vbo_invBind.dataSize;
-			if (copySize > BONE_COUNT_MAX * sizeof(Mat4))
-			{
-				copySize = BONE_COUNT_MAX * sizeof(Mat4);
-			}
-
-			memcpy_s(pTemp, BONE_COUNT_MAX * sizeof(Mat4), mB.vbo_invBind.poData, copySize);
+			memcpy_s(pTemp, mB.vbo_invBind.dataSize, mB.vbo_invBind.poData, mB.vbo_invBind.dataSize);
 
 			CBVBuffer_InvBind.Transfer(pTemp);
 

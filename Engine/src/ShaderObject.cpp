@@ -65,6 +65,20 @@ namespace Azul
 		AZUL_UNUSED_VAR(pColor);
 	}
 
+	void ShaderObject::ActivateCBV()
+	{
+		// if you need it it should be overrided in derived object
+		assert(false);
+	}
+	void ShaderObject::TransferWorldViewProj(Camera* pCam, Mat4* pWorld)
+	{
+		// if you need it it should be overrided in derived object
+		assert(false);
+
+		AZUL_UNUSED_VAR(pCam);
+		AZUL_UNUSED_VAR(pWorld);
+	}
+
 	void ShaderObject::TransferUVMatrix(Mat4* pMat)
 	{
 		// if you need it it should be overrided in derived object
@@ -123,6 +137,7 @@ namespace Azul
 		return "";
 	}
 
+
 	// -----------------------------------------------------------
 	// Get the latest profile for the specified pixel shader type.
 	// -----------------------------------------------------------
@@ -162,6 +177,43 @@ namespace Azul
 		}
 		return "";
 	}
+
+	// ---------------------------------------------------------------
+	// Get the latest profile for the specified compute shader type.
+	// ---------------------------------------------------------------
+	const char* ShaderObject::GetLatestProfile_ComputeShader()
+	{
+		// Query the current feature level:
+		D3D_FEATURE_LEVEL featureLevel = StateDirectXMan::GetDevice()->GetFeatureLevel();
+
+		// Prefer higher CS shader profile when possible as CS 5.0 
+		//        provides better performance on 11-class hardware.
+
+		switch (featureLevel)
+		{
+		case D3D_FEATURE_LEVEL_11_1:
+		case D3D_FEATURE_LEVEL_11_0:
+		{
+			return "cs_5_0";
+		}
+		break;
+
+		case D3D_FEATURE_LEVEL_10_1:
+		case D3D_FEATURE_LEVEL_10_0:
+		{
+			return "cs_4_0";
+		}
+		break;
+
+
+		default:
+			assert(false);
+
+		}
+
+		return "";
+	}
+
 
 }
 

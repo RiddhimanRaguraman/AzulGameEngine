@@ -23,6 +23,12 @@
 #include "JointTableMan.h"
 #include "JointTableProto.h"
  
+
+#include "BufferSRV_cs.h"
+#include "BufferUAV_cs.h"
+#include "StateDirectXMan.h"
+#include "ShaderMappings.h"
+
 namespace Azul
 {
  
@@ -157,11 +163,13 @@ namespace Azul
 		ShaderObject* pShaderB = new ShaderObject_FlatTexture(ShaderObject::Name::FlatTexture);
 		ShaderObject* pShaderC = new ShaderObject_LightTexture(ShaderObject::Name::LightTexture);
 		ShaderObject* pShaderD = new ShaderObject_SkinLightTexture(ShaderObject::Name::SkinFlatTexture);
+		ShaderObject* poShaderBasicCompute = new ShaderObject_BasicCompute(ShaderObject::Name::BasicCompute);
 
 		ShaderObjectNodeMan::Add(pShaderA);
 		ShaderObjectNodeMan::Add(pShaderB);
 		ShaderObjectNodeMan::Add(pShaderC);
 		ShaderObjectNodeMan::Add(pShaderD);
+		ShaderObjectNodeMan::Add(poShaderBasicCompute);
 
 		// --------------------------------
 		//  Texture
@@ -412,6 +420,7 @@ namespace Azul
 				}
 			}
 		}*/
+
         AnimMan::Update();
 
 		static int count = 0;
@@ -421,6 +430,58 @@ namespace Azul
 		sprintf_s(buff, 20, "Test: %d", count);
 		pFontSprite1->UpdateMessage(buff);
 
+		// ------------------------------------------------
+		//  Compute Shader Test
+		// ------------------------------------------------
+
+		HRESULT hr;
+
+		ShaderObject* pShaderObj = ShaderObjectNodeMan::Find(ShaderObject::Name::BasicCompute);
+		pShaderObj->ActivateShader();
+
+		//BufferRSV_cs RSV_A(48, sizeof(BufType));
+		//BufType A_Data[48];
+		//RSV_A.Transfer(&A_Data);
+		//RSV_A.Bind(0);
+
+		//BufferRSV_cs RSV_B(48, sizeof(BufType));	
+		//BufType B_Data[48];
+		//RSV_B.Transfer(&B_Data);
+		//RSV_B.Bind(1);
+
+		BufferUAV_cs UAV_Out(48, sizeof(BufType));
+		BufType Out_Data[48];
+		UAV_Out.BindCompute(UnorderedAccessBufferSlot::Test);
+
+		// Dispatch
+		StateDirectXMan::GetContext()->Dispatch(3, 2, 1);
+
+		// Block Waiting for stages to complete
+		D3D11_MAPPED_SUBRESOURCE MappedResource = { 0 };
+
+		hr = StateDirectXMan::GetContext()->Map(UAV_Out.poComputeUAVBuffer,
+			0,
+			D3D11_MAP_READ,
+			0,
+			&MappedResource);
+		assert(SUCCEEDED(hr));
+		assert(MappedResource.pData);
+
+		BufType* p = (BufType*)MappedResource.pData;
+
+
+		for (size_t i = 0; i < 48; i++)
+		{
+			Trace::out("%i:  \n", i);
+			Trace::out("    (%d, %d, %d)  Group ID \n", p->GroupID.x, p->GroupID.y, p->GroupID.z);
+			Trace::out("    (%d, %d, %d)  Group Thread ID \n", p->GroupThreadID.x, p->GroupThreadID.y, p->GroupThreadID.z);
+			Trace::out("    (%d, %d, %d)  Dispatch Thread ID \n", p->DispatchThreadID.x, p->DispatchThreadID.y, p->DispatchThreadID.z);
+			Trace::out("    (%d)  group Index \n", p->GroupIndex);
+			p++;
+
+		}
+
+		StateDirectXMan::GetContext()->Unmap(UAV_Out.poComputeUAVBuffer, 0);
 
 		// ------------------------------------
 		// Update GameObjects

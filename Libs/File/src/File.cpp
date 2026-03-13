@@ -114,75 +114,73 @@ namespace Azul
         }
     }
 
-    File::Error File::Open(File::Handle& fh, const char* const fileName, File::Mode mode, bool UseBaseAddr) noexcept
-    {
+	File::Error File::Open(File::Handle& fh, const char* const fileName, File::Mode mode, bool UseBaseAddr) noexcept
+	{
 		if (fileName == nullptr)
-		{
-			return File::Error::OPEN_FILENAME_FAIL;
-		}
+			return Error::OPEN_FILENAME_FAIL;
 
-		// Opening one that is already open
-		if (IsHandleValid(fh))
-		{
-			return File::Error::OPEN_FAIL;
-		}
+		char path[128] = { 0 };
 
-        DWORD accessFlags = privGetFileDesiredAccess(mode);
-        if (accessFlags == 0)
-        {
-            return File::Error::OPEN_FAIL;
-        }
-
-		// Build full path when requested
-		char fullPath[File::BASE_DIR_SIZE + MAX_PATH] = { 0 };
-		const char* path = fileName;
 		if (UseBaseAddr)
 		{
-			const size_t baseLen = std::strlen(BaseDir);
-			if (baseLen == 0)
-			{
-				return File::Error::OPEN_BASE_DIR_FAIL;
-			}
+			if (strlen(BaseDir) < 2)
+				return Error::OPEN_BASE_DIR_FAIL;
 
-			strncpy_s(fullPath, BaseDir, _TRUNCATE);
-			if (fullPath[baseLen - 1] != '\\' && fullPath[baseLen - 1] != '/')
-			{
-				strncat_s(fullPath, "\\", _TRUNCATE);
-			}
-			strncat_s(fullPath, fileName, _TRUNCATE);
-			path = fullPath;
+			strcat_s(path, 128, BaseDir);
 		}
 
-		fh = CreateFileA(path,
-			accessFlags,
-			FILE_SHARE_WRITE | FILE_SHARE_READ | FILE_SHARE_DELETE,
+		if (strcat_s(path, 128, fileName) != 0)
+			return Error::OPEN_BASE_DIR_FAIL;
+
+		DWORD access;
+		DWORD creation;
+		DWORD flags;
+
+		if (mode == Mode::READ)
+		{
+			access = GENERIC_READ;
+			creation = OPEN_EXISTING;
+			flags = 1;
+		}
+		else
+		{
+			access = (mode == Mode::WRITE) ?
+				GENERIC_WRITE :
+				GENERIC_READ | GENERIC_WRITE;
+
+			creation = CREATE_ALWAYS;
+			flags = FILE_ATTRIBUTE_NORMAL;
+		}
+
+		fh = CreateFileA(
+			path,
+			access,
+			0,
 			nullptr,
-			OPEN_ALWAYS,
-			FILE_ATTRIBUTE_NORMAL,
+			creation,
+			flags,
 			nullptr);
 
 		if (fh == INVALID_HANDLE_VALUE)
-		{
-			return File::Error::OPEN_FAIL;
-		}
+			return Error::OPEN_FAIL;
 
-		return File::Error::SUCCESS;
+		return Error::SUCCESS;
 	}
 
 	File::Error File::Close(File::Handle& fh) noexcept
 	{
-		if (!IsHandleValid(fh))
+		DWORD flags;
+
+		if (GetHandleInformation(fh, &flags) && fh != INVALID_HANDLE_VALUE)
 		{
-			return File::Error::CLOSE_FAIL;
+			if (CloseHandle(fh))
+			{
+				fh = INVALID_HANDLE_VALUE;
+				return File::Error::SUCCESS;
+			}
 		}
 
-		if (!CloseHandle(fh))
-		{
-			return File::Error::CLOSE_FAIL;
-		}
-
-		fh = reinterpret_cast<Handle>((LONG_PTR)0xFFFFFF);
-		return File::Error::SUCCESS;
+		return File::Error::CLOSE_FAIL;
 	}
 
 	File::Error File::Write(File::Handle fh, const void* const buffer, const DWORD inSize) noexcept

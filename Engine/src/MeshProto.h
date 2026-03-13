@@ -6,8 +6,8 @@
 #define MESH_PROTO_H
 
 #include "Mesh.h"
-#include "BufferIBV.h"
-#include "BufferVBV.h"
+#include "BufferIBV_ia.h"
+#include "BufferVBV_ia.h"
 
 namespace Azul
 {
@@ -29,15 +29,15 @@ namespace Azul
 		virtual void Transfer_SkinBoneWorldBuffer(Mat4* p) override;
 	private:
 		// Data
-		BufferVBV VBVBuffer_pos;
-		BufferVBV VBVBuffer_color;
-		BufferVBV VBVBuffer_tex;
-		BufferVBV VBVBuffer_norm;
+		BufferVBV_ia VBVBuffer_pos;
+		BufferVBV_ia VBVBuffer_color;
+		BufferVBV_ia VBVBuffer_tex;
+		BufferVBV_ia VBVBuffer_norm;
 
-		BufferVBV VBVBuffer_weight;
-		BufferVBV VBVBuffer_joint;
+		BufferVBV_ia VBVBuffer_weight;
+		BufferVBV_ia VBVBuffer_joint;
 
-		BufferIBV IBVBuffer;
+		BufferIBV_ia IBVBuffer;
 
 		// Not part of VertexBuffer.. but part of the Mesh
 		BufferCBV_vs CBVBuffer_InvBind;

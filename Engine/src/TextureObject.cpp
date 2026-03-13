@@ -83,7 +83,7 @@ namespace Azul
 
 	void TextureObject::ActivateTexture()
 	{
-		SRVTexBuffer.SetActive(ShaderResourceBufferSlot::TexA);
+		SRVTexBuffer.SetActive(ShaderResourceBufferSlot::Texture);
 		SamplerStateBuffer.SetActive(ShaderSamplerSlot::SampleA);
 	}
 

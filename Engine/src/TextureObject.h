@@ -6,8 +6,8 @@
 #define TEXTURE_OBJECT_H
 
 #include <d3d11.h>
-#include "BufferSamplerState.h"
-#include "BufferSRV_ps.h"
+#include "BufferSamplerState_ps.h"
+#include "BufferTextureSRV_ps.h"
 #include "BufferTexture2D.h"
 
 namespace Azul
@@ -63,8 +63,8 @@ namespace Azul
 		// ---------------------------------------------
 		TextureObject::Name mName;
 
-		BufferSRV_ps       SRVTexBuffer;
-		BufferSamplerState SamplerStateBuffer;
+		BufferTextureSRV_ps       SRVTexBuffer;
+		BufferSamplerState_ps SamplerStateBuffer;
 		BufferTexture2D    Texture2DBuffer;
 
 		unsigned int    width;

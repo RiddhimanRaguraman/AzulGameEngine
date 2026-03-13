@@ -21,7 +21,9 @@ namespace Azul
 			ColorByVertex,
 			FlatTexture,
 			LightTexture,
+			BasicCompute,
 			SkinFlatTexture,
+			MixerCompute,
 			ConstColor,
 			Sprite,
 			Uninitialized
@@ -37,8 +39,8 @@ namespace Azul
 		ShaderObject(ShaderObject::Name _name);
 
 		virtual void ActivateShader() = 0;
-		virtual void ActivateCBV() = 0;
-		virtual void TransferWorldViewProj(Camera *pCam, Mat4 *pWorld) = 0;
+		virtual void ActivateCBV();
+		virtual void TransferWorldViewProj(Camera *pCam, Mat4 *pWorld);
 		virtual void TransferPos(Vec3 *pLightPos);
 		virtual void TransferColor(Vec3 *pColor);
 		virtual void TransferBodyColor(Color* pColor);
@@ -47,6 +49,7 @@ namespace Azul
 
 		static const char *GetLatestProfile_PixelShader();
 		static const char *GetLatestProfile_VertexShader();
+		static const char* GetLatestProfile_ComputeShader();
 
 		char *GetName();
 		void SetName(ShaderObject::Name _name);

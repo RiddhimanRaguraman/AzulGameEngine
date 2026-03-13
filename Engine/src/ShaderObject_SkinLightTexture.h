@@ -7,9 +7,9 @@
 
 #include "ShaderObject.h"
 #include "BufferCBV_vs.h"
-#include "BufferVertexShader.h"
-#include "BufferPixelShader.h"
-#include "BufferInputLayout.h"
+#include "BufferVertexShader_vs.h"
+#include "BufferPixelShader_ps.h"
+#include "BufferInputLayout_ia.h"
 
 namespace Azul
 {
@@ -40,9 +40,9 @@ namespace Azul
 		BufferCBV_vs ConstantBuff_LightColor;
 		BufferCBV_vs ConstantBuff_LightPos;
 
-		BufferVertexShader VertexShader;
-		BufferPixelShader  PixelShader;
-		BufferInputLayout  InputLayout;
+		BufferVertexShader_vs VertexShader;
+		BufferPixelShader_ps  PixelShader;
+		BufferInputLayout_ia  InputLayout;
 
 	};
 }

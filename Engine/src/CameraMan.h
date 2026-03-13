@@ -2,26 +2,17 @@
 // Copyright 2025, Ed Keenan, all rights reserved.
 //----------------------------------------------------------------------------
 
-#ifndef SHADER_OBJECT_NODE_MAN_H
-#define SHADER_OBJECT_NODE_MAN_H 
-
+#ifndef CAM_NODE_MAN_H
+#define CAM_NODE_MAN_H 
+ 
 #include "ManBase.h"
-#include "ShaderObjectNode.h"
-#include "ShaderObject.h"
-#include "ShaderObject_ColorByVertex.h"
-#include "ShaderObject_FlatTexture.h"
-#include "ShaderObject_SkinFlatTexture.h"
-#include "ShaderObject_SkinLightTexture.h"
-#include "ShaderObject_LightTexture.h"
-#include "ShaderObject_ConstColor.h"
-#include "ShaderObject_Sprite.h"
-#include "ShaderObject_BasicCompute.h"
-#include "ShaderObject_Mixer.h"
+#include "CameraNode.h"
+#include "Camera.h"
+#include "CameraUtility.h"
 
 namespace Azul
 {
-
-	class ShaderObjectNodeMan : public ManBase
+	class CameraMan : public ManBase
 	{
 		//----------------------------------------------------------------------
 		// Static Methods
@@ -30,24 +21,32 @@ namespace Azul
 		static void Create(int reserveNum = 0, int reserveGrow = 1);
 		static void Destroy();
 
-		static ShaderObjectNode *Add(ShaderObject *pShaderObject);
-		static ShaderObject *Find(ShaderObject::Name name);
+		static CameraNode *Add(Camera::Name name, Camera *pCam);
+		static Camera *Find(Camera::Name name);
 
-		static void Remove(ShaderObjectNode *pNode);
+		// w1(7)
+		static void SetCurrent(Camera::Name name, Camera::Type type);
+		static Camera *GetCurrent(Camera::Type type);
+
+		static void Remove(CameraNode *pNode);
 		static void Dump();
 
+		void ProcessInput();
+		static void InputUpdate();
 		//----------------------------------------------------------------------
 		// Private methods
 		//----------------------------------------------------------------------
 	private:
-		static ShaderObjectNodeMan *privGetInstance();
+		static CameraMan *privGetInstance();
 
-		ShaderObjectNodeMan() = delete;
-		ShaderObjectNodeMan(const ShaderObjectNodeMan &) = delete;
-		ShaderObjectNodeMan &operator = (const ShaderObjectNodeMan &) = delete;
-		virtual ~ShaderObjectNodeMan();
+		CameraMan() = delete;
+		CameraMan(const CameraMan &) = delete;
+		CameraMan &operator = (const CameraMan &) = delete;
+		~CameraMan();
 
-		ShaderObjectNodeMan(int reserveNum, int reserveGrow);
+		CameraMan(int reserveNum, int reserveGrow);
+
+
 
 		//----------------------------------------------------------------------
 		// Override Abstract methods
@@ -55,16 +54,24 @@ namespace Azul
 	protected:
 		DLink *derivedCreateNode() override;
 
+
+
 		//----------------------------------------------------------------------
 		// Data: unique data for this manager 
 		//----------------------------------------------------------------------
 	private:
-		ShaderObjectNode *poNodeCompare;
-		static ShaderObjectNodeMan *posInstance;
+		CameraNode *poNodeCompare;
+		static CameraMan *posInstance;
 		static CompareStrategyBase *posEnumNameCompare;
 
+		// w1(7)
+		//Camera *currCamera;		
+		Camera *pCamOrthographic;
+		Camera *pCamPerspective;
 	};
+
 }
+
 #endif
 
 // --- End of File ---

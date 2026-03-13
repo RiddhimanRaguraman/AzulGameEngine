@@ -103,40 +103,40 @@
       <Field Name="poBufferCBV" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="Azul::BufferInputLayout">
+  <Class Name="Azul::BufferInputLayout_ia">
     <Position X="5.75" Y="8" Width="1.75" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
       <HashCode>QAIAAAAAAAAiAAEAAAAAAAAAAAAAAAAAAAAoAIAUAAA=</HashCode>
-      <FileName>BufferInputLayout.h</FileName>
+      <FileName>BufferInputLayout_ia.h</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="poInputLayout" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="Azul::BufferVertexShader">
+  <Class Name="Azul::BufferVertexShader_vs">
     <Position X="9.75" Y="8" Width="1.75" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
       <HashCode>ABAABAAAAAAgAIAAAAAAAAAAAAAAAAAAAAAgAIAUAAA=</HashCode>
-      <FileName>BufferVertexShader.h</FileName>
+      <FileName>BufferVertexShader_vs.h</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="poVertexShader" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="Azul::BufferPixelShader">
+  <Class Name="Azul::BufferPixelShader_ps">
     <Position X="7.75" Y="8" Width="1.75" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
       <HashCode>AAAAAAgAAAAgAAAAAAAAAAAAABAAAAAAAAAgAYAUAAA=</HashCode>
-      <FileName>BufferPixelShader.h</FileName>
+      <FileName>BufferPixelShader_ps.h</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="poPixelShader" />

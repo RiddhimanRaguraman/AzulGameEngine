@@ -44,24 +44,32 @@ namespace Azul
 
 	};
 
-	//enum class ConstantBufferSlot : uint32_t
-	//{
-	//	vsProjection,   // 0
-	//	vsView,         // 1
-	//	vsWorld,        // 2
-	//	vsLightColor,   // 3
-	//	vsLightPos,     // 4
-	//	psSpriteUVMatrix,   // 5
-	//	psSpriteColorScale, // 6
-	//	psColor,         // 7
-	//	vsSkinInvBind,       //8  Skin
-	//	vsSkinBoneWorld      //9  Skin
-	//};
+	// in shaders these are CBV slot "bx"
+	enum class ConstantCSBufferSlot : uint32_t
+	{
+		csMixer,   // 0
+		csWorld         // 1
+	};;
 
 	// in shaders these are RSV slot "tx"
 	enum class ShaderResourceBufferSlot : uint32_t
 	{
-		TexA      // slot 0  
+		Texture,      // slot 0  
+		KeyA,            // 1  
+		KeyB,            // 2  
+		HierarchyTable,  // 3
+		BoneWorldIn,     // 4
+		InvBind          // 5
+	};
+
+	// in shaders these are UAV slot "ux"
+	enum class UnorderedAccessBufferSlot : uint32_t
+	{
+		MixerABOut,    // slot 0  
+		BoneWorldOut,   // slot 1  
+
+		Test // 2
+
 	};
 
 	// in shaders these are Sampler slot "sx"

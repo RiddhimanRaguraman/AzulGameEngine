@@ -47,13 +47,7 @@ namespace Azul
 			// Since its already been updated... thankyou hack man
 			// we can just add the world matrix into our array
 
-		size_t numBones = pJointTable->GetNumBones();
-		if (numBones > BONE_COUNT_MAX)
-		{
-			numBones = BONE_COUNT_MAX;
-		}
-
-		for (size_t i = 0; i < numBones; i++)
+		for (size_t i = 0; i < pJointTable->GetNumBones(); i++)
 		{
 			GameObjectControlled* pGameObject = pSkeleton->FindBoneByIndex(pJointTable->poJointTable[i]);
 			//assert(pGameObject->index == i);

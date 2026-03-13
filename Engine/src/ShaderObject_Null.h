@@ -6,9 +6,9 @@
 #define SHADER_OBJECT_NULL_H
 
 #include "ShaderObject.h"
-#include "BufferVertexShader.h"
-#include "BufferPixelShader.h"
-#include "BufferInputLayout.h"
+#include "BufferVertexShader_vs.h"
+#include "BufferPixelShader_ps.h"
+#include "BufferInputLayout_ia.h"
 
 namespace Azul
 {
@@ -32,9 +32,9 @@ namespace Azul
 		// 	   Data:
 		// ---------------------------------------------
 
-		BufferVertexShader VertexShader;
-		BufferPixelShader  PixelShader;
-		BufferInputLayout  InputLayout;
+		BufferVertexShader_vs VertexShader;
+		BufferPixelShader_ps  PixelShader;
+		BufferInputLayout_ia  InputLayout;
 	};
 }
 

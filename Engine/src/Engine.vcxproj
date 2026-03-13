@@ -153,6 +153,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\shaders\Compiled\BasicCompute.Cx.h" />
     <ClInclude Include="..\shaders\Compiled\ConstColor.Px.h" />
     <ClInclude Include="..\shaders\Compiled\ConstColor.Vx.h" />
     <ClInclude Include="..\shaders\Compiled\ConstColorLight.px.h" />
@@ -177,15 +178,19 @@
     <ClInclude Include="AnimManCompareStrategyEnumName.h" />
     <ClInclude Include="Bone.h" />
     <ClInclude Include="BoundingSphere.h" />
+    <ClInclude Include="BufferCBV_cs.h" />
     <ClInclude Include="BufferCBV_ps.h" />
     <ClInclude Include="BufferCBV_vs.h" />
-    <ClInclude Include="BufferIBV.h" />
-    <ClInclude Include="BufferInputLayout.h" />
-    <ClInclude Include="BufferPixelShader.h" />
-    <ClInclude Include="BufferSamplerState.h" />
-    <ClInclude Include="BufferSRV_ps.h" />
+    <ClInclude Include="BufferComputeShader_cs.h" />
+    <ClInclude Include="BufferIBV_ia.h" />
+    <ClInclude Include="BufferInputLayout_ia.h" />
+    <ClInclude Include="BufferPixelShader_ps.h" />
+    <ClInclude Include="BufferSamplerState_ps.h" />
+    <ClInclude Include="BufferSRV_cs.h" />
+    <ClInclude Include="BufferTextureSRV_ps.h" />
     <ClInclude Include="BufferTexture2D.h" />
-    <ClInclude Include="BufferVBV.h" />
+    <ClInclude Include="BufferUAV_cs.h" />
+    <ClInclude Include="BufferVBV_ia.h" />
     <ClInclude Include="CameraNode.h" />
     <ClInclude Include="CameraNodeCompareStrategyEnumName.h" />
     <ClInclude Include="CameraNodeMan.h" />
@@ -238,10 +243,12 @@
     <ClInclude Include="GraphicsObject_FlatTexture.h" />
     <ClInclude Include="GraphicsObject_LightTexture.h" />
     <ClInclude Include="ShaderObjectNodeCompareStrategyEnumName.h" />
+    <ClInclude Include="ShaderObject_BasicCompute.h" />
     <ClInclude Include="ShaderObject_ConstColor.h" />
     <ClInclude Include="ShaderObject_ConstColorLight.h" />
     <ClInclude Include="ShaderObject_FlatTexture.h" />
     <ClInclude Include="ShaderObject_LightTexture.h" />
+    <ClInclude Include="ShaderObject_Mixer.h" />
     <ClInclude Include="ShaderObject_SkinFlatTexture.h" />
     <ClInclude Include="ShaderObject_SkinLightTexture.h" />
     <ClInclude Include="ShaderObject_Sprite.h" />
@@ -263,7 +270,7 @@
     <ClInclude Include="StateDepthStencilView.h" />
     <ClInclude Include="StateRasterizer.h" />
     <ClInclude Include="StateRenderTargetView.h" />
-    <ClInclude Include="BufferVertexShader.h" />
+    <ClInclude Include="BufferVertexShader_vs.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Colors.h" />
     <ClInclude Include="StateDirectXMan.h" />
@@ -311,15 +318,19 @@
     <ClCompile Include="AnimManCompareStrategyEnumName.cpp" />
     <ClCompile Include="Bone.cpp" />
     <ClCompile Include="BoundingSphere.cpp" />
+    <ClCompile Include="BufferCBV_cs.cpp" />
     <ClCompile Include="BufferCBV_ps.cpp" />
     <ClCompile Include="BufferCBV_vs.cpp" />
-    <ClCompile Include="BufferIBV.cpp" />
-    <ClCompile Include="BufferInputLayout.cpp" />
-    <ClCompile Include="BufferPixelShader.cpp" />
-    <ClCompile Include="BufferSamplerState.cpp" />
-    <ClCompile Include="BufferSRV_ps.cpp" />
+    <ClCompile Include="BufferComputeShader_cs.cpp" />
+    <ClCompile Include="BufferIBV_ia.cpp" />
+    <ClCompile Include="BufferInputLayout_ia.cpp" />
+    <ClCompile Include="BufferPixelShader_ps.cpp" />
+    <ClCompile Include="BufferSamplerState_ps.cpp" />
+    <ClCompile Include="BufferSRV_cs.cpp" />
+    <ClCompile Include="BufferTextureSRV_ps.cpp" />
     <ClCompile Include="BufferTexture2D.cpp" />
-    <ClCompile Include="BufferVBV.cpp" />
+    <ClCompile Include="BufferUAV_cs.cpp" />
+    <ClCompile Include="BufferVBV_ia.cpp" />
     <ClCompile Include="CameraNode.cpp" />
     <ClCompile Include="CameraNodeCompareStrategyEnumName.cpp" />
     <ClCompile Include="CameraNodeMan.cpp" />
@@ -371,10 +382,12 @@
     <ClCompile Include="GraphicsObject_FlatTexture.cpp" />
     <ClCompile Include="GraphicsObject_LightTexture.cpp" />
     <ClCompile Include="ShaderObjectNodeCompareStrategyEnumName.cpp" />
+    <ClCompile Include="ShaderObject_BasicCompute.cpp" />
     <ClCompile Include="ShaderObject_ConstColor.cpp" />
     <ClCompile Include="ShaderObject_ConstColorLight.cpp" />
     <ClCompile Include="ShaderObject_FlatTexture.cpp" />
     <ClCompile Include="ShaderObject_LightTexture.cpp" />
+    <ClCompile Include="ShaderObject_Mixer.cpp" />
     <ClCompile Include="ShaderObject_SkinFlatTexture.cpp" />
     <ClCompile Include="ShaderObject_SkinLightTexture.cpp" />
     <ClCompile Include="ShaderObject_Sprite.cpp" />
@@ -396,7 +409,7 @@
     <ClCompile Include="StateDepthStencilView.cpp" />
     <ClCompile Include="StateRasterizer.cpp" />
     <ClCompile Include="StateRenderTargetView.cpp" />
-    <ClCompile Include="BufferVertexShader.cpp" />
+    <ClCompile Include="BufferVertexShader_vs.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="StateDirectXMan.cpp" />
     <ClCompile Include="Engine.cpp" />
@@ -448,6 +461,17 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\shaders\original\BasicCompute.Cx.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">g_BasicCompute_CxShader</VariableName>
+      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Shaders/Compiled/BasicCompute.Cx.h</HeaderFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)_d.cso</ObjectFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">g_BasicCompute_CxShader</VariableName>
+      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../Shaders/Compiled/BasicCompute.Cx.h</HeaderFileOutput>
+    </FxCompile>
     <FxCompile Include="..\shaders\original\ColorByVertex.Px.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
@@ -557,6 +581,18 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
       <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../Shaders/Compiled/LightTexture.Vx.h</HeaderFileOutput>
       <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">g_LightTexture_VxShader</VariableName>
+    </FxCompile>
+    <FxCompile Include="..\shaders\original\Mixer.Cx.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">g_Mixer_CxShader</VariableName>
+      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Shaders/Compiled/Mixer.Cx.h</HeaderFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)_d.cso</ObjectFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">g_Mixer_CxShader</VariableName>
+      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../Shaders/Compiled/Mixer.Cx.h</HeaderFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename).cso</ObjectFileOutput>
     </FxCompile>
     <FxCompile Include="..\shaders\original\Null.Px.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

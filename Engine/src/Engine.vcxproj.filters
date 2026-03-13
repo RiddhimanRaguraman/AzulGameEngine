@@ -67,6 +67,21 @@
     <Filter Include="src\JointTable">
       <UniqueIdentifier>{9293a47d-06ec-4a42-814e-b23eb123ac2f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Buffers\ps - Pixel Shader">
+      <UniqueIdentifier>{f5ca209c-f656-4af8-a768-b1e1e9f24dbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Buffers\cs - Compute Shader">
+      <UniqueIdentifier>{53569bb1-cbfa-444f-bad1-23639340a3b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Buffers\vs - Vertex Shader">
+      <UniqueIdentifier>{9e94d98c-a70f-4c0d-b947-158ae2ee1c81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Buffers\ia - Input Assembly">
+      <UniqueIdentifier>{42fd5e5e-6bf5-4af6-90b4-1b8e04c232dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Buffers\ps - Pixel Shader\Intermediate">
+      <UniqueIdentifier>{cb17c2f2-337a-4cf5-88ec-42a41123b5a8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shaders\Compiled\Null.Px.h">
@@ -147,24 +162,6 @@
     <ClInclude Include="ShaderMappings.h">
       <Filter>src\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="BufferCBV_vs.h">
-      <Filter>src\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="BufferIBV.h">
-      <Filter>src\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="BufferInputLayout.h">
-      <Filter>src\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="BufferPixelShader.h">
-      <Filter>src\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="BufferVBV.h">
-      <Filter>src\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="BufferVertexShader.h">
-      <Filter>src\Buffers</Filter>
-    </ClInclude>
     <ClInclude Include="StateRenderTargetView.h">
       <Filter>src\State</Filter>
     </ClInclude>
@@ -185,9 +182,6 @@
     </ClInclude>
     <ClInclude Include="StateViewport.h">
       <Filter>src\State</Filter>
-    </ClInclude>
-    <ClInclude Include="BufferTexture2D.h">
-      <Filter>src\Buffers</Filter>
     </ClInclude>
     <ClInclude Include="StateSwapChain.h">
       <Filter>src\State</Filter>
@@ -278,12 +272,6 @@
     </ClInclude>
     <ClInclude Include="Anim.h">
       <Filter>src\Anim</Filter>
-    </ClInclude>
-    <ClInclude Include="BufferSRV_ps.h">
-      <Filter>src\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="BufferSamplerState.h">
-      <Filter>src\Buffers</Filter>
     </ClInclude>
     <ClInclude Include="GameObjectRigidBody.h">
       <Filter>src\GameObject</Filter>
@@ -384,9 +372,6 @@
     <ClInclude Include="GlyphProto.h">
       <Filter>src\Font</Filter>
     </ClInclude>
-    <ClInclude Include="BufferCBV_ps.h">
-      <Filter>src\Buffers</Filter>
-    </ClInclude>
     <ClInclude Include="Skel.h">
       <Filter>src\Skeleton</Filter>
     </ClInclude>
@@ -483,16 +468,67 @@
     <ClInclude Include="JointTableProto.h">
       <Filter>src\JointTable</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderObject_SkinLightTexture.h">
+      <Filter>src\Shader</Filter>
+    </ClInclude>
     <ClInclude Include="..\shaders\Compiled\SkinLightTexture.Vx.h">
       <Filter>Shaders\Compiled</Filter>
     </ClInclude>
     <ClInclude Include="..\shaders\Compiled\SkinLightTexture.Px.h">
       <Filter>Shaders\Compiled</Filter>
     </ClInclude>
+    <ClInclude Include="..\shaders\Compiled\BasicCompute.Cx.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferVertexShader_vs.h">
+      <Filter>src\Buffers\vs - Vertex Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferCBV_vs.h">
+      <Filter>src\Buffers\vs - Vertex Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferCBV_ps.h">
+      <Filter>src\Buffers\ps - Pixel Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferPixelShader_ps.h">
+      <Filter>src\Buffers\ps - Pixel Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferTextureSRV_ps.h">
+      <Filter>src\Buffers\ps - Pixel Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferSamplerState_ps.h">
+      <Filter>src\Buffers\ps - Pixel Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferIBV_ia.h">
+      <Filter>src\Buffers\ia - Input Assembly</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferInputLayout_ia.h">
+      <Filter>src\Buffers\ia - Input Assembly</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferVBV_ia.h">
+      <Filter>src\Buffers\ia - Input Assembly</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferTexture2D.h">
+      <Filter>src\Buffers\ps - Pixel Shader\Intermediate</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferSRV_cs.h">
+      <Filter>src\Buffers\cs - Compute Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferComputeShader_cs.h">
+      <Filter>src\Buffers\cs - Compute Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferUAV_cs.h">
+      <Filter>src\Buffers\cs - Compute Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderObject_BasicCompute.h">
+      <Filter>src\Shader</Filter>
+    </ClInclude>
     <ClInclude Include="GraphicsObject_SkinLightTexture.h">
       <Filter>src\GraphicsObject</Filter>
     </ClInclude>
-    <ClInclude Include="ShaderObject_SkinLightTexture.h">
+    <ClInclude Include="BufferCBV_cs.h">
+      <Filter>src\Buffers\cs - Compute Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderObject_Mixer.h">
       <Filter>src\Shader</Filter>
     </ClInclude>
   </ItemGroup>
@@ -560,24 +596,6 @@
     <ClCompile Include="ShaderObjectNodeMan.cpp">
       <Filter>src\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="BufferCBV_vs.cpp">
-      <Filter>src\Buffers</Filter>
-    </ClCompile>
-    <ClCompile Include="BufferIBV.cpp">
-      <Filter>src\Buffers</Filter>
-    </ClCompile>
-    <ClCompile Include="BufferInputLayout.cpp">
-      <Filter>src\Buffers</Filter>
-    </ClCompile>
-    <ClCompile Include="BufferPixelShader.cpp">
-      <Filter>src\Buffers</Filter>
-    </ClCompile>
-    <ClCompile Include="BufferVBV.cpp">
-      <Filter>src\Buffers</Filter>
-    </ClCompile>
-    <ClCompile Include="BufferVertexShader.cpp">
-      <Filter>src\Buffers</Filter>
-    </ClCompile>
     <ClCompile Include="StateRenderTargetView.cpp">
       <Filter>src\State</Filter>
     </ClCompile>
@@ -598,9 +616,6 @@
     </ClCompile>
     <ClCompile Include="StateViewport.cpp">
       <Filter>src\State</Filter>
-    </ClCompile>
-    <ClCompile Include="BufferTexture2D.cpp">
-      <Filter>src\Buffers</Filter>
     </ClCompile>
     <ClCompile Include="StateSwapChain.cpp">
       <Filter>src\State</Filter>
@@ -682,12 +697,6 @@
     </ClCompile>
     <ClCompile Include="AnimMan.cpp">
       <Filter>src\Anim</Filter>
-    </ClCompile>
-    <ClCompile Include="BufferSRV_ps.cpp">
-      <Filter>src\Buffers</Filter>
-    </ClCompile>
-    <ClCompile Include="BufferSamplerState.cpp">
-      <Filter>src\Buffers</Filter>
     </ClCompile>
     <ClCompile Include="GameObjectRigidBody.cpp">
       <Filter>src\GameObject</Filter>
@@ -779,9 +788,6 @@
     <ClCompile Include="GlyphProto.cpp">
       <Filter>src\Font</Filter>
     </ClCompile>
-    <ClCompile Include="BufferCBV_ps.cpp">
-      <Filter>src\Buffers</Filter>
-    </ClCompile>
     <ClCompile Include="Skel.cpp">
       <Filter>src\Skeleton</Filter>
     </ClCompile>
@@ -860,6 +866,54 @@
     <ClCompile Include="ShaderObject_SkinLightTexture.cpp">
       <Filter>src\Shader</Filter>
     </ClCompile>
+    <ClCompile Include="BufferVertexShader_vs.cpp">
+      <Filter>src\Buffers\vs - Vertex Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferCBV_vs.cpp">
+      <Filter>src\Buffers\vs - Vertex Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferCBV_ps.cpp">
+      <Filter>src\Buffers\ps - Pixel Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferPixelShader_ps.cpp">
+      <Filter>src\Buffers\ps - Pixel Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferTextureSRV_ps.cpp">
+      <Filter>src\Buffers\ps - Pixel Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferSamplerState_ps.cpp">
+      <Filter>src\Buffers\ps - Pixel Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferIBV_ia.cpp">
+      <Filter>src\Buffers\ia - Input Assembly</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferInputLayout_ia.cpp">
+      <Filter>src\Buffers\ia - Input Assembly</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferVBV_ia.cpp">
+      <Filter>src\Buffers\ia - Input Assembly</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferTexture2D.cpp">
+      <Filter>src\Buffers\ps - Pixel Shader\Intermediate</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferUAV_cs.cpp">
+      <Filter>src\Buffers\cs - Compute Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferSRV_cs.cpp">
+      <Filter>src\Buffers\cs - Compute Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferComputeShader_cs.cpp">
+      <Filter>src\Buffers\cs - Compute Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderObject_BasicCompute.cpp">
+      <Filter>src\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferCBV_cs.cpp">
+      <Filter>src\Buffers\cs - Compute Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderObject_Mixer.cpp">
+      <Filter>src\Shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Game_Diagram.cd">
@@ -934,6 +988,12 @@
       <Filter>Shaders\Original</Filter>
     </FxCompile>
     <FxCompile Include="..\shaders\original\SkinLightTexture.Vx.hlsl">
+      <Filter>Shaders\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="..\shaders\original\BasicCompute.Cx.hlsl">
+      <Filter>Shaders\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="..\shaders\original\Mixer.Cx.hlsl">
       <Filter>Shaders\Original</Filter>
     </FxCompile>
   </ItemGroup>
