@@ -49,7 +49,7 @@ namespace Azul
 	{
 	public:
 		void CreateSkeleton(Model& model, const char* const pTargetName);
-
+		void CreateHierarchy(Model &model, const char *const pTargetName);
 	private:
 		std::vector<skeleton>      skeletonVector;
 		std::vector<skeleton_table> skeletonTable;

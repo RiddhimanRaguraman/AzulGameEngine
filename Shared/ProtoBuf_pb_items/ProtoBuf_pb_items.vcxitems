@@ -22,6 +22,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)AnimVec3.pb.cc" />
     <ClCompile Include="$(MSBuildThisFileDirectory)FontData.pb.cc" />
     <ClCompile Include="$(MSBuildThisFileDirectory)FontEntry.pb.cc" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)HierarchyData.pb.cc" />
     <ClCompile Include="$(MSBuildThisFileDirectory)JointData.pb.cc" />
     <ClCompile Include="$(MSBuildThisFileDirectory)meshData.pb.cc" />
     <ClCompile Include="$(MSBuildThisFileDirectory)SkelData.pb.cc" />
@@ -37,6 +38,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)AnimVec3.pb.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)FontData.pb.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)FontEntry.pb.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)HierarchyData.pb.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)JointData.pb.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)meshData.pb.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)SkelData.pb.h" />

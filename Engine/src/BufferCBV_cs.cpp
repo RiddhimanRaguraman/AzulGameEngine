@@ -29,7 +29,7 @@ namespace Azul
 
 		//  shader resource
 		BufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		BufferDesc.ByteWidth = this->structSize;
+		BufferDesc.ByteWidth = (unsigned int)this->structSize;
 		BufferDesc.CPUAccessFlags = 0;
 		BufferDesc.Usage = D3D11_USAGE_DEFAULT;
 		BufferDesc.MiscFlags = 0;

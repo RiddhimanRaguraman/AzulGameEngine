@@ -34,11 +34,11 @@ namespace Azul
 
 		//  shader resource
 		BufferDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-		BufferDesc.ByteWidth = this->count * this->structSize;
+		BufferDesc.ByteWidth = (unsigned int)(this->count * this->structSize);
 		BufferDesc.CPUAccessFlags = 0;
 		BufferDesc.Usage = D3D11_USAGE_DEFAULT;
 		BufferDesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
-		BufferDesc.StructureByteStride = this->structSize;
+		BufferDesc.StructureByteStride = (unsigned int)this->structSize;
 
 		HRESULT hr;
 		hr = StateDirectXMan::GetDevice()->CreateBuffer(&BufferDesc,
@@ -51,7 +51,7 @@ namespace Azul
 		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
 		srvDesc.BufferEx.FirstElement = 0;
 		srvDesc.BufferEx.Flags = 0;
-		srvDesc.BufferEx.NumElements = this->count;    // number of structures
+		srvDesc.BufferEx.NumElements = (unsigned int)this->count;    // number of structures
 
 		hr = StateDirectXMan::GetDevice()->CreateShaderResourceView(poComputeRVSBuffer, &srvDesc, &this->poShaderResourceView);
 		assert(SUCCEEDED(hr));

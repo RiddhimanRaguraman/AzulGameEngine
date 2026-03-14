@@ -67,17 +67,17 @@ namespace Azul
 		assert(reserveGrow > 0);
 
 		// initialize the singleton here
-		assert(posInstance == nullptr);
+		assert(ClipMan::posInstance == nullptr);
 
 		// Do the initialization
-		if(posInstance == nullptr)
+		if(ClipMan::posInstance == nullptr)
 		{
-			posInstance = new ClipMan(reserveNum, reserveGrow);
+			ClipMan::posInstance = new ClipMan(reserveNum, reserveGrow);
 		}
 
-		if (posEnumNameCompare == nullptr)
+		if (ClipMan::posEnumNameCompare == nullptr)
 		{
-			posEnumNameCompare = new ClipCompareStrategyEnumName();
+			ClipMan::posEnumNameCompare = new ClipCompareStrategyEnumName();
 		}
 
 	}

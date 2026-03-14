@@ -12,23 +12,26 @@
 
 namespace Azul
 {
+	extern Bone HackLocalBone[];
 
 	GameObjectAnimSkeleton::GameObjectAnimSkeleton(GraphicsObject *pGraphicsObject, Bone *_pBoneResult)
 		: GameObjectControlled(pGraphicsObject)
 	{
 		assert(pGraphicsObject);
+		assert(_pBoneResult);
+
 		this->poTrans = new Vec3(0.0f, 0.0f, 0.0f);
 		this->poScale = new Vec3(1.0f, 1.0f, 1.0f);
 		this->poQuat = new Quat(0.0f, 0.0f, 0.0f, 1.0f);
 		this->poLocal = new Mat4(Identity);
 
 		this->pBoneResult = _pBoneResult;
-		assert(_pBoneResult);
-
+	
 		assert(this->poTrans);
 		assert(this->poScale);
 		assert(this->poQuat);
 		assert(this->poLocal);
+		assert(this->pBoneResult);
 	}
 
 	GameObjectAnimSkeleton::~GameObjectAnimSkeleton()
@@ -43,7 +46,7 @@ namespace Azul
 	{
 		AZUL_UNUSED_VAR(currentTime);
 
-		//Trace::out("index: %d \n", index);
+		Trace::out("index: %d \n", index);
 
 		Trans T;
 		Scale S;
@@ -62,12 +65,21 @@ namespace Azul
 			T.set(this->pBoneResult[index].T);
 			S.set(this->pBoneResult[index].S);
 			Q = this->pBoneResult[index].Q;
+
+			HackLocalBone[index].S = this->pBoneResult[index].S;
+			HackLocalBone[index].Q = this->pBoneResult[index].Q;
+			HackLocalBone[index].T = this->pBoneResult[index].T;
+
 		}
 		else
 		{
 			T.set(0, 0, 0);
 			S.set(1, 1, 1);
 			Q.set(Identity);
+
+			HackLocalBone[index].S = Vec3(1, 1, 1);
+			HackLocalBone[index].Q = Quat(Identity);
+			HackLocalBone[index].T = Vec3(0, 0, 0);
 		}
 
 		// world matrix

@@ -12,6 +12,7 @@
 #include "ShaderObject_FlatTexture.h"
 #include "ShaderObject_SkinFlatTexture.h"
 #include "ShaderObject_SkinLightTexture.h"
+#include "ShaderObject_World.h"
 #include "ShaderObject_LightTexture.h"
 #include "ShaderObject_ConstColor.h"
 #include "ShaderObject_Sprite.h"

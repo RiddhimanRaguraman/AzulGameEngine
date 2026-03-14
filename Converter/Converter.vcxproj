@@ -151,6 +151,7 @@
     <ClInclude Include="Anim.h" />
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="ConvertAnim.h" />
+    <ClInclude Include="ConvertHierarchy.h" />
     <ClInclude Include="ConvertJoint.h" />
     <ClInclude Include="ConvertMesh.h" />
     <ClInclude Include="ConvertSkeleton.h" />
@@ -172,6 +173,7 @@
     <ClCompile Include="Anim.cpp" />
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="ConvertAnim.cpp" />
+    <ClCompile Include="ConvertHierarchy.cpp" />
     <ClCompile Include="ConvertJoint.cpp" />
     <ClCompile Include="ConvertMesh.cpp" />
     <ClCompile Include="ConvertSkeleton.cpp" />

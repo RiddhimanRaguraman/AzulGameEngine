@@ -2,16 +2,16 @@
 // Copyright 2026, Ed Keenan, all rights reserved.
 //----------------------------------------------------------------------------
 
-#ifndef JOINT_TABLE_MANAGER_H
-#define JOINT_TABLE_MANAGER_H
+#ifndef HIERARCHY_TABLE_MANAGER_H
+#define HIERARCHY_TABLE_MANAGER_H
 
 #include "ManBase.h"
-#include "JointTable.h"
-#include "JointData.h"
+#include "HierarchyTable.h"
+#include "HierarchyData.h"
 
 namespace Azul
 {
-	class JointTableMan : public ManBase
+	class HierarchyTableMan : public ManBase
 	{
 		//----------------------------------------------------------------------
 		// Static Methods
@@ -20,25 +20,25 @@ namespace Azul
 		static void Create(int reserveNum = 0, int reserveGrow = 1);
 		static void Destroy();
 
-		static JointTable *Find(JointTable::Name name);
+		static HierarchyTable *Find(HierarchyTable::Name name);
 
-		static void Remove(JointTable *pNode);
+		static void Remove(HierarchyTable *pNode);
 		static void Dump();
 
-		static JointTable *Add(JointTable::Name JointTableName, const char *pFileName);
+		static HierarchyTable *Add(HierarchyTable::Name HierarchyTableName, const char *pFileName);
 
 		//----------------------------------------------------------------------
 		// Private methods
 		//----------------------------------------------------------------------
 	private:
-		static JointTableMan *privGetInstance();
+		static HierarchyTableMan *privGetInstance();
 
-		JointTableMan() = delete;
-		JointTableMan(const JointTableMan &) = delete;
-		JointTableMan &operator=(const JointTableMan &) = delete;
-		virtual ~JointTableMan();
+		HierarchyTableMan() = delete;
+		HierarchyTableMan(const HierarchyTableMan &) = delete;
+		HierarchyTableMan &operator=(const HierarchyTableMan &) = delete;
+		virtual ~HierarchyTableMan();
 
-		JointTableMan(int reserveNum, int reserveGrow);
+		HierarchyTableMan(int reserveNum, int reserveGrow);
 
 		//----------------------------------------------------------------------
 		// Override Abstract methods
@@ -50,8 +50,8 @@ namespace Azul
 		// Data: unique data for this manager 
 		//----------------------------------------------------------------------
 	private:
-		JointTable *poNodeCompare;
-		static JointTableMan *posInstance;
+		HierarchyTable *poNodeCompare;
+		static HierarchyTableMan *posInstance;
 		static CompareStrategyBase *posEnumNameCompare;
 	};
 }

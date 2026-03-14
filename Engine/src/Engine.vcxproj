@@ -164,6 +164,7 @@
     <ClInclude Include="..\shaders\Compiled\SkinLightTexture.Vx.h" />
     <ClInclude Include="..\shaders\Compiled\Sprite.Px.h" />
     <ClInclude Include="..\shaders\Compiled\Sprite.Vx.h" />
+    <ClInclude Include="..\shaders\Compiled\World.Cx.h" />
     <ClInclude Include="AnimMan.h" />
     <ClInclude Include="..\shaders\Compiled\ColorByVertex.Px.h" />
     <ClInclude Include="..\shaders\Compiled\ColorByVertex.Vx.h" />
@@ -216,6 +217,10 @@
     <ClInclude Include="GraphicsObject_SkinFlatTexture.h" />
     <ClInclude Include="GraphicsObject_SkinLightTexture.h" />
     <ClInclude Include="GraphicsObject_Sprite.h" />
+    <ClInclude Include="HierarchyTable.h" />
+    <ClInclude Include="HierarchyTableCompareStrategyEnumName.h" />
+    <ClInclude Include="HierarchyTableMan.h" />
+    <ClInclude Include="HierarchyTableProto.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="ImageCompareStrategyEnumName.h" />
     <ClInclude Include="ImageMan.h" />
@@ -252,6 +257,7 @@
     <ClInclude Include="ShaderObject_SkinFlatTexture.h" />
     <ClInclude Include="ShaderObject_SkinLightTexture.h" />
     <ClInclude Include="ShaderObject_Sprite.h" />
+    <ClInclude Include="ShaderObject_World.h" />
     <ClInclude Include="Skel.h" />
     <ClInclude Include="SkelCompareStrategyEnumName.h" />
     <ClInclude Include="Skeleton.h" />
@@ -356,6 +362,10 @@
     <ClCompile Include="GraphicsObject_SkinFlatTexture.cpp" />
     <ClCompile Include="GraphicsObject_SkinLightTexture.cpp" />
     <ClCompile Include="GraphicsObject_Sprite.cpp" />
+    <ClCompile Include="HierarchyTable.cpp" />
+    <ClCompile Include="HierarchyTableCompareStrategyEnumName.cpp" />
+    <ClCompile Include="HierarchyTableMan.cpp" />
+    <ClCompile Include="HierarchyTableProto.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="ImageCompareStrategyEnumName.cpp" />
     <ClCompile Include="ImageMan.cpp" />
@@ -391,6 +401,7 @@
     <ClCompile Include="ShaderObject_SkinFlatTexture.cpp" />
     <ClCompile Include="ShaderObject_SkinLightTexture.cpp" />
     <ClCompile Include="ShaderObject_Sprite.cpp" />
+    <ClCompile Include="ShaderObject_World.cpp" />
     <ClCompile Include="Skel.cpp" />
     <ClCompile Include="SkelCompareStrategyEnumName.cpp" />
     <ClCompile Include="Skeleton.cpp" />
@@ -681,6 +692,17 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
       <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">g_Sprite_VxShader</VariableName>
       <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../Shaders/Compiled/Sprite.Vx.h</HeaderFileOutput>
+    </FxCompile>
+    <FxCompile Include="..\shaders\original\World.Cx.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">g_World_CxShader</VariableName>
+      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Shaders/Compiled/World.Cx.h</HeaderFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">g_World_CxShader</VariableName>
+      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../Shaders/Compiled/World.Cx.h</HeaderFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)_d.cso</ObjectFileOutput>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -18,7 +18,7 @@ namespace Azul
 
 		bool status = false;
 
-		if( strcmp(pDataA->GetMesh()->pModelName,pDataB->GetMesh()->pModelName) == 0 )
+		if( strcmp(pDataA->GetMesh()->pModelName, pDataB->GetMesh()->pModelName) == 0 )
 		{
 			status = true;
 		}

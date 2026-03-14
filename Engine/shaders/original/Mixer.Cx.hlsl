@@ -43,7 +43,7 @@ cbuffer AA : register(b0) // slot 0 (ConstantBufferSlot_cs::csMixer)
 
 RWStructuredBuffer<BoneType> BoneOut : register(u0); // slot 0  (UnorderedAccessBufferSlot::MixerABOut)
 
-[numthreads(8, 1, 1)]
+[numthreads(1, 1, 1)]
 void main(uint3 dtID : SV_DispatchThreadID)
 {
     uint boneIndex = dtID.x;

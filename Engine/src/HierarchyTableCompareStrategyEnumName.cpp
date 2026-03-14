@@ -2,22 +2,22 @@
 // Copyright 2026, Ed Keenan, all rights reserved.
 //----------------------------------------------------------------------------
 
-#include "ImageCompareStrategyEnumName.h"
-#include "Image.h"
+#include "HierarchyTableCompareStrategyEnumName.h"
+#include "HierarchyTable.h"
 
 namespace Azul
 {
-	bool ImageCompareStrategyEnumName::Compare(DLink *pRefNode, DLink *pTargetNode)
+	bool HierarchyTableCompareStrategyEnumName::Compare(DLink *pRefNode, DLink *pTargetNode)
 	{
 		assert(pRefNode);
 		assert(pTargetNode);
 
-		Image *pDataA = (Image *)pRefNode;
-		Image *pDataB = (Image *)pTargetNode;
+		HierarchyTable *pDataA = (HierarchyTable *)pRefNode;
+		HierarchyTable *pDataB = (HierarchyTable *)pTargetNode;
 
 		bool status = false;
 
-	if(pDataA->imageName == pDataB->imageName)
+		if(pDataA->mName == pDataB->mName)
 		{
 			status = true;
 		}

@@ -2,32 +2,32 @@
 // Copyright 2026, Ed Keenan, all rights reserved.
 //----------------------------------------------------------------------------
 
-#include "JointTableMan.h"
+#include "HierarchyTableMan.h"
 #include "DLinkMan.h"
-#include "JointTableProto.h"
+#include "HierarchyTableProto.h"
 #include "File.h"
-#include "JointTableCompareStrategyEnumName.h"
-	
+#include "HierarchyTableCompareStrategyEnumName.h"
+
 namespace Azul
 {
 
-	JointTableMan *JointTableMan::posInstance = nullptr;
-	CompareStrategyBase *JointTableMan::posEnumNameCompare = nullptr;
+	HierarchyTableMan *HierarchyTableMan::posInstance = nullptr;
+	CompareStrategyBase *HierarchyTableMan::posEnumNameCompare = nullptr;
 
 	//----------------------------------------------------------------------
 	// Constructor
 	//----------------------------------------------------------------------
-	JointTableMan::JointTableMan(int reserveNum, int reserveGrow)
+	HierarchyTableMan::HierarchyTableMan(int reserveNum, int reserveGrow)
 		: ManBase(new DLinkMan(), new DLinkMan(), reserveNum, reserveGrow)
 	{
 		// Preload the reserve
 		this->proFillReservedPool(reserveNum);
 
 		// initialize derived data here
-		this->poNodeCompare = new JointTable();
+		this->poNodeCompare = new HierarchyTable();
 	}
 
-	JointTableMan::~JointTableMan()
+	HierarchyTableMan::~HierarchyTableMan()
 	{
 		delete this->poNodeCompare;
 		this->poNodeCompare = nullptr;
@@ -40,7 +40,7 @@ namespace Azul
 		// Walk through the nodes
 		while(!pIt->IsDone())
 		{
-			JointTable *pDeleteMe = (JointTable *)pIt->Curr();
+			HierarchyTable *pDeleteMe = (HierarchyTable *)pIt->Curr();
 			pNode = pIt->Next();
 			delete pDeleteMe;
 		}
@@ -52,7 +52,7 @@ namespace Azul
 		// Walk through the nodes
 		while(!pIt->IsDone())
 		{
-			JointTable *pDeleteMe = (JointTable *)pIt->Curr();
+			HierarchyTable *pDeleteMe = (HierarchyTable *)pIt->Curr();
 			pNode = pIt->Next();
 			delete pDeleteMe;
 		}
@@ -61,45 +61,44 @@ namespace Azul
 	//----------------------------------------------------------------------
 	// Static Methods
 	//----------------------------------------------------------------------
-	void JointTableMan::Create(int reserveNum, int reserveGrow)
+	void HierarchyTableMan::Create(int reserveNum, int reserveGrow)
 	{
 		// make sure values are ressonable 
 		assert(reserveNum >= 0);
 		assert(reserveGrow > 0);
 
 		// initialize the singleton here
-		assert(JointTableMan::posInstance == nullptr);
+		assert(posInstance == nullptr);
 
 		// Do the initialization
-		if(JointTableMan::posInstance == nullptr)
+		if(posInstance == nullptr)
 		{
-			JointTableMan::posInstance = new JointTableMan(reserveNum, reserveGrow);
+			posInstance = new HierarchyTableMan(reserveNum, reserveGrow);
 		}
-		if (JointTableMan::posEnumNameCompare == nullptr)
+
+		if(posEnumNameCompare == nullptr)
 		{
-			JointTableMan::posEnumNameCompare = new JointTableCompareStrategyEnumName();
+			posEnumNameCompare = new HierarchyTableCompareStrategyEnumName();
 		}
+
 	}
 
-	void JointTableMan::Destroy()
+	void HierarchyTableMan::Destroy()
 	{
-		JointTableMan *pMan = JointTableMan::privGetInstance();
+		HierarchyTableMan *pMan = HierarchyTableMan::privGetInstance();
 		assert(pMan != nullptr);
 		AZUL_UNUSED_VAR(pMan);
 
-		delete JointTableMan::posInstance;
-		JointTableMan::posInstance = nullptr;
-
-		delete JointTableMan::posEnumNameCompare;
-		JointTableMan::posEnumNameCompare = nullptr;
+		delete HierarchyTableMan::posInstance;
+		HierarchyTableMan::posInstance = nullptr;
 	}
 
-	JointTable *JointTableMan::Add(JointTable::Name JointTableName, const char *pFileName)
+	HierarchyTable *HierarchyTableMan::Add(HierarchyTable::Name JointTableName, const char *pFileName)
 	{
-		JointTableMan *pMan = JointTableMan::privGetInstance();
+		HierarchyTableMan *pMan = HierarchyTableMan::privGetInstance();
 		assert(pMan);
 
-		JointTable *pNode = (JointTable *)pMan->baseAddToFront();
+		HierarchyTable *pNode = (HierarchyTable *)pMan->baseAddToFront();
 		assert(pNode != nullptr);
 
 
@@ -115,48 +114,50 @@ namespace Azul
 		// Now the raw data is poBUff
 		// deserialize the data --> mB
 		std::string strIn((const char *)poBuff, numBytes);
-		JointData_proto mB_proto;
+		HierarchyData_proto mB_proto;
 
 		mB_proto.ParseFromString(strIn);
 
-		JointData mB;
+		HierarchyData mB;
 		mB.Deserialize(mB_proto);
 		delete[] poBuff;
 
-		pNode->Set(JointTableName, mB.numBones, &mB.poJointEntry[0]);
+		pNode->Set(JointTableName, 
+				   mB.numNodes, 
+				   mB.maxDepth,
+				   mB.poData);
 
 		return pNode;
 	}
 
 
-	JointTable *JointTableMan::Find(JointTable::Name _name)
+	HierarchyTable *HierarchyTableMan::Find(HierarchyTable::Name _name)
 	{
-		JointTableMan *pMan = JointTableMan::privGetInstance();
+		HierarchyTableMan *pMan = HierarchyTableMan::privGetInstance();
 		assert(pMan != nullptr);
 
-		pMan->pCompareStrategy = JointTableMan::posEnumNameCompare;
+		pMan->pCompareStrategy = HierarchyTableMan::posEnumNameCompare;
 		assert(pMan->pCompareStrategy);
 
-		pMan->poNodeCompare->SetJointTableName(_name);
+		pMan->poNodeCompare->SetHierarchyTableName(_name);
 
-		JointTable *pData = (JointTable *)pMan->baseFind(pMan->poNodeCompare);
+		HierarchyTable *pData = (HierarchyTable *)pMan->baseFind(pMan->poNodeCompare);
 		return pData;
 	}
 
-
-	void JointTableMan::Remove(JointTable *pNode)
+	void HierarchyTableMan::Remove(HierarchyTable *pNode)
 	{
 		assert(pNode != nullptr);
 
-		JointTableMan *pMan = JointTableMan::privGetInstance();
+		HierarchyTableMan *pMan = HierarchyTableMan::privGetInstance();
 		assert(pMan != nullptr);
 
 		pMan->baseRemove(pNode);
 	}
 
-	void JointTableMan::Dump()
+	void HierarchyTableMan::Dump()
 	{
-		JointTableMan *pMan = JointTableMan::privGetInstance();
+		HierarchyTableMan *pMan = HierarchyTableMan::privGetInstance();
 		assert(pMan != nullptr);
 
 		pMan->baseDump();
@@ -165,7 +166,7 @@ namespace Azul
 	//----------------------------------------------------------------------
 	// Private methods
 	//----------------------------------------------------------------------
-	JointTableMan *JointTableMan::privGetInstance()
+	HierarchyTableMan *HierarchyTableMan::privGetInstance()
 	{
 		// Safety - this forces users to call Create() first before using class
 		assert(posInstance != nullptr);
@@ -176,9 +177,9 @@ namespace Azul
 	//----------------------------------------------------------------------
 	// Override Abstract methods
 	//----------------------------------------------------------------------
-	DLink *JointTableMan::derivedCreateNode()
+	DLink *HierarchyTableMan::derivedCreateNode()
 	{
-		DLink *pNodeBase = new JointTable();
+		DLink *pNodeBase = new HierarchyTable();
 		assert(pNodeBase != nullptr);
 
 		return pNodeBase;

@@ -56,17 +56,17 @@ namespace Azul
 		//  Fill: Joint Data
 		// --------------------------------------------------
 
-		//size_t jointAccessorIndex = (size_t)gltfModel.meshes[0].primitives[0].attributes.find("JOINTS_0")->second;
+		size_t jointAccessorIndex = (size_t)gltfModel.meshes[0].primitives[0].attributes.find("JOINTS_0")->second;
 
 		//unsigned char *pBuff = (unsigned char *)&gltfModel.buffers[0].data[0];
 
 		// Joint
-		//auto JointAccessor = gltfModel.accessors[jointAccessorIndex];
-		//auto JointBuffView = gltfModel.bufferViews[(size_t)JointAccessor.bufferView];
+		auto JointAccessor = gltfModel.accessors[jointAccessorIndex];
+		auto JointBuffView = gltfModel.bufferViews[(size_t)JointAccessor.bufferView];
 
 		//unsigned char *pJointBuff = pBuff + JointBuffView.byteOffset;
-		//assert(JointAccessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT);
-		//assert(JointAccessor.type == TINYGLTF_TYPE_VEC4);
+		assert(JointAccessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT);
+		assert(JointAccessor.type == TINYGLTF_TYPE_VEC4);
 
 		// -------------------------------------------------
 		//  Joint table

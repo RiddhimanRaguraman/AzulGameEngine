@@ -21,11 +21,25 @@
 #include "TimerController.h"
 #include "AnimController.h"
 #include "AnimMan.h"
-#include "JointTableProto.h"
+#include "HierarchyTableMan.h"
  
 namespace Azul
 {
  
+	Bone HackLocalBone[15];
+	Mat4 HackWorld[8];
+	// int  HackHierarchyTable[7 * 8] =
+	// {
+	// 		0,  2,  3,  4, -1, -1, -1,
+	// 		0,  2,  3,  4,  8, -1, -1,
+	// 		0,  2,  3,  4,  8,  9, -1,
+	// 		0,  2,  3,  4,  8,  9, 10,
+	// 		0,  2,  3,  4,  5, -1, -1,
+	// 		0,  2,  3,  4,  5,  6, -1,
+	// 		0,  2,  3,  4,  5,  6,  7,
+	// 		0,  2,  3,  4, 11, -1, -1
+	// };
+
   FontSprite* pFontSprite1;
 
 	//-----------------------------------------------------------------------------
@@ -67,6 +81,7 @@ namespace Azul
 		ClipMan::Create();
         AnimMan::Create();
 		JointTableMan::Create();
+		HierarchyTableMan::Create();
 
 		// --------------------------------- 
 		//  Camera - Setup 
@@ -150,6 +165,13 @@ namespace Azul
 		JointTable* pJointTableMouse = JointTableMan::Add(JointTable::Name::Mousey, "Mousey.j.proto.azul");
 
 		// --------------------------------
+		//   Hierarchy
+		// --------------------------------
+
+		HierarchyTable* pHierarchyChicken = HierarchyTableMan::Add(HierarchyTable::Name::ChickenBot, "ChickenBot.h.proto.azul");
+		HierarchyTable* pHierarchyMouse = HierarchyTableMan::Add(HierarchyTable::Name::Mousey, "Mousey.h.proto.azul");
+
+		// --------------------------------
 		//  Shader
 		// --------------------------------
 
@@ -160,6 +182,7 @@ namespace Azul
 		ShaderObjectNodeMan::Add(ShaderObject::Name::SkinLightTexture);
 		ShaderObjectNodeMan::Add(ShaderObject::Name::BasicCompute);
 		ShaderObjectNodeMan::Add(ShaderObject::Name::MixerCompute);
+		ShaderObjectNodeMan::Add(ShaderObject::Name::WorldCompute);
 
 		// --------------------------------
 		//  Texture
@@ -169,7 +192,7 @@ namespace Azul
 		TexNodeMan::Add("TEST_PNG_RGBA.t.proto.azul", TextureObject::Name::Test1);
 		TexNodeMan::Add("TEST_TGA_BGR.t.proto.azul", TextureObject::Name::Test2);
 		TexNodeMan::Add("TEST_TGA_BGRA.t.proto.azul", TextureObject::Name::Test3);
-		//TexNodeMan::Add("ChickenBot.t.proto.azul",TextureObject::Name::ChickenBot);
+		TexNodeMan::Add("ChickenBot.t.proto.azul",TextureObject::Name::ChickenBot);
 		TexNodeMan::Add("Mousey.t.proto.azul", TextureObject::Name::Mousey);
 
 	/*	TextureObject* pTexDogBot = new TextureObject("DogBot.t.proto.azul");
@@ -437,6 +460,7 @@ namespace Azul
 	//-----------------------------------------------------------------------------
 	void Game::UnloadContent()
 	{
+		HierarchyTableMan::Destroy();
 		JointTableMan::Destroy();
 		AnimMan::Destroy();
 		ClipMan::Destroy();

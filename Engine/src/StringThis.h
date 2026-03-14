@@ -11,6 +11,7 @@
 #include "Camera.h"
 #include "AnimMan.h"
 #include "JointTable.h"
+#include "HierarchyTable.h"
 
 namespace Azul
 {
@@ -28,6 +29,7 @@ namespace Azul
 		StringThis(AnimMan::Name);
 		StringThis(Skel::Name);
 		StringThis(Clip::Name);
+		StringThis(HierarchyTable::Name);
 
 		operator char *();
 

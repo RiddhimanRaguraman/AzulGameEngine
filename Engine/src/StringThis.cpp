@@ -6,6 +6,23 @@
 
 namespace Azul
 {
+	StringThis::StringThis(HierarchyTable::Name status)
+	{
+		switch (status)
+		{
+		case HierarchyTable::Name::ChickenBot:
+			strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(HierarchyTable::ChickenBot));
+			break;
+
+		case HierarchyTable::Name::Not_Initialized:
+			strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(HierarchyTable::Not_Initialized));
+			break;
+
+		default:
+			assert(false);
+		}
+	}
+
 	StringThis::StringThis(JointTable::Name status)
 	{
 		switch (status)

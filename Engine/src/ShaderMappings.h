@@ -51,7 +51,7 @@ namespace Azul
 		csWorld         // 1
 	};;
 
-	// in shaders these are RSV slot "tx"
+	// in shaders these are SRV slot "tx"
 	enum class ShaderResourceBufferSlot : uint32_t
 	{
 		Texture,      // slot 0  

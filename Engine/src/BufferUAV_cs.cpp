@@ -38,11 +38,11 @@ namespace Azul
 		D3D11_BUFFER_DESC BufferDesc{ 0 };
 
 		BufferDesc.BindFlags = D3D11_BIND_UNORDERED_ACCESS;
-		BufferDesc.ByteWidth = this->count * this->structSize;
+		BufferDesc.ByteWidth = (unsigned int)(this->count * this->structSize);
 		BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
 		BufferDesc.Usage = D3D11_USAGE_DEFAULT;
 		BufferDesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
-		BufferDesc.StructureByteStride = this->structSize;
+		BufferDesc.StructureByteStride = (unsigned int)this->structSize;
 
 		hr = StateDirectXMan::GetDevice()->CreateBuffer(&BufferDesc,
 			nullptr,
@@ -61,7 +61,7 @@ namespace Azul
 
 		sbUAVDesc.Buffer.FirstElement = 0;
 		sbUAVDesc.Buffer.Flags = 0;
-		sbUAVDesc.Buffer.NumElements = this->count;  // number of structures
+		sbUAVDesc.Buffer.NumElements = (unsigned int)this->count;  // number of structures
 
 		hr = StateDirectXMan::GetDevice()->CreateUnorderedAccessView(this->poComputeUAVBuffer,
 			&sbUAVDesc,

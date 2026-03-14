@@ -15,6 +15,7 @@
 #include "ConvertAnim.h"
 #include "ConvertSkeleton.h"
 #include "ConvertJoint.h"
+#include "ConvertHierarchy.h"
 #include "ConvertSkin.h"
 
 int main()
@@ -62,6 +63,7 @@ int main()
 
 	Azul::ConvertSkin("ChickenBot_Mesh.glb", "Chickenbot");
 	Azul::ConvertJoint("ChickenBot_Mesh.glb", "ChickenBot");
+	Azul::ConvertHierarchy("ChickenBot_Mesh.glb", "ChickenBot");
 	Azul::ConvertSkeleton("walk_mesh.glb", "ChickenBot");
 	Azul::ConvertAnim("walk_mesh.glb", "ChickenBot_Walk");
 	//Azul::ConvertAnim("runRM+mesh.glb", "ChickenBot_Run");
@@ -75,6 +77,7 @@ int main()
 	Azul::ConvertJoint("Mousey_Mesh.glb", "Mousey");
 	Azul::ConvertSkin("Mousey_Mesh.glb", "Mousey");
 	Azul::ConvertSkeleton("Mousey_Mesh.glb", "Mousey");
+	Azul::ConvertHierarchy("Mousey_Mesh.glb", "Mousey");
 	Azul::ConvertAnim("Mousey_Anim_Silly_Dancing.glb", "Mousey_SillyDancing");
 	Azul::CreateTexturePNG("Mousey.png", "Mousey");
 

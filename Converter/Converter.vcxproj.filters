@@ -88,6 +88,9 @@
     <ClInclude Include="ConvertJoint.h">
       <Filter>Source Files\Anim</Filter>
     </ClInclude>
+    <ClInclude Include="ConvertHierarchy.h">
+      <Filter>Source Files\Anim</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -148,6 +151,9 @@
       <Filter>Source Files\Anim</Filter>
     </ClCompile>
     <ClCompile Include="ConvertJoint.cpp">
+      <Filter>Source Files\Anim</Filter>
+    </ClCompile>
+    <ClCompile Include="ConvertHierarchy.cpp">
       <Filter>Source Files\Anim</Filter>
     </ClCompile>
   </ItemGroup>

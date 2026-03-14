@@ -22,6 +22,7 @@
     <ClCompile Include="src\AnimVec3.cpp" />
     <ClCompile Include="src\FontData.cpp" />
     <ClCompile Include="src\FontEntry.cpp" />
+    <ClCompile Include="src\HierarchyData.cpp" />
     <ClCompile Include="src\JointData.cpp" />
     <ClCompile Include="src\meshData.cpp" />
     <ClCompile Include="src\ProtoBufEngine_DLLMain.cpp" />
@@ -38,6 +39,7 @@
     <ClInclude Include="include\AnimVec3.h" />
     <ClInclude Include="include\FontData.h" />
     <ClInclude Include="include\FontEntry.h" />
+    <ClInclude Include="include\HierarchyData.h" />
     <ClInclude Include="include\JointData.h" />
     <ClInclude Include="include\meshData.h" />
     <ClInclude Include="include\MeshLayout.h" />
@@ -56,6 +58,7 @@
     <None Include="src\AnimVec3.proto" />
     <None Include="src\FontData.proto" />
     <None Include="src\FontEntry.proto" />
+    <None Include="src\HierarchyData.proto" />
     <None Include="src\JointData.proto" />
     <None Include="src\meshData.proto" />
     <None Include="src\SkelData.proto" />

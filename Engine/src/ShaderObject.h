@@ -24,6 +24,7 @@ namespace Azul
 			BasicCompute,
 			SkinFlatTexture,
 			SkinLightTexture,
+			WorldCompute,
 			MixerCompute,
 			ConstColor,
 			Sprite,

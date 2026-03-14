@@ -132,6 +132,9 @@ namespace Azul
 			case ShaderObject::Name::MixerCompute:
 				pShader = new ShaderObject_Mixer(ShaderObject::Name::MixerCompute);
 				break;
+			case ShaderObject::Name::WorldCompute:
+				pShader = new ShaderObject_World(ShaderObject::Name::WorldCompute);
+				break;
 			case ShaderObject::Name::Sprite:
 				pShader = new ShaderObject_Sprite(ShaderObject::Name::Sprite);
 				break;

@@ -1,0 +1,17 @@
+//----------------------------------------------------------------------------
+// Copyright 2026, Ed Keenan, all rights reserved.
+//----------------------------------------------------------------------------
+
+syntax = "proto3";
+
+option optimize_for = LITE_RUNTIME;
+
+message HierarchyData_proto
+{
+	optional bytes  pVersion = 1;
+	optional uint32 numNodes = 2;
+	optional uint32 maxDepth = 3;
+	repeated uint32   poData = 4;
+}
+
+// -- End of File ---

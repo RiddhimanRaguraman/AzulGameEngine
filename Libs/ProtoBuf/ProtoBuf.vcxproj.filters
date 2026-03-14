@@ -62,6 +62,9 @@
     <ClCompile Include="src\JointData.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\HierarchyData.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\ProtoBufEngine_DLLInterface.h">
@@ -112,6 +115,9 @@
     <ClInclude Include="include\JointData.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\HierarchyData.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\meshData.proto">
@@ -151,6 +157,9 @@
       <Filter>src</Filter>
     </None>
     <None Include="src\JointData.proto">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\HierarchyData.proto">
       <Filter>src</Filter>
     </None>
   </ItemGroup>

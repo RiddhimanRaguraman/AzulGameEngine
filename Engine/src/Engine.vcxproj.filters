@@ -82,6 +82,9 @@
     <Filter Include="src\Buffers\ps - Pixel Shader\Intermediate">
       <UniqueIdentifier>{cb17c2f2-337a-4cf5-88ec-42a41123b5a8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Hierarchy">
+      <UniqueIdentifier>{43bd6850-3523-44bf-835c-7cdf0000c9aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shaders\Compiled\Null.Px.h">
@@ -531,6 +534,24 @@
     <ClInclude Include="ShaderObject_Mixer.h">
       <Filter>src\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderObject_World.h">
+      <Filter>src\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shaders\Compiled\World.Cx.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="HierarchyTableCompareStrategyEnumName.h">
+      <Filter>src\Hierarchy</Filter>
+    </ClInclude>
+    <ClInclude Include="HierarchyTableMan.h">
+      <Filter>src\Hierarchy</Filter>
+    </ClInclude>
+    <ClInclude Include="HierarchyTableProto.h">
+      <Filter>src\Hierarchy</Filter>
+    </ClInclude>
+    <ClInclude Include="HierarchyTable.h">
+      <Filter>src\Hierarchy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -914,6 +935,21 @@
     <ClCompile Include="ShaderObject_Mixer.cpp">
       <Filter>src\Shader</Filter>
     </ClCompile>
+    <ClCompile Include="ShaderObject_World.cpp">
+      <Filter>src\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="HierarchyTableCompareStrategyEnumName.cpp">
+      <Filter>src\Hierarchy</Filter>
+    </ClCompile>
+    <ClCompile Include="HierarchyTableMan.cpp">
+      <Filter>src\Hierarchy</Filter>
+    </ClCompile>
+    <ClCompile Include="HierarchyTableProto.cpp">
+      <Filter>src\Hierarchy</Filter>
+    </ClCompile>
+    <ClCompile Include="HierarchyTable.cpp">
+      <Filter>src\Hierarchy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Game_Diagram.cd">
@@ -994,6 +1030,9 @@
       <Filter>Shaders\Original</Filter>
     </FxCompile>
     <FxCompile Include="..\shaders\original\Mixer.Cx.hlsl">
+      <Filter>Shaders\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="..\shaders\original\World.Cx.hlsl">
       <Filter>Shaders\Original</Filter>
     </FxCompile>
   </ItemGroup>
