@@ -156,6 +156,30 @@ namespace Azul
 				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(ShaderObject::LightTexture));
 				break;
 
+			case ShaderObject::Name::BasicCompute:
+				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(ShaderObject::BasicCompute));
+				break;
+
+			case ShaderObject::Name::SkinFlatTexture:
+				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(ShaderObject::SkinFlatTexture));
+				break;
+
+			case ShaderObject::Name::SkinLightTexture:
+				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(ShaderObject::SkinLightTexture));
+				break;
+
+			case ShaderObject::Name::MixerCompute:
+				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(ShaderObject::MixerCompute));
+				break;
+
+			case ShaderObject::Name::ConstColor:
+				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(ShaderObject::ConstColor));
+				break;
+
+			case ShaderObject::Name::Sprite:
+				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(ShaderObject::Sprite));
+				break;
+
 			case ShaderObject::Name::Uninitialized:
 				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(ShaderObject::Uninitialized));
 				break;

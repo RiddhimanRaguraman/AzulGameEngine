@@ -100,6 +100,55 @@ namespace Azul
 		ShaderObjectNodeMan::posInstance = nullptr;
 	}
 
+	ShaderObject *ShaderObjectNodeMan::Add(ShaderObject::Name name)
+	{
+		ShaderObject *pShader = nullptr;
+		switch (name)
+		{
+			case ShaderObject::Name::NullShader:
+				pShader = new ShaderObject_Null(ShaderObject::Name::NullShader);
+				break;
+			case ShaderObject::Name::ColorByVertex:
+				pShader = new ShaderObject_ColorByVertex(ShaderObject::Name::ColorByVertex);
+				break;
+			case ShaderObject::Name::FlatTexture:
+				pShader = new ShaderObject_FlatTexture(ShaderObject::Name::FlatTexture);
+				break;
+			case ShaderObject::Name::LightTexture:
+				pShader = new ShaderObject_LightTexture(ShaderObject::Name::LightTexture);
+				break;
+			case ShaderObject::Name::ConstColor:
+				pShader = new ShaderObject_ConstColor(ShaderObject::Name::ConstColor);
+				break;
+			case ShaderObject::Name::SkinFlatTexture:
+				pShader = new ShaderObject_SkinFlatTexture(ShaderObject::Name::SkinFlatTexture);
+				break;
+			case ShaderObject::Name::SkinLightTexture:
+				pShader = new ShaderObject_SkinLightTexture(ShaderObject::Name::SkinLightTexture);
+				break;
+			case ShaderObject::Name::BasicCompute:
+				pShader = new ShaderObject_BasicCompute(ShaderObject::Name::BasicCompute);
+				break;
+			case ShaderObject::Name::MixerCompute:
+				pShader = new ShaderObject_Mixer(ShaderObject::Name::MixerCompute);
+				break;
+			case ShaderObject::Name::Sprite:
+				pShader = new ShaderObject_Sprite(ShaderObject::Name::Sprite);
+				break;
+			case ShaderObject::Name::Uninitialized:
+				assert(false);
+				break;
+
+			default:
+				assert(false);
+				break;
+		}
+
+		assert(pShader);
+		ShaderObjectNodeMan::Add(pShader);
+		return pShader;
+	}
+
 	ShaderObjectNode *ShaderObjectNodeMan::Add(ShaderObject *pShader)
 	{
 		ShaderObjectNodeMan *pMan = ShaderObjectNodeMan::privGetInstance();

@@ -30,6 +30,7 @@ namespace Azul
 		static void Create(int reserveNum = 0, int reserveGrow = 1);
 		static void Destroy();
 
+		static ShaderObject *Add(ShaderObject::Name name);
 		static ShaderObjectNode *Add(ShaderObject *pShaderObject);
 		static ShaderObject *Find(ShaderObject::Name name);
 

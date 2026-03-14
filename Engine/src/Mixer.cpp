@@ -103,7 +103,7 @@ namespace Azul
 		cbvMixer.BindCompute(ConstantCSBufferSlot::csMixer);
 
 		// Dispatch
-		StateDirectXMan::GetContext()->Dispatch((unsigned int)(numBones / 8), 1, 1);
+		StateDirectXMan::GetContext()->Dispatch((numBones ), 1, 1);
 
 
 		// Block Waiting for stages to complete

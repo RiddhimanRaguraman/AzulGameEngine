@@ -115,7 +115,7 @@ namespace Azul
 
 
 		pGraphicsSkin = new GraphicsObject_SkinLightTexture(meshName, // get from input later 
-															ShaderObject::Name::SkinFlatTexture,
+															ShaderObject::Name::SkinLightTexture,
 															texName, LightColor, LightPos);
 
 		pGameSkin = new GameObjectAnimSkin(pGraphicsSkin, this, pJointTable);

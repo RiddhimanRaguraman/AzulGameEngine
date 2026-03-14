@@ -8,6 +8,7 @@
 #include "DLinkMan.h"
 #include "MeshNodeCompareStrategyCharName.h"
 #include "MeshNodeCompareStrategyEnumName.h"
+#include "MeshProto.h"
 
 namespace Azul
 {
@@ -108,13 +109,33 @@ namespace Azul
 		MeshNodeMan::posInstance = nullptr;
 	}
 
-	MeshNode *MeshNodeMan::Add(Mesh::Name name, Mesh *pMesh)
+	MeshNode *MeshNodeMan::Add(const char *pFile, Mesh::Name name)
 	{
-		MeshNodeMan *pMan = MeshNodeMan::privGetInstance();
+		assert(pFile);
 
+		MeshNodeMan *pMan = MeshNodeMan::privGetInstance();
+		assert(pMan);
+
+		Mesh *pMesh = new MeshProto(pFile);
 		assert(pMesh);
 
-		MeshNode *pNode = (MeshNode *) pMan->baseAddToFront();
+		MeshNode *pNode = (MeshNode *)pMan->baseAddToFront();
+		assert(pNode != nullptr);
+
+		// Initialize the date
+		pNode->Set(name, pMesh);
+
+		return pNode;
+	}
+
+	MeshNode *MeshNodeMan::Add(Mesh::Name name, Mesh *pMesh)
+	{
+		assert(pMesh);
+
+		MeshNodeMan *pMan = MeshNodeMan::privGetInstance();
+		assert(pMan);
+
+		MeshNode *pNode = (MeshNode *)pMan->baseAddToFront();
 		assert(pNode != nullptr);
 
 		// Initialize the date

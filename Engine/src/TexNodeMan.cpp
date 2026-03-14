@@ -98,6 +98,25 @@ namespace Azul
 		TexNodeMan::posInstance = nullptr;
 	}
 
+	TexNode *TexNodeMan::Add(const char *pFile, TextureObject::Name name)
+	{
+		assert(pFile);
+
+		TexNodeMan *pMan = TexNodeMan::privGetInstance();
+		assert(pMan);
+
+		TextureObject *pTextureObject = new TextureObject(pFile);
+		assert(pTextureObject);
+
+		TexNode *pNode = (TexNode *)pMan->baseAddToFront();
+		assert(pNode != nullptr);
+
+		// Initialize the date
+		pNode->Set(name, pTextureObject);
+
+		return pNode;
+	}
+
 	TexNode *TexNodeMan::Add(TextureObject::Name name, TextureObject *pTextureObject)
 	{
 		TexNodeMan *pMan = TexNodeMan::privGetInstance();

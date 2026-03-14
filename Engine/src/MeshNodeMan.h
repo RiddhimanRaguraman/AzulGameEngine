@@ -21,7 +21,9 @@ namespace Azul
 		static void Create(int reserveNum = 0, int reserveGrow = 1);
 		static void Destroy();
 
+		static MeshNode *Add(const char *pFile, Mesh::Name name);
 		static MeshNode *Add(Mesh::Name name, Mesh *pMesh);
+		
 		static Mesh *Find(Mesh::Name name);
 		static Mesh *Find(const char *pModelName);
 
