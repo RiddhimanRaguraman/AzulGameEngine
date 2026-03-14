@@ -30,7 +30,7 @@ inline constexpr AnimClip_proto::Impl_::Impl_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
         numkeyframes_{0u},
-        numbones_{0u} {}
+        numnodes_{0u} {}
 
 template <typename>
 PROTOBUF_CONSTEXPR AnimClip_proto::AnimClip_proto(::_pbi::ConstantInitialized)
@@ -100,9 +100,9 @@ AnimClip_proto::AnimClip_proto(
                offsetof(Impl_, numkeyframes_),
            reinterpret_cast<const char *>(&from._impl_) +
                offsetof(Impl_, numkeyframes_),
-           offsetof(Impl_, numbones_) -
+           offsetof(Impl_, numnodes_) -
                offsetof(Impl_, numkeyframes_) +
-               sizeof(Impl_::numbones_));
+               sizeof(Impl_::numnodes_));
 
   // @@protoc_insertion_point(copy_constructor:AnimClip_proto)
 }
@@ -118,9 +118,9 @@ inline void AnimClip_proto::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   ::memset(reinterpret_cast<char *>(&_impl_) +
                offsetof(Impl_, numkeyframes_),
            0,
-           offsetof(Impl_, numbones_) -
+           offsetof(Impl_, numnodes_) -
                offsetof(Impl_, numkeyframes_) +
-               sizeof(Impl_::numbones_));
+               sizeof(Impl_::numnodes_));
 }
 AnimClip_proto::~AnimClip_proto() {
   // @@protoc_insertion_point(destructor:AnimClip_proto)
@@ -214,9 +214,9 @@ AnimClip_proto::_table_ = {
     // optional uint32 numKeyFrames = 2;
     {::_pbi::TcParser::FastV32S1,
      {16, 1, 0, PROTOBUF_FIELD_OFFSET(AnimClip_proto, _impl_.numkeyframes_)}},
-    // optional uint32 numBones = 3;
+    // optional uint32 numNodes = 3;
     {::_pbi::TcParser::FastV32S1,
-     {24, 2, 0, PROTOBUF_FIELD_OFFSET(AnimClip_proto, _impl_.numbones_)}},
+     {24, 2, 0, PROTOBUF_FIELD_OFFSET(AnimClip_proto, _impl_.numnodes_)}},
   }}, {{
     65535, 65535
   }}, {{
@@ -224,8 +224,8 @@ AnimClip_proto::_table_ = {
     {PROTOBUF_FIELD_OFFSET(AnimClip_proto, _impl_.pversion_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kBytes | ::_fl::kRepAString)},
     // optional uint32 numKeyFrames = 2;
     {PROTOBUF_FIELD_OFFSET(AnimClip_proto, _impl_.numkeyframes_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
-    // optional uint32 numBones = 3;
-    {PROTOBUF_FIELD_OFFSET(AnimClip_proto, _impl_.numbones_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
+    // optional uint32 numNodes = 3;
+    {PROTOBUF_FIELD_OFFSET(AnimClip_proto, _impl_.numnodes_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
     // repeated .AnimFrameBucket_proto poFrameBucketEntry = 4;
     {PROTOBUF_FIELD_OFFSET(AnimClip_proto, _impl_.poframebucketentry_), -1, 0, (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
@@ -249,8 +249,8 @@ PROTOBUF_NOINLINE void AnimClip_proto::Clear() {
   }
   if ((cached_has_bits & 0x00000006U) != 0) {
     ::memset(&_impl_.numkeyframes_, 0, static_cast<::size_t>(
-        reinterpret_cast<char*>(&_impl_.numbones_) -
-        reinterpret_cast<char*>(&_impl_.numkeyframes_)) + sizeof(_impl_.numbones_));
+        reinterpret_cast<char*>(&_impl_.numnodes_) -
+        reinterpret_cast<char*>(&_impl_.numkeyframes_)) + sizeof(_impl_.numnodes_));
   }
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::std::string>();
@@ -285,11 +285,11 @@ PROTOBUF_NOINLINE void AnimClip_proto::Clear() {
         2, this_._internal_numkeyframes(), target);
   }
 
-  // optional uint32 numBones = 3;
+  // optional uint32 numNodes = 3;
   if ((cached_has_bits & 0x00000004U) != 0) {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
-        3, this_._internal_numbones(), target);
+        3, this_._internal_numnodes(), target);
   }
 
   // repeated .AnimFrameBucket_proto poFrameBucketEntry = 4;
@@ -348,10 +348,10 @@ PROTOBUF_NOINLINE void AnimClip_proto::Clear() {
       total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
           this_._internal_numkeyframes());
     }
-    // optional uint32 numBones = 3;
+    // optional uint32 numNodes = 3;
     if ((cached_has_bits & 0x00000004U) != 0) {
       total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
-          this_._internal_numbones());
+          this_._internal_numnodes());
     }
   }
   if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
@@ -380,7 +380,7 @@ void AnimClip_proto::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::
       _this->_impl_.numkeyframes_ = from._impl_.numkeyframes_;
     }
     if ((cached_has_bits & 0x00000004U) != 0) {
-      _this->_impl_.numbones_ = from._impl_.numbones_;
+      _this->_impl_.numnodes_ = from._impl_.numnodes_;
     }
   }
   _this->_impl_._has_bits_[0] |= cached_has_bits;
@@ -404,8 +404,8 @@ void AnimClip_proto::InternalSwap(AnimClip_proto* PROTOBUF_RESTRICT PROTOBUF_NON
   _impl_.poframebucketentry_.InternalSwap(&other->_impl_.poframebucketentry_);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.pversion_, &other->_impl_.pversion_, arena);
   ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(AnimClip_proto, _impl_.numbones_)
-      + sizeof(AnimClip_proto::_impl_.numbones_)
+      PROTOBUF_FIELD_OFFSET(AnimClip_proto, _impl_.numnodes_)
+      + sizeof(AnimClip_proto::_impl_.numnodes_)
       - PROTOBUF_FIELD_OFFSET(AnimClip_proto, _impl_.numkeyframes_)>(
           reinterpret_cast<char*>(&_impl_.numkeyframes_),
           reinterpret_cast<char*>(&other->_impl_.numkeyframes_));

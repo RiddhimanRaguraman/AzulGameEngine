@@ -18,7 +18,7 @@ namespace Azul
 		PROTOBUF_ENGINE_LIBRARY_API JointData& operator = (const JointData&);
 		PROTOBUF_ENGINE_LIBRARY_API ~JointData();
 
-		PROTOBUF_ENGINE_LIBRARY_API JointData(unsigned int _numBones, unsigned int* pData);
+		PROTOBUF_ENGINE_LIBRARY_API JointData(unsigned int _numJoints, unsigned int* pData);
 
 		// Serialization 
 		PROTOBUF_ENGINE_LIBRARY_API void Serialize(JointData_proto& out) const;
@@ -27,7 +27,7 @@ namespace Azul
 		PROTOBUF_ENGINE_LIBRARY_API void Print(const char* const pName) const;
 
 	public:
-		unsigned int  numBones;
+		unsigned int  numJoints;
 		unsigned int* poJointEntry;
 
 	};

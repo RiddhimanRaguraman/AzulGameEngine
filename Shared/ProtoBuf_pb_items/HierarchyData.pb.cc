@@ -30,7 +30,7 @@ inline constexpr HierarchyData_proto::Impl_::Impl_(
         pversion_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
-        numnodes_{0u},
+        numjoints_{0u},
         maxdepth_{0u} {}
 
 template <typename>
@@ -95,11 +95,11 @@ HierarchyData_proto::HierarchyData_proto(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
   ::memcpy(reinterpret_cast<char *>(&_impl_) +
-               offsetof(Impl_, numnodes_),
+               offsetof(Impl_, numjoints_),
            reinterpret_cast<const char *>(&from._impl_) +
-               offsetof(Impl_, numnodes_),
+               offsetof(Impl_, numjoints_),
            offsetof(Impl_, maxdepth_) -
-               offsetof(Impl_, numnodes_) +
+               offsetof(Impl_, numjoints_) +
                sizeof(Impl_::maxdepth_));
 
   // @@protoc_insertion_point(copy_constructor:HierarchyData_proto)
@@ -115,10 +115,10 @@ PROTOBUF_NDEBUG_INLINE HierarchyData_proto::Impl_::Impl_(
 inline void HierarchyData_proto::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
   ::memset(reinterpret_cast<char *>(&_impl_) +
-               offsetof(Impl_, numnodes_),
+               offsetof(Impl_, numjoints_),
            0,
            offsetof(Impl_, maxdepth_) -
-               offsetof(Impl_, numnodes_) +
+               offsetof(Impl_, numjoints_) +
                sizeof(Impl_::maxdepth_));
 }
 HierarchyData_proto::~HierarchyData_proto() {
@@ -210,9 +210,9 @@ HierarchyData_proto::_table_ = {
     // optional bytes pVersion = 1;
     {::_pbi::TcParser::FastBS1,
      {10, 0, 0, PROTOBUF_FIELD_OFFSET(HierarchyData_proto, _impl_.pversion_)}},
-    // optional uint32 numNodes = 2;
+    // optional uint32 numJoints = 2;
     {::_pbi::TcParser::FastV32S1,
-     {16, 1, 0, PROTOBUF_FIELD_OFFSET(HierarchyData_proto, _impl_.numnodes_)}},
+     {16, 1, 0, PROTOBUF_FIELD_OFFSET(HierarchyData_proto, _impl_.numjoints_)}},
     // optional uint32 maxDepth = 3;
     {::_pbi::TcParser::FastV32S1,
      {24, 2, 0, PROTOBUF_FIELD_OFFSET(HierarchyData_proto, _impl_.maxdepth_)}},
@@ -221,8 +221,8 @@ HierarchyData_proto::_table_ = {
   }}, {{
     // optional bytes pVersion = 1;
     {PROTOBUF_FIELD_OFFSET(HierarchyData_proto, _impl_.pversion_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kBytes | ::_fl::kRepAString)},
-    // optional uint32 numNodes = 2;
-    {PROTOBUF_FIELD_OFFSET(HierarchyData_proto, _impl_.numnodes_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
+    // optional uint32 numJoints = 2;
+    {PROTOBUF_FIELD_OFFSET(HierarchyData_proto, _impl_.numjoints_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
     // optional uint32 maxDepth = 3;
     {PROTOBUF_FIELD_OFFSET(HierarchyData_proto, _impl_.maxdepth_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
     // repeated uint32 poData = 4;
@@ -245,9 +245,9 @@ PROTOBUF_NOINLINE void HierarchyData_proto::Clear() {
     _impl_.pversion_.ClearNonDefaultToEmpty();
   }
   if ((cached_has_bits & 0x00000006U) != 0) {
-    ::memset(&_impl_.numnodes_, 0, static_cast<::size_t>(
+    ::memset(&_impl_.numjoints_, 0, static_cast<::size_t>(
         reinterpret_cast<char*>(&_impl_.maxdepth_) -
-        reinterpret_cast<char*>(&_impl_.numnodes_)) + sizeof(_impl_.maxdepth_));
+        reinterpret_cast<char*>(&_impl_.numjoints_)) + sizeof(_impl_.maxdepth_));
   }
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::std::string>();
@@ -275,11 +275,11 @@ PROTOBUF_NOINLINE void HierarchyData_proto::Clear() {
     target = stream->WriteBytesMaybeAliased(1, _s, target);
   }
 
-  // optional uint32 numNodes = 2;
+  // optional uint32 numJoints = 2;
   if ((cached_has_bits & 0x00000002U) != 0) {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
-        2, this_._internal_numnodes(), target);
+        2, this_._internal_numjoints(), target);
   }
 
   // optional uint32 maxDepth = 3;
@@ -338,10 +338,10 @@ PROTOBUF_NOINLINE void HierarchyData_proto::Clear() {
       total_size += 1 + ::google::protobuf::internal::WireFormatLite::BytesSize(
                                       this_._internal_pversion());
     }
-    // optional uint32 numNodes = 2;
+    // optional uint32 numJoints = 2;
     if ((cached_has_bits & 0x00000002U) != 0) {
       total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
-          this_._internal_numnodes());
+          this_._internal_numjoints());
     }
     // optional uint32 maxDepth = 3;
     if ((cached_has_bits & 0x00000004U) != 0) {
@@ -371,7 +371,7 @@ void HierarchyData_proto::MergeImpl(::google::protobuf::MessageLite& to_msg, con
       _this->_internal_set_pversion(from._internal_pversion());
     }
     if ((cached_has_bits & 0x00000002U) != 0) {
-      _this->_impl_.numnodes_ = from._impl_.numnodes_;
+      _this->_impl_.numjoints_ = from._impl_.numjoints_;
     }
     if ((cached_has_bits & 0x00000004U) != 0) {
       _this->_impl_.maxdepth_ = from._impl_.maxdepth_;
@@ -400,9 +400,9 @@ void HierarchyData_proto::InternalSwap(HierarchyData_proto* PROTOBUF_RESTRICT PR
   ::google::protobuf::internal::memswap<
       PROTOBUF_FIELD_OFFSET(HierarchyData_proto, _impl_.maxdepth_)
       + sizeof(HierarchyData_proto::_impl_.maxdepth_)
-      - PROTOBUF_FIELD_OFFSET(HierarchyData_proto, _impl_.numnodes_)>(
-          reinterpret_cast<char*>(&_impl_.numnodes_),
-          reinterpret_cast<char*>(&other->_impl_.numnodes_));
+      - PROTOBUF_FIELD_OFFSET(HierarchyData_proto, _impl_.numjoints_)>(
+          reinterpret_cast<char*>(&_impl_.numjoints_),
+          reinterpret_cast<char*>(&other->_impl_.numjoints_));
 }
 
 // @@protoc_insertion_point(namespace_scope)

@@ -17,7 +17,7 @@ namespace Azul
 		PROTOBUF_ENGINE_LIBRARY_API AnimClip& operator = (const AnimClip&) = delete;
 		PROTOBUF_ENGINE_LIBRARY_API ~AnimClip();
 
-		PROTOBUF_ENGINE_LIBRARY_API AnimClip(unsigned int _numKeyFrames, unsigned int _numBones);
+		PROTOBUF_ENGINE_LIBRARY_API AnimClip(unsigned int _numKeyFrames, unsigned int _numNodes);
 
 		// Serialization 
 		PROTOBUF_ENGINE_LIBRARY_API void Serialize(AnimClip_proto& out) const;
@@ -28,7 +28,7 @@ namespace Azul
 	public:
 		char pVersion[protoVersion::VERSION_NUM_BYTES];
 		unsigned int numKeyFrames;
-		unsigned int numBones;
+		unsigned int numNodes;
         AnimFrameBucket* poFrameBucketEntry;
     };
 }

@@ -10,7 +10,7 @@ namespace Azul
 	JointTable::JointTable()
 		: DLink(),
 		mName(JointTable::Name::Not_Initialized),
-		numBones(0),
+		numJoints(0),
 		poJointTable(nullptr)
 	{
 
@@ -21,9 +21,9 @@ namespace Azul
 		delete[] this->poJointTable;
 	}
 
-	size_t JointTable::GetNumBones()
+	size_t JointTable::GetNumJoints()
 	{
-		return this->numBones;
+		return this->numJoints;
 	}
 
 	void JointTable::SetJointTableName(Name JointTableName)
@@ -34,13 +34,13 @@ namespace Azul
 	void JointTable::Set(Name JointTableName, size_t _numBones, unsigned int *_pJointTable)
 	{
 		this->mName = JointTableName;
-		this->numBones = _numBones;
+		this->numJoints = _numBones;
 
 		delete[] this->poJointTable;
 
 		assert(_pJointTable);
-		this->poJointTable = new unsigned int[this->numBones]();
-		size_t size = this->numBones * sizeof(unsigned int);
+		this->poJointTable = new unsigned int[this->numJoints]();
+		size_t size = this->numJoints * sizeof(unsigned int);
 		memcpy(this->poJointTable, _pJointTable, size);
 	}
 
@@ -55,7 +55,7 @@ namespace Azul
 	void JointTable::Wash()
 	{
 		this->mName = JointTable::Name::Not_Initialized;
-		this->numBones = 0;
+		this->numJoints = 0;
 		this->poJointTable = nullptr;
 	}
 

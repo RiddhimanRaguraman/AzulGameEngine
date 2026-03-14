@@ -40,12 +40,12 @@ namespace Azul
 		virtual ~Clip();
 
 		AnimTime GetTotalTime();
-		size_t GetNumBones();
+		size_t GetNumNodes();
 		Skel::Name GetSkelName();
 		void SetClipName(Name clipName);
 
 		void Set(Clip::Name clipName,
-				 unsigned int numBones,
+				 unsigned int numNodes,
 				 unsigned int numKeyFrames,
 				 AnimFrameBucket *pFrameBucket,
 				 Skel::Name skelName);
@@ -60,7 +60,7 @@ namespace Azul
 
 	public:
 		Name         mName;
-		size_t       numBones;
+		size_t       numNodes;
 		size_t       numFrames;
 		Skel::Name   skelName;
 		AnimTime     TotalTime;

@@ -27,7 +27,7 @@ inline constexpr JointData_proto::Impl_::Impl_(
       : _cached_size_{0},
         pojointentry_{},
         _pojointentry_cached_byte_size_{0},
-        numbones_{0u} {}
+        numjoints_{0u} {}
 
 template <typename>
 PROTOBUF_CONSTEXPR JointData_proto::JointData_proto(::_pbi::ConstantInitialized)
@@ -89,7 +89,7 @@ JointData_proto::JointData_proto(
   _internal_metadata_.MergeFrom<::std::string>(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
-  _impl_.numbones_ = from._impl_.numbones_;
+  _impl_.numjoints_ = from._impl_.numjoints_;
 
   // @@protoc_insertion_point(copy_constructor:JointData_proto)
 }
@@ -102,7 +102,7 @@ PROTOBUF_NDEBUG_INLINE JointData_proto::Impl_::Impl_(
 
 inline void JointData_proto::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
-  _impl_.numbones_ = {};
+  _impl_.numjoints_ = {};
 }
 JointData_proto::~JointData_proto() {
   // @@protoc_insertion_point(destructor:JointData_proto)
@@ -189,14 +189,14 @@ JointData_proto::_table_ = {
     // repeated uint32 poJointEntry = 2;
     {::_pbi::TcParser::FastV32P1,
      {18, 63, 0, PROTOBUF_FIELD_OFFSET(JointData_proto, _impl_.pojointentry_)}},
-    // optional uint32 numBones = 1;
+    // optional uint32 numJoints = 1;
     {::_pbi::TcParser::FastV32S1,
-     {8, 0, 0, PROTOBUF_FIELD_OFFSET(JointData_proto, _impl_.numbones_)}},
+     {8, 0, 0, PROTOBUF_FIELD_OFFSET(JointData_proto, _impl_.numjoints_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // optional uint32 numBones = 1;
-    {PROTOBUF_FIELD_OFFSET(JointData_proto, _impl_.numbones_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
+    // optional uint32 numJoints = 1;
+    {PROTOBUF_FIELD_OFFSET(JointData_proto, _impl_.numjoints_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
     // repeated uint32 poJointEntry = 2;
     {PROTOBUF_FIELD_OFFSET(JointData_proto, _impl_.pojointentry_), -1, 0, (0 | ::_fl::kFcRepeated | ::_fl::kPackedUInt32)},
   }},
@@ -212,7 +212,7 @@ PROTOBUF_NOINLINE void JointData_proto::Clear() {
   (void) cached_has_bits;
 
   _impl_.pojointentry_.Clear();
-  _impl_.numbones_ = 0u;
+  _impl_.numjoints_ = 0u;
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::std::string>();
 }
@@ -233,11 +233,11 @@ PROTOBUF_NOINLINE void JointData_proto::Clear() {
   (void)cached_has_bits;
 
   cached_has_bits = this_._impl_._has_bits_[0];
-  // optional uint32 numBones = 1;
+  // optional uint32 numJoints = 1;
   if ((cached_has_bits & 0x00000001U) != 0) {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
-        1, this_._internal_numbones(), target);
+        1, this_._internal_numjoints(), target);
   }
 
   // repeated uint32 poJointEntry = 2;
@@ -283,11 +283,11 @@ PROTOBUF_NOINLINE void JointData_proto::Clear() {
     }
   }
    {
-    // optional uint32 numBones = 1;
+    // optional uint32 numJoints = 1;
     cached_has_bits = this_._impl_._has_bits_[0];
     if ((cached_has_bits & 0x00000001U) != 0) {
       total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
-          this_._internal_numbones());
+          this_._internal_numjoints());
     }
   }
   if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
@@ -308,7 +308,7 @@ void JointData_proto::MergeImpl(::google::protobuf::MessageLite& to_msg, const :
   _this->_internal_mutable_pojointentry()->MergeFrom(from._internal_pojointentry());
   cached_has_bits = from._impl_._has_bits_[0];
   if ((cached_has_bits & 0x00000001U) != 0) {
-    _this->_impl_.numbones_ = from._impl_.numbones_;
+    _this->_impl_.numjoints_ = from._impl_.numjoints_;
   }
   _this->_impl_._has_bits_[0] |= cached_has_bits;
   _this->_internal_metadata_.MergeFrom<::std::string>(from._internal_metadata_);
@@ -327,7 +327,7 @@ void JointData_proto::InternalSwap(JointData_proto* PROTOBUF_RESTRICT PROTOBUF_N
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
   _impl_.pojointentry_.InternalSwap(&other->_impl_.pojointentry_);
-  swap(_impl_.numbones_, other->_impl_.numbones_);
+  swap(_impl_.numjoints_, other->_impl_.numjoints_);
 }
 
 // @@protoc_insertion_point(namespace_scope)

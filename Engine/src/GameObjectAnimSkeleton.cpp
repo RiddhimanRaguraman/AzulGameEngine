@@ -46,7 +46,7 @@ namespace Azul
 	{
 		AZUL_UNUSED_VAR(currentTime);
 
-		Trace::out("index: %d \n", index);
+		//Trace::out("index: %d \n", index);
 
 		Trans T;
 		Scale S;

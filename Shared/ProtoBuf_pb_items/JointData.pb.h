@@ -193,7 +193,7 @@ class JointData_proto final : public ::google::protobuf::MessageLite
   // accessors -------------------------------------------------------
   enum : int {
     kPoJointEntryFieldNumber = 2,
-    kNumBonesFieldNumber = 1,
+    kNumJointsFieldNumber = 1,
   };
   // repeated uint32 poJointEntry = 2;
   int pojointentry_size() const;
@@ -213,15 +213,15 @@ class JointData_proto final : public ::google::protobuf::MessageLite
   ::google::protobuf::RepeatedField<::uint32_t>* PROTOBUF_NONNULL _internal_mutable_pojointentry();
 
   public:
-  // optional uint32 numBones = 1;
-  bool has_numbones() const;
-  void clear_numbones() ;
-  ::uint32_t numbones() const;
-  void set_numbones(::uint32_t value);
+  // optional uint32 numJoints = 1;
+  bool has_numjoints() const;
+  void clear_numjoints() ;
+  ::uint32_t numjoints() const;
+  void set_numjoints(::uint32_t value);
 
   private:
-  ::uint32_t _internal_numbones() const;
-  void _internal_set_numbones(::uint32_t value);
+  ::uint32_t _internal_numjoints() const;
+  void _internal_set_numjoints(::uint32_t value);
 
   public:
   // @@protoc_insertion_point(class_scope:JointData_proto)
@@ -252,7 +252,7 @@ class JointData_proto final : public ::google::protobuf::MessageLite
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::google::protobuf::RepeatedField<::uint32_t> pojointentry_;
     ::google::protobuf::internal::CachedSize _pojointentry_cached_byte_size_;
-    ::uint32_t numbones_;
+    ::uint32_t numjoints_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -277,32 +277,32 @@ extern const ::google::protobuf::internal::ClassDataLite<16> JointData_proto_cla
 
 // JointData_proto
 
-// optional uint32 numBones = 1;
-inline bool JointData_proto::has_numbones() const {
+// optional uint32 numJoints = 1;
+inline bool JointData_proto::has_numjoints() const {
   bool value = (_impl_._has_bits_[0] & 0x00000001U) != 0;
   return value;
 }
-inline void JointData_proto::clear_numbones() {
+inline void JointData_proto::clear_numjoints() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.numbones_ = 0u;
+  _impl_.numjoints_ = 0u;
   _impl_._has_bits_[0] &= ~0x00000001U;
 }
-inline ::uint32_t JointData_proto::numbones() const {
-  // @@protoc_insertion_point(field_get:JointData_proto.numBones)
-  return _internal_numbones();
+inline ::uint32_t JointData_proto::numjoints() const {
+  // @@protoc_insertion_point(field_get:JointData_proto.numJoints)
+  return _internal_numjoints();
 }
-inline void JointData_proto::set_numbones(::uint32_t value) {
-  _internal_set_numbones(value);
+inline void JointData_proto::set_numjoints(::uint32_t value) {
+  _internal_set_numjoints(value);
   _impl_._has_bits_[0] |= 0x00000001U;
-  // @@protoc_insertion_point(field_set:JointData_proto.numBones)
+  // @@protoc_insertion_point(field_set:JointData_proto.numJoints)
 }
-inline ::uint32_t JointData_proto::_internal_numbones() const {
+inline ::uint32_t JointData_proto::_internal_numjoints() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.numbones_;
+  return _impl_.numjoints_;
 }
-inline void JointData_proto::_internal_set_numbones(::uint32_t value) {
+inline void JointData_proto::_internal_set_numjoints(::uint32_t value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.numbones_ = value;
+  _impl_.numjoints_ = value;
 }
 
 // repeated uint32 poJointEntry = 2;

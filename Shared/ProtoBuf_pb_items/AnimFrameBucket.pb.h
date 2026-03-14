@@ -195,7 +195,7 @@ class AnimFrameBucket_proto final : public ::google::protobuf::MessageLite
   enum : int {
     kPoBoneFieldNumber = 5,
     kKeyFrameFieldNumber = 1,
-    kNumBonesFieldNumber = 2,
+    kNumNodesFieldNumber = 2,
     kKeyTimeFieldNumber = 3,
     kKeyTimeIndexFieldNumber = 4,
   };
@@ -227,15 +227,15 @@ class AnimFrameBucket_proto final : public ::google::protobuf::MessageLite
   void _internal_set_keyframe(::uint32_t value);
 
   public:
-  // optional uint32 numBones = 2;
-  bool has_numbones() const;
-  void clear_numbones() ;
-  ::uint32_t numbones() const;
-  void set_numbones(::uint32_t value);
+  // optional uint32 numNodes = 2;
+  bool has_numnodes() const;
+  void clear_numnodes() ;
+  ::uint32_t numnodes() const;
+  void set_numnodes(::uint32_t value);
 
   private:
-  ::uint32_t _internal_numbones() const;
-  void _internal_set_numbones(::uint32_t value);
+  ::uint32_t _internal_numnodes() const;
+  void _internal_set_numnodes(::uint32_t value);
 
   public:
   // optional float keyTime = 3;
@@ -288,7 +288,7 @@ class AnimFrameBucket_proto final : public ::google::protobuf::MessageLite
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::google::protobuf::RepeatedPtrField< ::AnimBone_proto > pobone_;
     ::uint32_t keyframe_;
-    ::uint32_t numbones_;
+    ::uint32_t numnodes_;
     float keytime_;
     ::int32_t keytimeindex_;
     PROTOBUF_TSAN_DECLARE_MEMBER
@@ -343,32 +343,32 @@ inline void AnimFrameBucket_proto::_internal_set_keyframe(::uint32_t value) {
   _impl_.keyframe_ = value;
 }
 
-// optional uint32 numBones = 2;
-inline bool AnimFrameBucket_proto::has_numbones() const {
+// optional uint32 numNodes = 2;
+inline bool AnimFrameBucket_proto::has_numnodes() const {
   bool value = (_impl_._has_bits_[0] & 0x00000002U) != 0;
   return value;
 }
-inline void AnimFrameBucket_proto::clear_numbones() {
+inline void AnimFrameBucket_proto::clear_numnodes() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.numbones_ = 0u;
+  _impl_.numnodes_ = 0u;
   _impl_._has_bits_[0] &= ~0x00000002U;
 }
-inline ::uint32_t AnimFrameBucket_proto::numbones() const {
-  // @@protoc_insertion_point(field_get:AnimFrameBucket_proto.numBones)
-  return _internal_numbones();
+inline ::uint32_t AnimFrameBucket_proto::numnodes() const {
+  // @@protoc_insertion_point(field_get:AnimFrameBucket_proto.numNodes)
+  return _internal_numnodes();
 }
-inline void AnimFrameBucket_proto::set_numbones(::uint32_t value) {
-  _internal_set_numbones(value);
+inline void AnimFrameBucket_proto::set_numnodes(::uint32_t value) {
+  _internal_set_numnodes(value);
   _impl_._has_bits_[0] |= 0x00000002U;
-  // @@protoc_insertion_point(field_set:AnimFrameBucket_proto.numBones)
+  // @@protoc_insertion_point(field_set:AnimFrameBucket_proto.numNodes)
 }
-inline ::uint32_t AnimFrameBucket_proto::_internal_numbones() const {
+inline ::uint32_t AnimFrameBucket_proto::_internal_numnodes() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.numbones_;
+  return _impl_.numnodes_;
 }
-inline void AnimFrameBucket_proto::_internal_set_numbones(::uint32_t value) {
+inline void AnimFrameBucket_proto::_internal_set_numnodes(::uint32_t value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.numbones_ = value;
+  _impl_.numnodes_ = value;
 }
 
 // optional float keyTime = 3;

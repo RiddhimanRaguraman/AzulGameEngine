@@ -34,7 +34,7 @@ namespace Azul
 		// ---------------------------------------------
 
 		BufferCBV_vs ConstantBuff_Projection;
-		//	BufferCBV_vs ConstantBuff_World;
+		BufferCBV_vs ConstantBuff_World;
 		BufferCBV_vs ConstantBuff_View;
 		
 		BufferCBV_vs ConstantBuff_LightColor;

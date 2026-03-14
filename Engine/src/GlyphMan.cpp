@@ -111,7 +111,7 @@ namespace Azul
         return pNode;
     }
 
-    void GlyphMan::Add(const char *const pMetricsFileName, TextureObject::Name texName)
+    void GlyphMan::Add(TextureObject::Name texName, const char *const pMetricsFileName)
     {
         GlyphProto(pMetricsFileName, texName);
 

@@ -13,7 +13,7 @@ namespace Azul
 
 	HierarchyData::HierarchyData()
 		:pVersion{0}, 
-		numNodes(0),
+		numJoints(0),
 		maxDepth(0),
 		poData(nullptr)
 	{
@@ -21,16 +21,16 @@ namespace Azul
 		assert(strlen(this->pVersion) < protoVersion::VERSION_NUM_BYTES);
 	}
 
-	HierarchyData::HierarchyData(unsigned int _numNodes, unsigned int _maxDepth)
+	HierarchyData::HierarchyData(unsigned int _numJoints, unsigned int _maxDepth)
 		:pVersion{0}, 
-		numNodes(_numNodes),
+		numJoints(_numJoints),
 		maxDepth(_maxDepth),
 		poData(nullptr)
 	{
 		strcpy_s(this->pVersion, protoVersion::VERSION_NUM_BYTES, protoVersion::VERSION_STRING);
 		assert(strlen(this->pVersion) < protoVersion::VERSION_NUM_BYTES);
 
-		this->poData = new unsigned int[numNodes*maxDepth]();
+		this->poData = new unsigned int[numJoints * maxDepth]();
 		assert(this->poData);
 	}
 
@@ -39,16 +39,16 @@ namespace Azul
 		if(this != &r)
 		{
 			// Nuke orginal
-			this->numNodes = 0;
+			this->numJoints = 0;
 			this->maxDepth = 0;
 			delete[] this->poData;
 
 			// copy the new
-			this->numNodes = r.numNodes;
+			this->numJoints = r.numJoints;
 			this->maxDepth = r.maxDepth;
-			this->poData = new unsigned int[numNodes * maxDepth]();
+			this->poData = new unsigned int[numJoints * maxDepth]();
 
-			for(size_t i = 0; i < (numNodes * maxDepth); i++)
+			for(size_t i = 0; i < (numJoints * maxDepth); i++)
 			{
 				this->poData[i] = r.poData[i];
 			}
@@ -64,10 +64,10 @@ namespace Azul
 		std::string sVersion((const char *)this->pVersion, protoVersion::VERSION_NUM_BYTES);
 		out.set_pversion(sVersion);
 
-		out.set_numnodes(this->numNodes);
+		out.set_numjoints(this->numJoints);
 		out.set_maxdepth(this->maxDepth);
 
-		for(unsigned int i = 0; i < (numNodes* maxDepth); i++)
+		for(unsigned int i = 0; i < (numJoints * maxDepth); i++)
 		{
 			// add it to the message(package)
 			out.add_podata(this->poData[i]);
@@ -86,13 +86,13 @@ namespace Azul
 		delete[] this->poData;
 		this->poData = nullptr;
 
-		this->numNodes = in.numnodes();
+		this->numJoints = in.numjoints();
 		this->maxDepth = in.maxdepth();
 
-		this->poData = new unsigned int[(numNodes * maxDepth)]();
+		this->poData = new unsigned int[(numJoints * maxDepth)]();
 		assert(this->poData);
 
-		for(unsigned int i = 0; i < (numNodes * maxDepth); i++)
+		for(unsigned int i = 0; i < (numJoints * maxDepth); i++)
 		{
 			poData[i] = in.podata(i);
 		}
@@ -103,11 +103,11 @@ namespace Azul
 		AZUL_UNUSED_VAR(pName);
 		Trace::out("%s: \n", pName);
 
-		Trace::out("numNodes: %d\n",this->numNodes);
+		Trace::out("numJoints: %d\n",this->numJoints);
 		Trace::out("maxDepth: %d\n",this->maxDepth);
 
 
-		for(size_t i = 0; i < (numNodes ); i++)
+		for(size_t i = 0; i < (numJoints); i++)
 		{
 			Trace::out("%2d: ", i);
 			for(size_t j = 0; j < maxDepth; j++)

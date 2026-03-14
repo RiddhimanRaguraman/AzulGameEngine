@@ -17,22 +17,70 @@
 #include "PCSTreeForwardIterator.h"
 #include "Prefab_Pivot.h"
 #include "SkelMan.h"
+#include "ClipMan.h"
 
 namespace Azul
 {
 
-	Skeleton::Skeleton(Bone* pBone, unsigned int _numBones, Skel::Name skelName, TextureObject::Name texName, Mesh::Name meshName, JointTable* pJointTable)
+	Skeleton::Skeleton(Clip::Name _ClipName)
 		: pFirstBone(nullptr),
-		numBones(_numBones)
+		mNumNodes(0),
+		poBoneResult(nullptr),
+		pSkel(nullptr),
+		pClip(nullptr)
 	{
-		assert(pBone);
-		this->privSetAnimationHierarchy(pBone, skelName, texName, meshName, pJointTable);
-		assert(pFirstBone);
+		assert(_ClipName != Clip::Name::Not_Initialized);
+
+		this->pClip = ClipMan::Find(_ClipName);
+		assert(this->pClip);
+
+		this->mNumNodes = this->pClip->GetNumNodes();
+
+		this->poBoneResult = new Bone[this->mNumNodes]();
+		assert(this->poBoneResult);
+
+		this->pSkel = SkelMan::Find(pClip->GetSkelName());
+		assert(this->pSkel);
 	}
 
 	Skeleton::~Skeleton()
 	{
+		delete[] this->poBoneResult;
+		this->poBoneResult = nullptr;
+	}
 
+	void Skeleton::SetClip(Clip::Name clipName)
+	{
+		assert(clipName != Clip::Name::Not_Initialized);
+		Clip *pNewClip = ClipMan::Find(clipName);
+		assert(pNewClip);
+
+		assert((int)pNewClip->GetNumNodes() == this->mNumNodes);
+
+		this->pClip = pNewClip;
+		this->pSkel = SkelMan::Find(pNewClip->GetSkelName());
+		assert(this->pSkel);
+	}
+
+	void Skeleton::SetAnimationHierarchy(GameObject *pParent)
+	{
+		assert(pParent);
+
+		if (this->pFirstBone == nullptr)
+		{
+			this->privSetAnimationHierarchy(pParent);
+			assert(this->pFirstBone);
+		}
+	}
+
+	Clip *Skeleton::GetClip()
+	{
+		return this->pClip;
+	}
+
+	Bone *Skeleton::GetBoneResult()
+	{
+		return this->poBoneResult;
 	}
 
 	GameObjectControlled* Skeleton::GetFirstBone()
@@ -44,7 +92,6 @@ namespace Azul
 	GameObjectControlled* Skeleton::FindBoneByIndex(int index)
 	{
 		GameObjectControlled* pFound = nullptr;
-
 		GameObjectControlled* pObj = this->GetFirstBone();
 
 		// TODO - add test bed for an interator of a tree with only one node
@@ -76,12 +123,11 @@ namespace Azul
 		return pFound;
 	}
 
-	void Skeleton::privSetAnimationHierarchy(Bone* pBoneResult, Skel::Name skelName, TextureObject::Name texName, Mesh::Name meshName, JointTable* pJointTable)
+	void Skeleton::privSetAnimationHierarchy(GameObject *pParent)
 	{
-		assert(pBoneResult);
-
-		Skel* pSkel = SkelMan::Find(skelName);
-		assert(pSkel);
+		assert(pParent);
+		assert(this->poBoneResult);
+		assert(this->pSkel);;
 
 		// GraphicsObject for a specific instance
 		GraphicsObject* pGraphicsObj;
@@ -90,61 +136,27 @@ namespace Azul
 		Vec3 color(1, 1, 1);
 		Vec3 pos(1, 1, 1);
 
-		//---------------------------------------
-		// ChickenBot
-		//---------------------------------------
-
-		// Add A Dummy pivot object
-		pGraphicsObj = new GraphicsObject_Null(Mesh::Name::NULL_MESH, ShaderObject::Name::NullShader);
-		GameObjectRigidBody* pPivotObj = new GameObjectRigidBody(pGraphicsObj);
-		pPivotObj->SetName("Pivot");
-		pPivotObj->DrawDisable();
-		pPivotObj->SetPrefab(new Prefab_Pivot());
-		this->pPivot = pPivotObj;
-		// Add Bones in Hierarchy
-		GameObjectMan::Add(pPivotObj, GameObjectMan::GetRoot());
-
 		// Animation
-		GameObjectControlled* pGameObj;
-
-		// Skin Mesh
-		GameObjectAnimSkin* pGameSkin;
-		Vec3 LightColor(1.5f, 1.50f, 1.50f);
-		Vec3 LightPos(1.0f, 1.0f, 100.0f);
-		GraphicsObject_SkinLightTexture* pGraphicsSkin;
-
-
-		pGraphicsSkin = new GraphicsObject_SkinLightTexture(meshName, // get from input later 
-															ShaderObject::Name::SkinLightTexture,
-															texName, LightColor, LightPos);
-
-		pGameSkin = new GameObjectAnimSkin(pGraphicsSkin, this, pJointTable);
-
-		// Glue the bone array together - Hack
-		pGraphicsSkin->SetBoneWorld(pGameSkin->poBoneWorld);
-
-		GameObjectMan::Add(pGameSkin, pPivot);
-		pGameSkin->SetName("Mousey");
-
-		
+		GameObjectControlled *pGameObj;
+				
 		// Root animation is treated differently
 		for (int i = 0; i < 1; i++)
 		{
 			pGraphicsObj = new GraphicsObject_Null(Mesh::Name::NULL_MESH,
 				ShaderObject::Name::NullShader);
-			pGameObj = new GameObjectAnimSkeleton(pGraphicsObj, pBoneResult);
+			pGameObj = new GameObjectAnimSkeleton(pGraphicsObj, this->poBoneResult);
 			pGameObj->SetIndex(pSkel->poTableArray[i].index);
 			pGameObj->SetName(pSkel->poTableArray[i].name);
 
-			GameObjectMan::Add(pGameObj, pPivot);
+			GameObjectMan::Add(pGameObj, pParent);
 			this->pFirstBone = pGameObj;
 		}
 
-		for (int i = 1; i < this->numBones; i++)
+		for (int i = 1; i < this->mNumNodes; i++)
 		{
 			pGraphicsObj = new GraphicsObject_Null(Mesh::Name::NULL_MESH,
 				ShaderObject::Name::NullShader);
-			pGameObj = new GameObjectAnimSkeleton(pGraphicsObj, pBoneResult);
+			pGameObj = new GameObjectAnimSkeleton(pGraphicsObj, this->poBoneResult);
 			pGameObj->SetIndex(pSkel->poTableArray[i].index);
 			pGameObj->SetName(pSkel->poTableArray[i].name);
 
@@ -155,63 +167,49 @@ namespace Azul
 
 	}
 	
-	int Skeleton::GetNumBones() const
+	int Skeleton::GetNumNodes() const
 	{
-		return this->numBones;
+		return this->mNumNodes;
 	}
 
 	void Skeleton::SetPivotScale(float sx, float sy, float sz)
 	{
-		if (this->pPivot)
-		{
-			this->pPivot->SetScale(sx, sy, sz);
-		}
+		AZUL_UNUSED_VAR(sx);
+		AZUL_UNUSED_VAR(sy);
+		AZUL_UNUSED_VAR(sz);
 	}
 
 	void Skeleton::SetUniformPivotScale(float s)
 	{
-		if (this->pPivot)
-		{
-			this->pPivot->SetUniformScale(s);
-		}
+		AZUL_UNUSED_VAR(s);
 	}
 
 
 	void Skeleton::SetPivotTrans(float x, float y, float z)
 	{
-		if (this->pPivot)
-		{
-			this->pPivot->SetTrans(x, y, z);
-		}
+		AZUL_UNUSED_VAR(x);
+		AZUL_UNUSED_VAR(y);
+		AZUL_UNUSED_VAR(z);
 	}
 
 	void Skeleton::SetPivotRotX(float angle)
 	{
-		if (this->pPivot)
-		{
-			this->pPivot->SetRotX(angle);
-		}
+		AZUL_UNUSED_VAR(angle);
 	}
 	void Skeleton::SetPivotRotY(float angle)
 	{
-		if (this->pPivot)
-		{
-			this->pPivot->SetRotY(angle);
-		}
+		AZUL_UNUSED_VAR(angle);
 	}
 	void Skeleton::SetPivotRotZ(float angle)
 	{
-		if (this->pPivot)
-		{
-			this->pPivot->SetRotZ(angle);
-		}
+		AZUL_UNUSED_VAR(angle);
 	}
 	void Skeleton::SetPivotTotalRot(const Rot3 mode, float x, float y, float z)
 	{
-		if (this->pPivot)
-		{
-			this->pPivot->SetTotalRot(mode,x,y,z);
-		}
+		AZUL_UNUSED_VAR(mode);
+		AZUL_UNUSED_VAR(x);
+		AZUL_UNUSED_VAR(y);
+		AZUL_UNUSED_VAR(z);
 	}
 }
 

@@ -39,10 +39,10 @@ namespace Azul
 		//assert(strcmp(mB.pVersion, "2.0.0") == 0);
 
 		ClipMan::Add(clipName,
-					 mB.numBones,
+					 skelName,
+					 mB.numNodes,
 					 mB.numKeyFrames,
-					 mB.poFrameBucketEntry,
-					 skelName);
+					 mB.poFrameBucketEntry);
 
 	}
 }

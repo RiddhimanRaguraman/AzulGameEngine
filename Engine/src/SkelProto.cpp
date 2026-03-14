@@ -38,7 +38,7 @@ namespace Azul
 		// Do I know this format?
 		//assert(strcmp(mB.pVersion, "2.0.0") == 0);
 
-		SkelMan::Add(skelName, mB.numBones, mB.poSkelEntry);
+		SkelMan::Add(skelName, mB.numNodes, mB.poSkelEntry);
 	}
 }
 

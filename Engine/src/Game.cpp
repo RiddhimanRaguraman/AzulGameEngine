@@ -28,17 +28,6 @@ namespace Azul
  
 	Bone HackLocalBone[15];
 	Mat4 HackWorld[8];
-	// int  HackHierarchyTable[7 * 8] =
-	// {
-	// 		0,  2,  3,  4, -1, -1, -1,
-	// 		0,  2,  3,  4,  8, -1, -1,
-	// 		0,  2,  3,  4,  8,  9, -1,
-	// 		0,  2,  3,  4,  8,  9, 10,
-	// 		0,  2,  3,  4,  5, -1, -1,
-	// 		0,  2,  3,  4,  5,  6, -1,
-	// 		0,  2,  3,  4,  5,  6,  7,
-	// 		0,  2,  3,  4, 11, -1, -1
-	// };
 
   FontSprite* pFontSprite1;
 
@@ -188,12 +177,12 @@ namespace Azul
 		//  Texture
 		// --------------------------------
 
-		TexNodeMan::Add("TEST_PNG_RGB.t.proto.azul", TextureObject::Name::Test0);
-		TexNodeMan::Add("TEST_PNG_RGBA.t.proto.azul", TextureObject::Name::Test1);
-		TexNodeMan::Add("TEST_TGA_BGR.t.proto.azul", TextureObject::Name::Test2);
-		TexNodeMan::Add("TEST_TGA_BGRA.t.proto.azul", TextureObject::Name::Test3);
-		TexNodeMan::Add("ChickenBot.t.proto.azul",TextureObject::Name::ChickenBot);
-		TexNodeMan::Add("Mousey.t.proto.azul", TextureObject::Name::Mousey);
+		TexNodeMan::Add(TextureObject::Name::Test0, "TEST_PNG_RGB.t.proto.azul");
+		TexNodeMan::Add(TextureObject::Name::Test1, "TEST_PNG_RGBA.t.proto.azul");
+		TexNodeMan::Add(TextureObject::Name::Test2, "TEST_TGA_BGR.t.proto.azul");
+		TexNodeMan::Add(TextureObject::Name::Test3, "TEST_TGA_BGRA.t.proto.azul");
+		TexNodeMan::Add(TextureObject::Name::ChickenBot, "ChickenBot.t.proto.azul");
+		TexNodeMan::Add(TextureObject::Name::Mousey, "Mousey.t.proto.azul");
 
 	/*	TextureObject* pTexDogBot = new TextureObject("DogBot.t.proto.azul");
 		TexNodeMan::Add(TextureObject::Name::DogBot, pTexDogBot);
@@ -217,8 +206,8 @@ namespace Azul
 		// ---------------------------------------------
 		//  Font - load xml
 		// ---------------------------------------------
-		TexNodeMan::Add("FontArial36.t.proto.azul", TextureObject::Name::FontAriel36);
-		GlyphMan::Add("MetricsArial36.xml.proto.azul", TextureObject::Name::FontAriel36);
+		TexNodeMan::Add(TextureObject::Name::FontAriel36,"FontArial36.t.proto.azul");
+		GlyphMan::Add(TextureObject::Name::FontAriel36,"MetricsArial36.xml.proto.azul");
 
 
 		// ---------------------------------------------
@@ -336,8 +325,8 @@ namespace Azul
 		// ---------------------------------
 
 		//// load skeleton
-		SkelMan::Add("ChickenBot.s.proto.azul", Skel::Name::ChickenBot);
-		SkelMan::Add("Mousey.s.proto.azul", Skel::Name::Mousey);
+		SkelMan::Add(Skel::Name::ChickenBot, "ChickenBot.s.proto.azul");
+		SkelMan::Add(Skel::Name::Mousey, "Mousey.s.proto.azul");
 		//SkelMan::Add("DogBot.s.proto.azul", Skel::Name::DogBot);
 		//SkelMan::Add("SpiderBot.s.proto.azul", Skel::Name::SpiderBot);
 

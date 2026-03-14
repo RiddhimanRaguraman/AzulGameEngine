@@ -196,7 +196,7 @@ class AnimClip_proto final : public ::google::protobuf::MessageLite
     kPoFrameBucketEntryFieldNumber = 4,
     kPVersionFieldNumber = 1,
     kNumKeyFramesFieldNumber = 2,
-    kNumBonesFieldNumber = 3,
+    kNumNodesFieldNumber = 3,
   };
   // repeated .AnimFrameBucket_proto poFrameBucketEntry = 4;
   int poframebucketentry_size() const;
@@ -242,15 +242,15 @@ class AnimClip_proto final : public ::google::protobuf::MessageLite
   void _internal_set_numkeyframes(::uint32_t value);
 
   public:
-  // optional uint32 numBones = 3;
-  bool has_numbones() const;
-  void clear_numbones() ;
-  ::uint32_t numbones() const;
-  void set_numbones(::uint32_t value);
+  // optional uint32 numNodes = 3;
+  bool has_numnodes() const;
+  void clear_numnodes() ;
+  ::uint32_t numnodes() const;
+  void set_numnodes(::uint32_t value);
 
   private:
-  ::uint32_t _internal_numbones() const;
-  void _internal_set_numbones(::uint32_t value);
+  ::uint32_t _internal_numnodes() const;
+  void _internal_set_numnodes(::uint32_t value);
 
   public:
   // @@protoc_insertion_point(class_scope:AnimClip_proto)
@@ -282,7 +282,7 @@ class AnimClip_proto final : public ::google::protobuf::MessageLite
     ::google::protobuf::RepeatedPtrField< ::AnimFrameBucket_proto > poframebucketentry_;
     ::google::protobuf::internal::ArenaStringPtr pversion_;
     ::uint32_t numkeyframes_;
-    ::uint32_t numbones_;
+    ::uint32_t numnodes_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -404,32 +404,32 @@ inline void AnimClip_proto::_internal_set_numkeyframes(::uint32_t value) {
   _impl_.numkeyframes_ = value;
 }
 
-// optional uint32 numBones = 3;
-inline bool AnimClip_proto::has_numbones() const {
+// optional uint32 numNodes = 3;
+inline bool AnimClip_proto::has_numnodes() const {
   bool value = (_impl_._has_bits_[0] & 0x00000004U) != 0;
   return value;
 }
-inline void AnimClip_proto::clear_numbones() {
+inline void AnimClip_proto::clear_numnodes() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.numbones_ = 0u;
+  _impl_.numnodes_ = 0u;
   _impl_._has_bits_[0] &= ~0x00000004U;
 }
-inline ::uint32_t AnimClip_proto::numbones() const {
-  // @@protoc_insertion_point(field_get:AnimClip_proto.numBones)
-  return _internal_numbones();
+inline ::uint32_t AnimClip_proto::numnodes() const {
+  // @@protoc_insertion_point(field_get:AnimClip_proto.numNodes)
+  return _internal_numnodes();
 }
-inline void AnimClip_proto::set_numbones(::uint32_t value) {
-  _internal_set_numbones(value);
+inline void AnimClip_proto::set_numnodes(::uint32_t value) {
+  _internal_set_numnodes(value);
   _impl_._has_bits_[0] |= 0x00000004U;
-  // @@protoc_insertion_point(field_set:AnimClip_proto.numBones)
+  // @@protoc_insertion_point(field_set:AnimClip_proto.numNodes)
 }
-inline ::uint32_t AnimClip_proto::_internal_numbones() const {
+inline ::uint32_t AnimClip_proto::_internal_numnodes() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.numbones_;
+  return _impl_.numnodes_;
 }
-inline void AnimClip_proto::_internal_set_numbones(::uint32_t value) {
+inline void AnimClip_proto::_internal_set_numnodes(::uint32_t value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.numbones_ = value;
+  _impl_.numnodes_ = value;
 }
 
 // repeated .AnimFrameBucket_proto poFrameBucketEntry = 4;

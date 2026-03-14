@@ -11,17 +11,17 @@ namespace Azul
 	AnimClip::AnimClip()
 		: pVersion{ 0 },
 		numKeyFrames{ 0 },
-		numBones{ 0 },
+		numNodes{ 0 },
 		poFrameBucketEntry{ nullptr }
 	{
 		strcpy_s(this->pVersion, protoVersion::VERSION_NUM_BYTES, protoVersion::VERSION_STRING);
 		assert(strlen(this->pVersion) < protoVersion::VERSION_NUM_BYTES);
 	}
 
-	AnimClip::AnimClip(unsigned int _numKeyFrames, unsigned int _numBones)
+	AnimClip::AnimClip(unsigned int _numKeyFrames, unsigned int _numNodes)
 		: pVersion{ 0 },
 		numKeyFrames{ _numKeyFrames },
-		numBones{ _numBones },
+		numNodes{ _numNodes },
 		poFrameBucketEntry{ nullptr }
 	{
 		strcpy_s(this->pVersion, protoVersion::VERSION_NUM_BYTES, protoVersion::VERSION_STRING);
@@ -31,7 +31,7 @@ namespace Azul
 
 		for (size_t i = 0; i < _numKeyFrames; i++)
 		{
-			this->poFrameBucketEntry[i] = AnimFrameBucket(_numBones);
+			this->poFrameBucketEntry[i] = AnimFrameBucket(_numNodes);
 		}
 
 		assert(this->poFrameBucketEntry);
@@ -46,7 +46,7 @@ namespace Azul
 
 		// Add the number of bones
 		out.set_numkeyframes(this->numKeyFrames);
-		out.set_numbones(this->numBones);
+		out.set_numnodes(this->numNodes);
 
 		for (unsigned int i = 0; i < this->numKeyFrames; i++)
 		{
@@ -78,7 +78,7 @@ namespace Azul
 		this->poFrameBucketEntry = nullptr;
 
 		this->numKeyFrames = in.numkeyframes();
-		this->numBones = in.numbones();
+		this->numNodes = in.numnodes();
 
 		// Create the EMPTY space...
 		//    High-level only

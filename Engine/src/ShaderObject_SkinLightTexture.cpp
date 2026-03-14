@@ -29,7 +29,7 @@ namespace Azul
 	ShaderObject_SkinLightTexture::ShaderObject_SkinLightTexture(ShaderObject_SkinLightTexture::Name _name)
 		: ShaderObject(_name),
 		ConstantBuff_Projection{ sizeof(Mat4) },
-		//ConstantBuff_World{sizeof(Mat4)},
+		ConstantBuff_World{sizeof(Mat4)},
 		ConstantBuff_View{ sizeof(Mat4) },
 		ConstantBuff_LightColor{ sizeof(Vec3) },
 		ConstantBuff_LightPos{ sizeof(Vec3) },
@@ -49,7 +49,7 @@ namespace Azul
 
 	void ShaderObject_SkinLightTexture::ActivateCBV()
 	{
-		//	this->ConstantBuff_World.SetActive(ConstantBufferSlot::vsWorld);
+		this->ConstantBuff_World.SetActive(ConstantVSBufferSlot::vsWorld);
 		this->ConstantBuff_View.SetActive(ConstantVSBufferSlot::vsView);
 		this->ConstantBuff_Projection.SetActive(ConstantVSBufferSlot::vsProjection);
 		this->ConstantBuff_LightColor.SetActive(ConstantVSBufferSlot::vsLightColor);
@@ -61,7 +61,7 @@ namespace Azul
 		assert(pCam);
 		assert(pWorld);
 
-		//	this->ConstantBuff_World.Transfer(pWorld);
+		this->ConstantBuff_World.Transfer(pWorld);
 		this->ConstantBuff_View.Transfer(&pCam->getViewMatrix());
 		this->ConstantBuff_Projection.Transfer(&pCam->getProjMatrix());
 	}

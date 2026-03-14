@@ -20,7 +20,7 @@ namespace Azul
 		PROTOBUF_ENGINE_LIBRARY_API SkelData& operator = (const SkelData&) = delete;
 		PROTOBUF_ENGINE_LIBRARY_API ~SkelData();
 
-		PROTOBUF_ENGINE_LIBRARY_API SkelData(unsigned int _numBones);
+		PROTOBUF_ENGINE_LIBRARY_API SkelData(unsigned int _numNodes);
 
 		// Serialization 
 		PROTOBUF_ENGINE_LIBRARY_API void Serialize(SkelData_proto& out) const;
@@ -30,7 +30,7 @@ namespace Azul
 
 	public:
 		char           pVersion[protoVersion::VERSION_NUM_BYTES];
-		unsigned int   numBones;
+		unsigned int   numNodes;
 		SkelEntry* poSkelEntry;
 	};
 

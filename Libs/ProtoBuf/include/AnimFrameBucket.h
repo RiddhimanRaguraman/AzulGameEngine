@@ -17,7 +17,7 @@ namespace Azul
 		PROTOBUF_ENGINE_LIBRARY_API AnimFrameBucket& operator = (const AnimFrameBucket&);
 		PROTOBUF_ENGINE_LIBRARY_API ~AnimFrameBucket();
 
-		PROTOBUF_ENGINE_LIBRARY_API AnimFrameBucket(unsigned int _numBones);
+		PROTOBUF_ENGINE_LIBRARY_API AnimFrameBucket(unsigned int _numNodes);
 
 		// Serialization 
 		PROTOBUF_ENGINE_LIBRARY_API void Serialize(AnimFrameBucket_proto& out) const;
@@ -27,7 +27,7 @@ namespace Azul
 
 	public:
 		unsigned int  keyFrame;
-		unsigned int  numBones;
+		unsigned int  numNodes;
 		float         keyTime;
 		int           keyTimeIndex;
 		AnimBone* poBone;

@@ -35,11 +35,11 @@ namespace Azul
 		mB.Deserialize(mB_proto);
 		delete[] poBuff;
 
-		this->numBones = mB.numBones;
+		this->numJoints = mB.numJoints;
 
-		this->poJointTable = new unsigned int[this->numBones]();
+		this->poJointTable = new unsigned int[this->numJoints]();
 		assert(this->poJointTable);
-		size_t size = this->numBones * sizeof(unsigned int);
+		size_t size = this->numJoints * sizeof(unsigned int);
 		memcpy(this->poJointTable, &mB.poJointEntry[0], size);
 
 	}

@@ -12,56 +12,47 @@
 
 namespace Azul
 {
-	Anim::Anim(Clip::Name clipName, TextureObject::Name texName, Mesh::Name meshName, JointTable* pJointTable)
-		: pClip{ nullptr },
-		poBoneResult(nullptr),
-		poSkeleton(nullptr),
-		numBones(0)
+	Anim::Anim(Skeleton *pSkeleton)
+		: poSkeleton{ pSkeleton }
 	{
+		assert(poSkeleton);
+	}
 
-		this->pClip = ClipMan::Find(clipName);
-		assert(this->pClip);
-		this->numBones = (unsigned int)pClip->GetNumBones();
+	Anim::~Anim()
+	{
+		this->poSkeleton = nullptr;
+	}
 
-		this->poBoneResult = new Bone[this->numBones]();
-		assert(poBoneResult);
-
-		this->poSkeleton = new Skeleton(this->poBoneResult, numBones, pClip->GetSkelName(), texName, meshName, pJointTable);
+	AnimTime Anim::FindMaxTime()
+	{
 		assert(this->poSkeleton);
+
+		Clip *pClip = this->poSkeleton->GetClip();
+		assert(pClip);
+
+		return pClip->GetTotalTime();
 	}
 
-    Anim::~Anim()
+	void Anim::Animate(AnimTime tCurr)
 	{
-		delete[] this->poBoneResult;
-		delete   this->poSkeleton;
+		assert(this->poSkeleton);
+
+		Clip *pClip = this->poSkeleton->GetClip();
+		assert(pClip);
+
+		pClip->AnimateBones(tCurr, this->poSkeleton->GetBoneResult());
 	}
-
-    AnimTime Anim::FindMaxTime()
-    {
-        assert(pClip);
-        return this->pClip->GetTotalTime();
-    }
-
-    void Anim::Animate(AnimTime tCurr)
-    {
-		// if the Clip to set externly
-        if (!this->pClip)
-        {
-            return;
-        }
-        this->pClip->AnimateBones(tCurr, this->poBoneResult);
-    }
 
 	void Anim::SetClip(Clip::Name clipName)
 	{
-		this->pClip = ClipMan::Find(clipName);
-		assert(this->pClip);
-		this->numBones = (unsigned int)this->pClip->GetNumBones();
+		assert(this->poSkeleton);
+		this->poSkeleton->SetClip(clipName);
 	}
 
     Clip *Anim::GetClip()
     {
-        return this->pClip;
+		assert(this->poSkeleton);
+        return this->poSkeleton->GetClip();
     }
 
     void Anim::SetPivotScale(float sx, float sy, float sz)

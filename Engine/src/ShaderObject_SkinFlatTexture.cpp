@@ -28,7 +28,7 @@ namespace Azul
 	ShaderObject_SkinFlatTexture::ShaderObject_SkinFlatTexture(ShaderObject_SkinFlatTexture::Name _name)
 		: ShaderObject(_name),
 		ConstantBuff_Projection{ sizeof(Mat4) },
-		//ConstantBuff_World{sizeof(Mat4)},
+		ConstantBuff_World{sizeof(Mat4)},
 		ConstantBuff_View{ sizeof(Mat4) },
 
 		VertexShader{ sizeof(g_SkinFlatTexture_VxShader), (void*)g_SkinFlatTexture_VxShader },
@@ -46,7 +46,7 @@ namespace Azul
 
 	void ShaderObject_SkinFlatTexture::ActivateCBV()
 	{
-		//	this->ConstantBuff_World.SetActive(ConstantBufferSlot::vsWorld);
+		this->ConstantBuff_World.SetActive(ConstantVSBufferSlot::vsWorld);
 		this->ConstantBuff_View.SetActive(ConstantVSBufferSlot::vsView);
 		this->ConstantBuff_Projection.SetActive(ConstantVSBufferSlot::vsProjection);
 	}
@@ -56,7 +56,7 @@ namespace Azul
 		assert(pCam);
 		assert(pWorld);
 
-		//	this->ConstantBuff_World.Transfer(pWorld);
+		this->ConstantBuff_World.Transfer(pWorld);
 		this->ConstantBuff_View.Transfer(&pCam->getViewMatrix());
 		this->ConstantBuff_Projection.Transfer(&pCam->getProjMatrix());
 	}

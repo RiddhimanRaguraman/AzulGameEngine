@@ -243,6 +243,9 @@ namespace Azul
 		case AnimMan::Name::Shotup:
 			strcpy_s(this->buffer, BUFFER_SIZE, "Shotup");
 			break;
+		case AnimMan::Name::Dance:
+			strcpy_s(this->buffer, BUFFER_SIZE, "Dance");
+			break;
 		case AnimMan::Name::Idle:
 			strcpy_s(this->buffer, BUFFER_SIZE, "Idle");
 			break;

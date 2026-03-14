@@ -19,7 +19,7 @@ namespace Azul
 		PROTOBUF_ENGINE_LIBRARY_API HierarchyData &operator = (const HierarchyData &);
 		PROTOBUF_ENGINE_LIBRARY_API ~HierarchyData();
 
-		PROTOBUF_ENGINE_LIBRARY_API HierarchyData(unsigned int _numNodes, unsigned int _maxDepth);
+		PROTOBUF_ENGINE_LIBRARY_API HierarchyData(unsigned int _numJoints, unsigned int _maxDepth);
 
 		// Serialization 
 		PROTOBUF_ENGINE_LIBRARY_API void Serialize(HierarchyData_proto &out) const;
@@ -29,7 +29,7 @@ namespace Azul
 
 	public:
 		char  pVersion[protoVersion::VERSION_NUM_BYTES];
-		unsigned int numNodes;
+		unsigned int numJoints;
 		unsigned int maxDepth;
 		unsigned int *poData;
 	};

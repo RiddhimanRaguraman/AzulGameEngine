@@ -9,9 +9,10 @@
 #include "Bone.h"
 #include "Skel.h"
 #include "JointTable.h"
+#include "Clip.h"
 namespace Azul
 {
-    class GameObjectRigidBody;
+	class GameObject;
 	class Skeleton
 	{
 	public:
@@ -23,18 +24,21 @@ namespace Azul
 		};
 
 	public:
-		Skeleton(Bone* pBone, unsigned int _numBones, Skel::Name skelName, TextureObject::Name texName, Mesh::Name meshName, JointTable* pJointTable);
-
+		Skeleton(Clip::Name _name);
 		Skeleton() = delete;
 		Skeleton(const Skeleton &) = delete;
 		Skeleton &operator = (const Skeleton &) = delete;
 		~Skeleton();
 
+		void SetClip(Clip::Name clipName);
+		void SetAnimationHierarchy(GameObject *pParent);
+
 		GameObjectControlled* GetFirstBone();
 		GameObjectControlled* FindBoneByIndex(int index);
 		
-		int GetNumBones() const;
-
+		int GetNumNodes() const;
+		Clip *GetClip();
+		Bone *GetBoneResult();
         void SetPivotScale(float sx, float sy, float sz);
 		void SetUniformPivotScale(float s);
 		void SetPivotTrans(float x, float y, float z);
@@ -43,12 +47,14 @@ namespace Azul
 		void SetPivotRotZ(float angle);
 		void SetPivotTotalRot(const Rot3 mode, float x, float y, float z);
     private:
-		void privSetAnimationHierarchy(Bone* pBoneResult, Skel::Name skelName, TextureObject::Name texName, Mesh::Name meshName, JointTable* pJointTable);
+		void privSetAnimationHierarchy(GameObject *pParent);
 
     private:
         GameObjectControlled *pFirstBone;
-		GameObjectRigidBody *pPivot;
-        int             numBones;
+		int             mNumNodes;
+		Bone *poBoneResult;
+		Skel *pSkel;
+		Clip *pClip;
     };
 }
 

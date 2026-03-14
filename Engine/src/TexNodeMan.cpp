@@ -98,7 +98,7 @@ namespace Azul
 		TexNodeMan::posInstance = nullptr;
 	}
 
-	TexNode *TexNodeMan::Add(const char *pFile, TextureObject::Name name)
+	TexNode *TexNodeMan::Add(TextureObject::Name name, const char *pFile)
 	{
 		assert(pFile);
 

@@ -16,7 +16,7 @@ namespace Azul
 	struct MixerConstant
 	{
 		float ts;
-		unsigned int numBones;
+		unsigned int numNodes;
 		int pad0;
 		int pad1;
 	};
@@ -26,7 +26,7 @@ namespace Azul
 		const Bone* pA,
 		const Bone* pB,
 		const float tS,
-		int numBones)
+		int numNodes)
 	{
 
 		assert(pA);
@@ -38,7 +38,7 @@ namespace Azul
 		Bone* pBoneOrigResult = pResult;
 
 		// Interpolate to tS time, for all bones
-		for (int i = 0; i < numBones; i++)
+		for (int i = 0; i < numNodes; i++)
 		{
 			// interpolate ahoy!
 			Vec3App::Lerp(pResult->T, pA->T, pB->T, tS);
@@ -54,7 +54,7 @@ namespace Azul
 
 
 		// Let's try the shader to prove out the mixer
-		unsigned int uNumBones = (unsigned int)numBones;
+		unsigned int uNumBones = (unsigned int)numNodes;
 
 		// ------------------------------------
 		// Load SSBO into the shader - 
@@ -98,12 +98,12 @@ namespace Azul
 		BufferCBV_cs cbvMixer(sizeof(MixerConstant));
 		MixerConstant mixerData;
 		mixerData.ts = tS;
-		mixerData.numBones = numBones;
+		mixerData.numNodes = numNodes;
 		cbvMixer.Transfer(&mixerData);
 		cbvMixer.BindCompute(ConstantCSBufferSlot::csMixer);
 
 		// Dispatch
-		StateDirectXMan::GetContext()->Dispatch((numBones ), 1, 1);
+		StateDirectXMan::GetContext()->Dispatch(((unsigned int)numNodes), 1, 1);
 
 
 		// Block Waiting for stages to complete
@@ -118,7 +118,7 @@ namespace Azul
 		assert(SUCCEEDED(hr));
 		assert(MappedResource.pData);
 
-		Bone* p = (Bone*)MappedResource.pData;
+	/*	Bone* p = (Bone*)MappedResource.pData;
 
 
 		Trace::out("\n\n");
@@ -139,7 +139,7 @@ namespace Azul
 			Trace::out("  S: %+ 5.3f %+ 5.3f %+ 5.3f             %+ 5.3f %+ 5.3f %+ 5.3f \n",
 				pCompute->S[x], pCompute->S[y], pCompute->S[z],
 				pCpp->S[x], pCpp->S[y], pCpp->S[z]);
-		}
+		}*/
 		StateDirectXMan::GetContext()->Unmap(uavBoneResult.poComputeUAVBuffer, 0);
 
 

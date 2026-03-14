@@ -20,7 +20,7 @@ namespace Azul
         static void Destroy();
 
         static Glyph *Add(Glyph::Name glyphName, int key, TextureObject::Name textName, Rect &rect);
-        static void Add(const char *const pMetricsFileName, TextureObject::Name texName);
+        static void Add(TextureObject::Name texName, const char *const pMetricsFileName);
 
 
         static Glyph *Find(Glyph::Name _name, int _key);

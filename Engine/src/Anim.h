@@ -22,7 +22,9 @@ namespace Azul
         Anim &operator = (const Anim &) = delete;
         ~Anim();
 
-        Anim(Clip::Name clipName, TextureObject::Name texName, Mesh::Name meshName, JointTable* pJointTable);
+        Anim(Skeleton *ptSkeleton);
+
+        //Anim(Clip::Name clipName, TextureObject::Name texName, Mesh::Name meshName, JointTable* pJointTable);
 
         void Animate(AnimTime tCurr);
         AnimTime FindMaxTime();
@@ -38,11 +40,9 @@ namespace Azul
         void SetPivotRotZ(float angle);
         void SetPivotTotalRot(const Rot3 mode, float x, float y, float z);
 
-	private:
-        Clip *pClip;
-        Bone *poBoneResult;
+    private:
+
         Skeleton *poSkeleton;
-        int      numBones;
     };
 
 }

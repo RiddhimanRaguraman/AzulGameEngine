@@ -27,7 +27,7 @@ inline constexpr AnimFrameBucket_proto::Impl_::Impl_(
       : _cached_size_{0},
         pobone_{},
         keyframe_{0u},
-        numbones_{0u},
+        numnodes_{0u},
         keytime_{0},
         keytimeindex_{0} {}
 
@@ -205,9 +205,9 @@ AnimFrameBucket_proto::_table_ = {
     // optional uint32 keyFrame = 1;
     {::_pbi::TcParser::FastV32S1,
      {8, 0, 0, PROTOBUF_FIELD_OFFSET(AnimFrameBucket_proto, _impl_.keyframe_)}},
-    // optional uint32 numBones = 2;
+    // optional uint32 numNodes = 2;
     {::_pbi::TcParser::FastV32S1,
-     {16, 1, 0, PROTOBUF_FIELD_OFFSET(AnimFrameBucket_proto, _impl_.numbones_)}},
+     {16, 1, 0, PROTOBUF_FIELD_OFFSET(AnimFrameBucket_proto, _impl_.numnodes_)}},
     // optional float keyTime = 3;
     {::_pbi::TcParser::FastF32S1,
      {29, 2, 0, PROTOBUF_FIELD_OFFSET(AnimFrameBucket_proto, _impl_.keytime_)}},
@@ -224,8 +224,8 @@ AnimFrameBucket_proto::_table_ = {
   }}, {{
     // optional uint32 keyFrame = 1;
     {PROTOBUF_FIELD_OFFSET(AnimFrameBucket_proto, _impl_.keyframe_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
-    // optional uint32 numBones = 2;
-    {PROTOBUF_FIELD_OFFSET(AnimFrameBucket_proto, _impl_.numbones_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
+    // optional uint32 numNodes = 2;
+    {PROTOBUF_FIELD_OFFSET(AnimFrameBucket_proto, _impl_.numnodes_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
     // optional float keyTime = 3;
     {PROTOBUF_FIELD_OFFSET(AnimFrameBucket_proto, _impl_.keytime_), _Internal::kHasBitsOffset + 2, 0, (0 | ::_fl::kFcOptional | ::_fl::kFloat)},
     // optional int32 keyTimeIndex = 4;
@@ -280,11 +280,11 @@ PROTOBUF_NOINLINE void AnimFrameBucket_proto::Clear() {
         1, this_._internal_keyframe(), target);
   }
 
-  // optional uint32 numBones = 2;
+  // optional uint32 numNodes = 2;
   if ((cached_has_bits & 0x00000002U) != 0) {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
-        2, this_._internal_numbones(), target);
+        2, this_._internal_numnodes(), target);
   }
 
   // optional float keyTime = 3;
@@ -353,10 +353,10 @@ PROTOBUF_NOINLINE void AnimFrameBucket_proto::Clear() {
       total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
           this_._internal_keyframe());
     }
-    // optional uint32 numBones = 2;
+    // optional uint32 numNodes = 2;
     if ((cached_has_bits & 0x00000002U) != 0) {
       total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
-          this_._internal_numbones());
+          this_._internal_numnodes());
     }
     // optional int32 keyTimeIndex = 4;
     if ((cached_has_bits & 0x00000008U) != 0) {
@@ -387,7 +387,7 @@ void AnimFrameBucket_proto::MergeImpl(::google::protobuf::MessageLite& to_msg, c
       _this->_impl_.keyframe_ = from._impl_.keyframe_;
     }
     if ((cached_has_bits & 0x00000002U) != 0) {
-      _this->_impl_.numbones_ = from._impl_.numbones_;
+      _this->_impl_.numnodes_ = from._impl_.numnodes_;
     }
     if ((cached_has_bits & 0x00000004U) != 0) {
       _this->_impl_.keytime_ = from._impl_.keytime_;

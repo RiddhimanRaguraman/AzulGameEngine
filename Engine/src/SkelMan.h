@@ -25,8 +25,8 @@ namespace Azul
         static void Remove(Skel *pNode);
         static void Dump();
 
-        static void Add(const char *const pFileName, Skel::Name skelName);
-        static void Add(Skel::Name skelName, unsigned int numBones, SkelEntry *poSkelEntry);
+        static void Add(Skel::Name skelName, const char *const pFileName);
+        static void Add(Skel::Name skelName, unsigned int numNodes  , SkelEntry *poSkelEntry);
 
         //----------------------------------------------------------------------
         // Private methods

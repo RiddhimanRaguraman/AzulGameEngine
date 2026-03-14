@@ -95,19 +95,19 @@ namespace Azul
         SkelMan::posInstance = nullptr;
     }
 
-    void SkelMan::Add(const char *const pFileName, Skel::Name skelName)
+    void SkelMan::Add(Skel::Name skelName, const char *const pFileName)
     {
         SkelProto(pFileName, skelName);
     }
 
-    void SkelMan::Add(Skel::Name skelName, unsigned int numBones, SkelEntry *poSkelEntry)
+    void SkelMan::Add(Skel::Name skelName, unsigned int numNodes, SkelEntry *poSkelEntry)
     {
         SkelMan *pMan = SkelMan::privGetInstance();
 
         Skel *pNode = (Skel *)pMan->baseAddToFront();
         assert(pNode != nullptr);
 
-        pNode->Set(skelName, numBones, poSkelEntry);
+        pNode->Set(skelName, numNodes, poSkelEntry);
     }
 
     Skel *SkelMan::Find(Skel::Name _name)

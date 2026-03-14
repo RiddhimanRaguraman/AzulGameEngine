@@ -8,6 +8,6 @@ message AnimClip_proto
 {
 	optional bytes                           pVersion  = 1;
     optional uint32                       numKeyFrames = 2;
-	optional uint32                           numBones = 3;
+	optional uint32                           numNodes = 3;
 	repeated AnimFrameBucket_proto  poFrameBucketEntry = 4;
 }

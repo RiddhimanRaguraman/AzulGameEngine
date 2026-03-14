@@ -13,18 +13,18 @@ namespace Azul
 
 	JointData::JointData()
 	{
-		this->numBones = 0;
+		this->numJoints = 0;
 		this->poJointEntry = nullptr;
 	}
 
-	JointData::JointData(unsigned int _numBones, unsigned int* pData)
+	JointData::JointData(unsigned int _numJoints, unsigned int* pData)
 	{
-		this->numBones = _numBones;
+		this->numJoints = _numJoints;
 
-		this->poJointEntry = new unsigned int[_numBones]();
+		this->poJointEntry = new unsigned int[_numJoints]();
 		assert(this->poJointEntry);
 
-		size_t size = this->numBones * sizeof(unsigned int);
+		size_t size = this->numJoints * sizeof(unsigned int);
 		memcpy(this->poJointEntry, pData, size);
 	}
 
@@ -33,14 +33,14 @@ namespace Azul
 		if (this != &r)
 		{
 			// Nuke orginal
-			this->numBones = 0;
+			this->numJoints = 0;
 			delete[] this->poJointEntry;
 
 			// copy the new
-			this->numBones = r.numBones;
-			this->poJointEntry = new unsigned int[r.numBones]();
+			this->numJoints = r.numJoints;
+			this->poJointEntry = new unsigned int[r.numJoints]();
 
-			for (size_t i = 0; i < r.numBones; i++)
+			for (size_t i = 0; i < r.numJoints; i++)
 			{
 				this->poJointEntry[i] = r.poJointEntry[i];
 			}
@@ -54,17 +54,17 @@ namespace Azul
 		AZUL_UNUSED_VAR(out);
 
 		// Add the number of bones
-		out.set_numbones(this->numBones);
+		out.set_numjoints(this->numJoints);
 
 		// Add the SkelEntry
 		JointData_proto tmpBoneEntry_proto;
 
-		for (unsigned int i = 0; i < this->numBones; i++)
+		for (unsigned int i = 0; i < this->numJoints; i++)
 		{
 			out.add_pojointentry(this->poJointEntry[i]);
 		}
 
-		assert(out.numbones() == this->numBones);
+		assert(out.numjoints() == this->numJoints);
 	}
 
 	void JointData::Deserialize(const JointData_proto& in)
@@ -74,12 +74,12 @@ namespace Azul
 		delete[] this->poJointEntry;
 		this->poJointEntry = nullptr;
 
-		this->numBones = in.numbones();
+		this->numJoints = in.numjoints();
 
-		this->poJointEntry = new unsigned int[this->numBones]();
+		this->poJointEntry = new unsigned int[this->numJoints]();
 		assert(this->poJointEntry);
 
-		for (unsigned int i = 0; i < this->numBones; i++)
+		for (unsigned int i = 0; i < this->numJoints; i++)
 		{
 			poJointEntry[i] = in.pojointentry(i);
 		}
@@ -90,9 +90,9 @@ namespace Azul
 		AZUL_UNUSED_VAR(pName);
 		Trace::out("%s: \n", pName);
 
-		Trace::out("     numBones: %d\n", this->numBones);
+		Trace::out("     numJoints: %d\n", this->numJoints);
 
-		for (size_t i = 0; i < this->numBones; i++)
+		for (size_t i = 0; i < this->numJoints; i++)
 		{
 			Trace::out("      [%d]: jointIndex: %d\n", i, this->poJointEntry[i]);
 		}

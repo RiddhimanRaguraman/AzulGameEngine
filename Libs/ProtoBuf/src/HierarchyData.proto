@@ -9,7 +9,7 @@ option optimize_for = LITE_RUNTIME;
 message HierarchyData_proto
 {
 	optional bytes  pVersion = 1;
-	optional uint32 numNodes = 2;
+	optional uint32 numJoints = 2;
 	optional uint32 maxDepth = 3;
 	repeated uint32   poData = 4;
 }

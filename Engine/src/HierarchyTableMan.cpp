@@ -123,7 +123,7 @@ namespace Azul
 		delete[] poBuff;
 
 		pNode->Set(JointTableName, 
-				   mB.numNodes, 
+				   mB.numJoints, 
 				   mB.maxDepth,
 				   mB.poData);
 

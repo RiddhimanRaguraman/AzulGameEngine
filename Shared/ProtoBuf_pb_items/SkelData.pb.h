@@ -195,7 +195,7 @@ class SkelData_proto final : public ::google::protobuf::MessageLite
   enum : int {
     kPoSkelEntryFieldNumber = 3,
     kPVersionFieldNumber = 1,
-    kNumBonesFieldNumber = 2,
+    kNumNodesFieldNumber = 2,
   };
   // repeated .SkelEntry_proto poSkelEntry = 3;
   int poskelentry_size() const;
@@ -230,15 +230,15 @@ class SkelData_proto final : public ::google::protobuf::MessageLite
   ::std::string* PROTOBUF_NONNULL _internal_mutable_pversion();
 
   public:
-  // optional uint32 numBones = 2;
-  bool has_numbones() const;
-  void clear_numbones() ;
-  ::uint32_t numbones() const;
-  void set_numbones(::uint32_t value);
+  // optional uint32 numNodes = 2;
+  bool has_numnodes() const;
+  void clear_numnodes() ;
+  ::uint32_t numnodes() const;
+  void set_numnodes(::uint32_t value);
 
   private:
-  ::uint32_t _internal_numbones() const;
-  void _internal_set_numbones(::uint32_t value);
+  ::uint32_t _internal_numnodes() const;
+  void _internal_set_numnodes(::uint32_t value);
 
   public:
   // @@protoc_insertion_point(class_scope:SkelData_proto)
@@ -269,7 +269,7 @@ class SkelData_proto final : public ::google::protobuf::MessageLite
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::google::protobuf::RepeatedPtrField< ::SkelEntry_proto > poskelentry_;
     ::google::protobuf::internal::ArenaStringPtr pversion_;
-    ::uint32_t numbones_;
+    ::uint32_t numnodes_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -363,32 +363,32 @@ inline void SkelData_proto::set_allocated_pversion(::std::string* PROTOBUF_NULLA
   // @@protoc_insertion_point(field_set_allocated:SkelData_proto.pVersion)
 }
 
-// optional uint32 numBones = 2;
-inline bool SkelData_proto::has_numbones() const {
+// optional uint32 numNodes = 2;
+inline bool SkelData_proto::has_numnodes() const {
   bool value = (_impl_._has_bits_[0] & 0x00000002U) != 0;
   return value;
 }
-inline void SkelData_proto::clear_numbones() {
+inline void SkelData_proto::clear_numnodes() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.numbones_ = 0u;
+  _impl_.numnodes_ = 0u;
   _impl_._has_bits_[0] &= ~0x00000002U;
 }
-inline ::uint32_t SkelData_proto::numbones() const {
-  // @@protoc_insertion_point(field_get:SkelData_proto.numBones)
-  return _internal_numbones();
+inline ::uint32_t SkelData_proto::numnodes() const {
+  // @@protoc_insertion_point(field_get:SkelData_proto.numNodes)
+  return _internal_numnodes();
 }
-inline void SkelData_proto::set_numbones(::uint32_t value) {
-  _internal_set_numbones(value);
+inline void SkelData_proto::set_numnodes(::uint32_t value) {
+  _internal_set_numnodes(value);
   _impl_._has_bits_[0] |= 0x00000002U;
-  // @@protoc_insertion_point(field_set:SkelData_proto.numBones)
+  // @@protoc_insertion_point(field_set:SkelData_proto.numNodes)
 }
-inline ::uint32_t SkelData_proto::_internal_numbones() const {
+inline ::uint32_t SkelData_proto::_internal_numnodes() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.numbones_;
+  return _impl_.numnodes_;
 }
-inline void SkelData_proto::_internal_set_numbones(::uint32_t value) {
+inline void SkelData_proto::_internal_set_numnodes(::uint32_t value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.numbones_ = value;
+  _impl_.numnodes_ = value;
 }
 
 // repeated .SkelEntry_proto poSkelEntry = 3;

@@ -109,7 +109,7 @@ namespace Azul
 		MeshNodeMan::posInstance = nullptr;
 	}
 
-	MeshNode *MeshNodeMan::Add(const char *pFile, Mesh::Name name)
+	MeshNode *MeshNodeMan::Add(Mesh::Name name, const char *pFile)
 	{
 		assert(pFile);
 

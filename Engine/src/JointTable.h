@@ -25,10 +25,10 @@ namespace Azul
 		JointTable &operator = (const JointTable &) = delete;
 		virtual ~JointTable();
 
-		size_t	GetNumBones();
+		size_t	GetNumJoints();
 		void SetJointTableName(Name JointTableName);
 
-		void Set(Name JointTableName, size_t numBones, unsigned int *pJointTable);
+		void Set(Name JointTableName, size_t numJoints, unsigned int *pJointTable);
 
 
 		virtual void Dump() override;
@@ -37,7 +37,7 @@ namespace Azul
 
 	public:
 		Name         mName;
-		size_t       numBones;
+		size_t       numJoints;
 		unsigned int *poJointTable;
 	};
 }

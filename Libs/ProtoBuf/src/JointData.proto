@@ -8,7 +8,7 @@ option optimize_for = LITE_RUNTIME;
 
 message JointData_proto
 {
-	optional uint32 numBones = 1;
+	optional uint32 numJoints = 1;
 	repeated uint32 poJointEntry = 2;
 }
 

@@ -11,7 +11,6 @@
 #include "Anim.h"
 #include "GameObjectAnimSkeleton.h"
 
-#include "ShaderMappings.h"
 #include "ShaderObjectNodeMan.h"
 #include "BufferCBV_cs.h"
 #include "BufferSRV_cs.h"
@@ -34,30 +33,50 @@ namespace Azul
 	};
 
 
-	GameObjectAnimSkin::GameObjectAnimSkin(GraphicsObject *pGraphicsObject, Skeleton *_pSkeleton, JointTable* _pJointTable)
-		: GameObjectControlled(pGraphicsObject),
+	GameObjectAnimSkin::GameObjectAnimSkin(GraphicsObject *_pGraphicsObject, Skeleton *_pSkeleton, JointTable* _pJointTable)
+		: GameObjectControlled(_pGraphicsObject),
 		poBoneWorld{nullptr},
 		pSkeleton{_pSkeleton},
 		pJointTable{ _pJointTable }
 	{
-		assert(pGraphicsObject);
-		assert(pSkeleton);
+		assert(_pGraphicsObject);
+		assert(this->pSkeleton);
 
-		// size_t numBones = pSkeleton->GetNumBones();
-		this->poBoneWorld = new Mat4[BONE_COUNT_MAX]();
-
-		for(size_t i = 0; i < BONE_COUNT_MAX; i++)
+		size_t numNodes = pSkeleton->GetNumNodes();
+		this->poBoneWorld = new Mat4[numNodes]();
+		for (size_t i = 0; i < numNodes; i++)
 		{
 			poBoneWorld[i].set(Identity);
 		}
+		assert(this->poBoneWorld);
 
-		this->GetGraphicsObject()->GetMesh()->Initialize_SkinBoneWorldBuffer(BONE_COUNT_MAX * sizeof(Mat4));
+		this->poTrans = new Vec3(0.0f, 0.0f, 0.0f);
+		this->poScale = new Vec3(1.0f, 1.0f, 1.0f);
+		this->poQuat = new Quat(0.0f, 0.0f, 0.0f, 1.0f);
+
+		assert(this->poTrans);
+		assert(this->poScale);
+		assert(this->poQuat);
+
+		this->delta_x = 0.0f;
+		this->delta_y = 0.0f;
+		this->delta_z = 0.0f;
+
+		this->cur_rot_x = 0.0f;
+		this->cur_rot_y = 0.0f;
+		this->cur_rot_z = 0.0f;
+
+		this->GetGraphicsObject()->GetMesh()->Initialize_SkinBoneWorldBuffer(this->pJointTable->GetNumJoints() * sizeof(Mat4));// BONE_COUNT_MAX * sizeof(Mat4));
 
 	}
 
 	GameObjectAnimSkin::~GameObjectAnimSkin()
 	{
 		delete[] this->poBoneWorld;
+		delete this->poTrans;
+		delete this->poScale;
+		delete this->poQuat;
+		delete this->pSkeleton;
 	}
 
 
@@ -67,7 +86,7 @@ namespace Azul
 			// Since its already been updated... thankyou hack man
 			// we can just add the world matrix into our array
 
-		for (size_t i = 0; i < pJointTable->GetNumBones(); i++)
+		for (size_t i = 0; i < pJointTable->GetNumJoints(); i++)
 		{
 			GameObjectControlled* pGameObject = pSkeleton->FindBoneByIndex(pJointTable->poJointTable[i]);
 			//assert(pGameObject->index == i);
@@ -119,7 +138,7 @@ namespace Azul
 			assert(SUCCEEDED(hr));
 			assert(MappedResource.pData);
 
-			Mat4 *p = (Mat4 *)MappedResource.pData;
+			/*Mat4 *p = (Mat4 *)MappedResource.pData;
 
 			Trace::out("\n\n");
 			Trace::out("----------------------------------\n");
@@ -132,7 +151,7 @@ namespace Azul
 				this->poBoneWorld[i].Print("cpp");
 				pCompute->Print("gpu");
 
-			}
+			}*/
 
 			StateDirectXMan::GetContext()->Unmap(uavBoneResult.poComputeUAVBuffer, 0);
 		}
@@ -145,6 +164,61 @@ namespace Azul
 		// Goal: update the world matrix
 		this->privUpdateBoneWorldArray();
 
+		// Goal: update the world matrix
+		this->privUpdate(currentTime);
+
+		// update the bounding volume based on world matrix
+		this->poGraphicsObject->SetWorld(*this->poWorld);
+	}
+
+	void GameObjectAnimSkin::privUpdate(AnimTime currentTime)
+	{
+		AZUL_UNUSED_VAR(currentTime);
+
+		Trans T(*this->poTrans);
+		Scale S(*this->poScale);
+		Quat  Q(*this->poQuat);
+
+		cur_rot_x += delta_x;
+		cur_rot_y += delta_y;
+		cur_rot_z += delta_z;
+
+		Rot Rx(Rot1::X, cur_rot_x);
+		Rot Ry(Rot1::Y, cur_rot_y);
+		Rot Rz(Rot1::Z, cur_rot_z);
+
+		// world matrix
+		*this->poWorld = S * Q * Rx * Ry * Rz * T;
+	}
+
+	void GameObjectAnimSkin::SetQuat(float qx, float qy, float qz, float qw)
+	{
+		this->poQuat->set(qx, qy, qz, qw);
+	}
+
+	void GameObjectAnimSkin::SetScale(float sx, float sy, float sz)
+	{
+		this->poScale->set(sx, sy, sz);
+	}
+
+	void GameObjectAnimSkin::SetTrans(float x, float y, float z)
+	{
+		this->poTrans->set(x, y, z);
+	}
+
+	void GameObjectAnimSkin::SetScale(Vec3 &r)
+	{
+		*this->poScale = r;
+	}
+
+	void GameObjectAnimSkin::SetQuat(Quat &r)
+	{
+		*this->poQuat = r;
+	}
+
+	void GameObjectAnimSkin::SetTrans(Vec3 &r)
+	{
+		*this->poTrans = r;
 	}
 
 	void GameObjectAnimSkin::SetIndex(int i)

@@ -29,7 +29,7 @@ inline constexpr SkelData_proto::Impl_::Impl_(
         pversion_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
-        numbones_{0u} {}
+        numnodes_{0u} {}
 
 template <typename>
 PROTOBUF_CONSTEXPR SkelData_proto::SkelData_proto(::_pbi::ConstantInitialized)
@@ -95,7 +95,7 @@ SkelData_proto::SkelData_proto(
   _internal_metadata_.MergeFrom<::std::string>(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
-  _impl_.numbones_ = from._impl_.numbones_;
+  _impl_.numnodes_ = from._impl_.numnodes_;
 
   // @@protoc_insertion_point(copy_constructor:SkelData_proto)
 }
@@ -108,7 +108,7 @@ PROTOBUF_NDEBUG_INLINE SkelData_proto::Impl_::Impl_(
 
 inline void SkelData_proto::SharedCtor(::_pb::Arena* PROTOBUF_NULLABLE arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
-  _impl_.numbones_ = {};
+  _impl_.numnodes_ = {};
 }
 SkelData_proto::~SkelData_proto() {
   // @@protoc_insertion_point(destructor:SkelData_proto)
@@ -197,9 +197,9 @@ SkelData_proto::_table_ = {
     // optional bytes pVersion = 1;
     {::_pbi::TcParser::FastBS1,
      {10, 0, 0, PROTOBUF_FIELD_OFFSET(SkelData_proto, _impl_.pversion_)}},
-    // optional uint32 numBones = 2;
+    // optional uint32 numNodes = 2;
     {::_pbi::TcParser::FastV32S1,
-     {16, 1, 0, PROTOBUF_FIELD_OFFSET(SkelData_proto, _impl_.numbones_)}},
+     {16, 1, 0, PROTOBUF_FIELD_OFFSET(SkelData_proto, _impl_.numnodes_)}},
     // repeated .SkelEntry_proto poSkelEntry = 3;
     {::_pbi::TcParser::FastMtR1,
      {26, 63, 0, PROTOBUF_FIELD_OFFSET(SkelData_proto, _impl_.poskelentry_)}},
@@ -208,8 +208,8 @@ SkelData_proto::_table_ = {
   }}, {{
     // optional bytes pVersion = 1;
     {PROTOBUF_FIELD_OFFSET(SkelData_proto, _impl_.pversion_), _Internal::kHasBitsOffset + 0, 0, (0 | ::_fl::kFcOptional | ::_fl::kBytes | ::_fl::kRepAString)},
-    // optional uint32 numBones = 2;
-    {PROTOBUF_FIELD_OFFSET(SkelData_proto, _impl_.numbones_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
+    // optional uint32 numNodes = 2;
+    {PROTOBUF_FIELD_OFFSET(SkelData_proto, _impl_.numnodes_), _Internal::kHasBitsOffset + 1, 0, (0 | ::_fl::kFcOptional | ::_fl::kUInt32)},
     // repeated .SkelEntry_proto poSkelEntry = 3;
     {PROTOBUF_FIELD_OFFSET(SkelData_proto, _impl_.poskelentry_), -1, 0, (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
   }},
@@ -231,7 +231,7 @@ PROTOBUF_NOINLINE void SkelData_proto::Clear() {
   if ((cached_has_bits & 0x00000001U) != 0) {
     _impl_.pversion_.ClearNonDefaultToEmpty();
   }
-  _impl_.numbones_ = 0u;
+  _impl_.numnodes_ = 0u;
   _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::std::string>();
 }
@@ -258,11 +258,11 @@ PROTOBUF_NOINLINE void SkelData_proto::Clear() {
     target = stream->WriteBytesMaybeAliased(1, _s, target);
   }
 
-  // optional uint32 numBones = 2;
+  // optional uint32 numNodes = 2;
   if ((cached_has_bits & 0x00000002U) != 0) {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
-        2, this_._internal_numbones(), target);
+        2, this_._internal_numnodes(), target);
   }
 
   // repeated .SkelEntry_proto poSkelEntry = 3;
@@ -316,10 +316,10 @@ PROTOBUF_NOINLINE void SkelData_proto::Clear() {
       total_size += 1 + ::google::protobuf::internal::WireFormatLite::BytesSize(
                                       this_._internal_pversion());
     }
-    // optional uint32 numBones = 2;
+    // optional uint32 numNodes = 2;
     if ((cached_has_bits & 0x00000002U) != 0) {
       total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
-          this_._internal_numbones());
+          this_._internal_numnodes());
     }
   }
   if (ABSL_PREDICT_FALSE(this_._internal_metadata_.have_unknown_fields())) {
@@ -345,7 +345,7 @@ void SkelData_proto::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::
       _this->_internal_set_pversion(from._internal_pversion());
     }
     if ((cached_has_bits & 0x00000002U) != 0) {
-      _this->_impl_.numbones_ = from._impl_.numbones_;
+      _this->_impl_.numnodes_ = from._impl_.numnodes_;
     }
   }
   _this->_impl_._has_bits_[0] |= cached_has_bits;
@@ -368,7 +368,7 @@ void SkelData_proto::InternalSwap(SkelData_proto* PROTOBUF_RESTRICT PROTOBUF_NON
   swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
   _impl_.poskelentry_.InternalSwap(&other->_impl_.poskelentry_);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.pversion_, &other->_impl_.pversion_, arena);
-  swap(_impl_.numbones_, other->_impl_.numbones_);
+  swap(_impl_.numnodes_, other->_impl_.numnodes_);
 }
 
 // @@protoc_insertion_point(namespace_scope)

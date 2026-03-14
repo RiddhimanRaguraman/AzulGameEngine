@@ -34,7 +34,7 @@ namespace Azul
 		mB.Deserialize(mB_proto);
 		delete[] poBuff;
 
-		this->mNumBones = mB.numNodes;
+		this->mNumBones = mB.numJoints;
 		this->mDepth = mB.maxDepth;
 
 		size_t count = this->mNumBones * this->mDepth;

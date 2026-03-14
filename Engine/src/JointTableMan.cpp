@@ -123,7 +123,7 @@ namespace Azul
 		mB.Deserialize(mB_proto);
 		delete[] poBuff;
 
-		pNode->Set(JointTableName, mB.numBones, &mB.poJointEntry[0]);
+		pNode->Set(JointTableName, mB.numJoints, &mB.poJointEntry[0]);
 
 		return pNode;
 	}

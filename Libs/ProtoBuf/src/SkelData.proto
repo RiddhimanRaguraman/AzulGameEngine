@@ -10,8 +10,8 @@ option optimize_for = LITE_RUNTIME;
 
 message SkelData_proto
 {
-	optional bytes             pVersion  = 1;
-	optional uint32             numBones = 2;
+	optional bytes              pVersion = 1;
+	optional uint32             numNodes = 2;
 	repeated SkelEntry_proto poSkelEntry = 3;
 }
 

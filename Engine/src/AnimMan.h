@@ -17,6 +17,7 @@
 
 namespace Azul
 {
+	class GameObjectAnimSkin;
 
     class AnimMan : public ManBase
     {
@@ -74,8 +75,9 @@ namespace Azul
             AnimNode &operator=(const AnimNode &) = delete;
             virtual ~AnimNode();
 
-            void Set(Name inName, Clip *pClip, AnimController *pController);
+            void Set(Name inName, Clip *pClip, AnimController *pController, GameObjectAnimSkin *pGameSkin);
             AnimController *GetController();
+			GameObjectAnimSkin *GetGameSkin();
 
             char *GetName() override;
             void Wash() override;
@@ -88,6 +90,7 @@ namespace Azul
             Name mName;
             Clip *pClip;
             AnimController *pController;
+			GameObjectAnimSkin *pGameSkin;
         };
 
     private:

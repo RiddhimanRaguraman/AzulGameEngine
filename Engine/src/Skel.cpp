@@ -12,7 +12,7 @@ namespace Azul
 	Skel::Skel()
 	{
 		this->mName = Skel::Name::Not_Initialized;
-		this->numBones = 0;;
+		this->numNodes = 0;;
 		this->poTableArray = nullptr;
 	}
 
@@ -22,16 +22,16 @@ namespace Azul
 		this->poTableArray = nullptr;
 	}
 
-	void Skel::Set(Skel::Name skelName, unsigned int _numBones, SkelEntry *poSkelEntry)
+	void Skel::Set(Skel::Name skelName, unsigned int _numNodes, SkelEntry *poSkelEntry)
 	{
 		this->mName = skelName;
-		this->numBones = _numBones;
+		this->numNodes = _numNodes;
 
-		this->poTableArray = new Data[numBones]();
+		this->poTableArray = new Data[numNodes]();
 
 		assert(SkelEntry::SKELETON_NAME_SIZE == Skel::SKELETON_NAME_SIZE);
 
-		for(size_t i = 0; i < numBones; i++)
+		for(size_t i = 0; i < numNodes; i++)
 		{
 			poTableArray[i].index = poSkelEntry[i].nodeIndex;
 			poTableArray[i].parentIndex = poSkelEntry[i].parentIndex;
@@ -56,7 +56,7 @@ namespace Azul
 	void Skel::Wash()
 	{
 		this->mName = Skel::Name::Not_Initialized;
-		this->numBones = 0;
+		this->numNodes = 0;
 		// just in case
 		delete[] this->poTableArray;
 		this->poTableArray = nullptr;

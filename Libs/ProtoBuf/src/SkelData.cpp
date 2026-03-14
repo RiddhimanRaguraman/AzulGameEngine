@@ -13,7 +13,7 @@ namespace Azul
 
 	SkelData::SkelData()
 		: pVersion{ 0 },
-		numBones{ 0 },
+		numNodes{ 0 },
 		poSkelEntry{ nullptr }
 	{
 		strcpy_s(this->pVersion, protoVersion::VERSION_NUM_BYTES, protoVersion::VERSION_STRING);
@@ -22,7 +22,7 @@ namespace Azul
 
 	SkelData::SkelData(unsigned int _numBones)
 		: pVersion{ 0 },
-		numBones{ _numBones },
+		numNodes{ _numBones },
 		poSkelEntry{ nullptr }
 	{
 		strcpy_s(this->pVersion, protoVersion::VERSION_NUM_BYTES, protoVersion::VERSION_STRING);
@@ -40,12 +40,12 @@ namespace Azul
 		out.set_pversion(sVersion);
 
 		// Add the number of bones
-		out.set_numbones(this->numBones);
+		out.set_numnodes(this->numNodes);
 
 		// Add the SkelEntry
 		SkelEntry_proto tmpSkelEntry_proto;
 
-		for (unsigned int i = 0; i < this->numBones; i++)
+		for (unsigned int i = 0; i < this->numNodes; i++)
 		{
 			// create one proto
 			this->poSkelEntry[i].Serialize(tmpSkelEntry_proto);
@@ -56,7 +56,7 @@ namespace Azul
 			*p = tmpSkelEntry_proto;
 		}
 
-		assert(out.numbones() == this->numBones);
+		assert(out.numnodes() == this->numNodes);
 	}
 
 	void SkelData::Deserialize(const SkelData_proto& in)
@@ -71,12 +71,12 @@ namespace Azul
 		delete[] this->poSkelEntry;
 		this->poSkelEntry = nullptr;
 
-		this->numBones = in.numbones();
+		this->numNodes = in.numnodes();
 
-		this->poSkelEntry = new SkelEntry[this->numBones]();
+		this->poSkelEntry = new SkelEntry[this->numNodes]();
 		assert(this->poSkelEntry);
 
-		for (unsigned int i = 0; i < this->numBones; i++)
+		for (unsigned int i = 0; i < this->numNodes; i++)
 		{
 			poSkelEntry[i].Deserialize(in.poskelentry((int)i));
 		}
@@ -87,7 +87,7 @@ namespace Azul
 		AZUL_UNUSED_VAR(pName);
 		Trace::out("%s: \n", pName);
 
-		for (size_t i = 0; i < this->numBones; i++)
+		for (size_t i = 0; i < this->numNodes; i++)
 		{
 			this->poSkelEntry[i].Print(pName);
 		}

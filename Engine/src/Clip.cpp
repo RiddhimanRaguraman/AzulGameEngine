@@ -13,7 +13,7 @@ namespace Azul
 	Clip::Clip()
 		: DLink(),
 		mName(Clip::Name::Not_Initialized),
-		numBones(0),
+		numNodes(0),
 		numFrames(0),
 		skelName(Skel::Name::Not_Initialized),
 		TotalTime(AnimTime::Duration::ZERO),
@@ -27,9 +27,9 @@ namespace Azul
 		delete[] this->poHead;
 	}
 
-	size_t Clip::GetNumBones()
+	size_t Clip::GetNumNodes()
 	{
-		return this->numBones;
+		return this->numNodes;
 	}
 
 	Skel::Name Clip::GetSkelName()
@@ -55,7 +55,7 @@ namespace Azul
 	void Clip::Wash()
 	{
 		this->mName = Clip::Name::Not_Initialized;
-		this->numBones = 0;
+		this->numNodes = 0;
 		this->numFrames = 0;
 		this->skelName = Skel::Name::Not_Initialized;
 		this->TotalTime = AnimTime(AnimTime::Duration::ZERO);
@@ -81,7 +81,7 @@ namespace Azul
 		// find the "S" of the time
 		float tS = (tCurr - pA->KeyTime) / (pB->KeyTime - pA->KeyTime);
 
-		Mixer::Blend(pResult, pA->poBone, pB->poBone, tS, (int)this->numBones);
+		Mixer::Blend(pResult, pA->poBone, pB->poBone, tS, (int)this->numNodes);
 
 	}
 
@@ -92,7 +92,7 @@ namespace Azul
 				   Skel::Name _skelName)
 	{
 		this->mName = _clipName;
-		this->numBones = _numBones;
+		this->numNodes = _numBones;
 		this->numFrames = _numKeyFrames;
 		this->skelName = _skelName;
 
@@ -112,13 +112,13 @@ namespace Azul
 			pCurrFrame++;
 
 			// Create Bones
-			poHead[i].poBone = new Bone[this->numBones]();
+			poHead[i].poBone = new Bone[this->numNodes]();
 
 			// Fill the Bones
 			Bone *pBone = poHead[i].poBone;
 			AnimBone *pEntry = pFrameBucketEntry[i].poBone;
 
-			for(size_t j = 0; j < (size_t)this->numBones; j++)
+			for(size_t j = 0; j < (size_t)this->numNodes; j++)
 			{
 				pBone[j].S.set(pEntry[j].S.x, pEntry[j].S.y, pEntry[j].S.z);
 				pBone[j].Q.set(pEntry[j].Q.qx, pEntry[j].Q.qy, pEntry[j].Q.qz, pEntry[j].Q.qw);

@@ -194,7 +194,7 @@ class HierarchyData_proto final : public ::google::protobuf::MessageLite
   enum : int {
     kPoDataFieldNumber = 4,
     kPVersionFieldNumber = 1,
-    kNumNodesFieldNumber = 2,
+    kNumJointsFieldNumber = 2,
     kMaxDepthFieldNumber = 3,
   };
   // repeated uint32 poData = 4;
@@ -231,15 +231,15 @@ class HierarchyData_proto final : public ::google::protobuf::MessageLite
   ::std::string* PROTOBUF_NONNULL _internal_mutable_pversion();
 
   public:
-  // optional uint32 numNodes = 2;
-  bool has_numnodes() const;
-  void clear_numnodes() ;
-  ::uint32_t numnodes() const;
-  void set_numnodes(::uint32_t value);
+  // optional uint32 numJoints = 2;
+  bool has_numjoints() const;
+  void clear_numjoints() ;
+  ::uint32_t numjoints() const;
+  void set_numjoints(::uint32_t value);
 
   private:
-  ::uint32_t _internal_numnodes() const;
-  void _internal_set_numnodes(::uint32_t value);
+  ::uint32_t _internal_numjoints() const;
+  void _internal_set_numjoints(::uint32_t value);
 
   public:
   // optional uint32 maxDepth = 3;
@@ -282,7 +282,7 @@ class HierarchyData_proto final : public ::google::protobuf::MessageLite
     ::google::protobuf::RepeatedField<::uint32_t> podata_;
     ::google::protobuf::internal::CachedSize _podata_cached_byte_size_;
     ::google::protobuf::internal::ArenaStringPtr pversion_;
-    ::uint32_t numnodes_;
+    ::uint32_t numjoints_;
     ::uint32_t maxdepth_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -377,32 +377,32 @@ inline void HierarchyData_proto::set_allocated_pversion(::std::string* PROTOBUF_
   // @@protoc_insertion_point(field_set_allocated:HierarchyData_proto.pVersion)
 }
 
-// optional uint32 numNodes = 2;
-inline bool HierarchyData_proto::has_numnodes() const {
+// optional uint32 numJoints = 2;
+inline bool HierarchyData_proto::has_numjoints() const {
   bool value = (_impl_._has_bits_[0] & 0x00000002U) != 0;
   return value;
 }
-inline void HierarchyData_proto::clear_numnodes() {
+inline void HierarchyData_proto::clear_numjoints() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.numnodes_ = 0u;
+  _impl_.numjoints_ = 0u;
   _impl_._has_bits_[0] &= ~0x00000002U;
 }
-inline ::uint32_t HierarchyData_proto::numnodes() const {
-  // @@protoc_insertion_point(field_get:HierarchyData_proto.numNodes)
-  return _internal_numnodes();
+inline ::uint32_t HierarchyData_proto::numjoints() const {
+  // @@protoc_insertion_point(field_get:HierarchyData_proto.numJoints)
+  return _internal_numjoints();
 }
-inline void HierarchyData_proto::set_numnodes(::uint32_t value) {
-  _internal_set_numnodes(value);
+inline void HierarchyData_proto::set_numjoints(::uint32_t value) {
+  _internal_set_numjoints(value);
   _impl_._has_bits_[0] |= 0x00000002U;
-  // @@protoc_insertion_point(field_set:HierarchyData_proto.numNodes)
+  // @@protoc_insertion_point(field_set:HierarchyData_proto.numJoints)
 }
-inline ::uint32_t HierarchyData_proto::_internal_numnodes() const {
+inline ::uint32_t HierarchyData_proto::_internal_numjoints() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.numnodes_;
+  return _impl_.numjoints_;
 }
-inline void HierarchyData_proto::_internal_set_numnodes(::uint32_t value) {
+inline void HierarchyData_proto::_internal_set_numjoints(::uint32_t value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.numnodes_ = value;
+  _impl_.numjoints_ = value;
 }
 
 // optional uint32 maxDepth = 3;

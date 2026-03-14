@@ -21,7 +21,7 @@ namespace Azul
 		static void Create(int reserveNum = 0, int reserveGrow = 1);
 		static void Destroy();
 
-		static TexNode *Add(const char *pFile, TextureObject::Name name);
+		static TexNode *Add(TextureObject::Name name, const char *pFile);
 		static TexNode *Add(TextureObject::Name name, TextureObject *pTextureObject);
 		static TextureObject *Find(TextureObject::Name name);
 

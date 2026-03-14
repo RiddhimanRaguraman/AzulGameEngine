@@ -1,6 +1,7 @@
 // Enable data
 #define CBV_vsProjectionMatrix
 #define CBV_vsViewMatrix
+#define CBV_vsWorldMatrix
 #define CBV_vsLightColor
 #define CBV_vsLightPos
 #define CBV_vsSkinInvBind
@@ -43,8 +44,9 @@ VertexShaderOutput main(VertData_pos inPos,
                         mul(mul(vsSkinInvBind[inJoint.j.z], vsSkinBoneWorld[inJoint.j.z]), inWeight.w.z) +
                         mul(mul(vsSkinInvBind[inJoint.j.w], vsSkinBoneWorld[inJoint.j.w]), inWeight.w.w);
     
-    matrix Mat = mul(mul(SkinWorld, vsViewMatrix), vsProjectionMatrix);
-
+    // Skin * World * View * Proj
+    matrix Mat = mul(mul(mul(SkinWorld, vsWorldMatrix), vsViewMatrix), vsProjectionMatrix);
+	
 	//   position = vec4(inPos.xyz,1) * Mat
 	//   color    = vec4(inColor.rgb,1)
     

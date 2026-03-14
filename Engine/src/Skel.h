@@ -43,11 +43,11 @@ namespace Azul
 		virtual void Dump() override;
 		virtual void Wash() override;
 
-		void Set(Skel::Name skelName, unsigned int numBones, SkelEntry *poSkelEntry);
+		void Set(Skel::Name skelName, unsigned int numNodes, SkelEntry *poSkelEntry);
 
 	public:
 		Name           mName;
-		unsigned int   numBones;
+		unsigned int   numNodes;
 		Data          *poTableArray;
 
 	};

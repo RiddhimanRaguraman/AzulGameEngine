@@ -28,17 +28,38 @@ namespace Azul
 		GameObjectAnimSkin& operator=(GameObjectAnimSkin&) = delete;
 		virtual ~GameObjectAnimSkin();
 
-		virtual void Update(AnimTime currTime);
+		virtual void Update(AnimTime currTime) override;
 
 		virtual void SetIndex(int i) override;
 
+		void SetScale(float sx, float sy, float sz);
+		void SetQuat(float qx, float qy, float qz, float qw);
+		void SetTrans(float x, float y, float z);
+
+		void SetScale(Vec3 &r);
+		void SetQuat(Quat &r);
+		void SetTrans(Vec3 &r);
+
 	private:
 		void privUpdateBoneWorldArray();
+		void privUpdate(AnimTime currTime);
 
 	public:
 		Mat4* poBoneWorld;
 		Skeleton* pSkeleton;
 		JointTable* pJointTable;
+
+		Vec3 *poScale;
+		Quat *poQuat;
+		Vec3 *poTrans;
+
+		float delta_x;
+		float delta_y;
+		float delta_z;
+
+		float cur_rot_x;
+		float cur_rot_y;
+		float cur_rot_z;
 	};
 }
 

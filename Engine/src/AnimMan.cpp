@@ -8,6 +8,12 @@
 #include "SkelMan.h"
 #include "Anim.h"
 #include "AnimManCompareStrategyEnumName.h"
+#include "GameObjectMan.h"
+#include "GraphicsObject_SkinFlatTexture.h"
+#include "GameObjectAnimSkin.h"
+#include "Skeleton.h"
+#include "ShaderObject.h"
+#include "MathEngine.h"
 
 namespace Azul
 {
@@ -16,7 +22,7 @@ namespace Azul
     CompareStrategyBase *AnimMan::posEnumNameCompare = nullptr;
 
     AnimMan::AnimNode::AnimNode()
-        : DLink(), mName(Name::Uninitialized), pClip(nullptr), pController(nullptr)
+        : DLink(), mName(Name::Uninitialized), pClip(nullptr), pController(nullptr), pGameSkin(nullptr)
     {
         this->privClear();
     }
@@ -34,21 +40,28 @@ namespace Azul
         }
         pController = nullptr;
         pClip = nullptr;
+		pGameSkin = nullptr;
         mName = Name::Uninitialized;
     }
 
-    void AnimMan::AnimNode::Set(Name inName, Clip *clip, AnimController *controller)
+    void AnimMan::AnimNode::Set(Name inName, Clip *clip, AnimController *controller, GameObjectAnimSkin *gameSkin)
     {
         this->privClear();
         this->mName = inName;
         this->pClip = clip;
         this->pController = controller;
+		this->pGameSkin = gameSkin;
     }
 
     AnimController *AnimMan::AnimNode::GetController()
     {
         return this->pController;
     }
+
+	GameObjectAnimSkin *AnimMan::AnimNode::GetGameSkin()
+	{
+		return this->pGameSkin;
+	}
 
     char *AnimMan::AnimNode::GetName()
     {
@@ -192,20 +205,37 @@ namespace Azul
 
         Clip::Name clipName = privMapToClipName(name, skelName);
 
-        ClipMan::Add(clipFileName, clipName, skelName);
+        ClipMan::Add(clipName, skelName, clipFileName  );
 
-        Anim *pAnim = new Anim(clipName, texName, meshName, pJointTable);
+		Skeleton *ptSkeleton = new Skeleton(clipName);
+		assert(ptSkeleton);
+
+        Anim *pAnim = new Anim(ptSkeleton);
         assert(pAnim);
 
         AnimController *pController = new AnimController(pAnim, delta);
         assert(pController);
+
+		GraphicsObject_SkinFlatTexture *pGraphicsSkin = new GraphicsObject_SkinFlatTexture(meshName,
+			ShaderObject::Name::SkinFlatTexture,
+			texName);
+		assert(pGraphicsSkin);
+
+		GameObjectAnimSkin *pGameSkin = new GameObjectAnimSkin(pGraphicsSkin, ptSkeleton, pJointTable);
+		assert(pGameSkin);
+		pGameSkin->SetName(StringMe(name));
+		GameObjectMan::Add(pGameSkin, GameObjectMan::GetRoot());
+
+		ptSkeleton->SetAnimationHierarchy(pGameSkin);
+
+		pGraphicsSkin->SetBoneWorld(pGameSkin->poBoneWorld);
 
         Clip *pClip = ClipMan::Find(clipName);
         assert(pClip);
 
         AnimNode *pNode = (AnimNode *)pMan->baseAddToFront();
         assert(pNode);
-        pNode->Set(name, pClip, pController);
+        pNode->Set(name, pClip, pController, pGameSkin);
         return pNode;
     }
 
@@ -256,29 +286,44 @@ namespace Azul
 
     void AnimMan::SetScale(Name name, float sx, float sy, float sz)
     {
-        AnimController *pCtrl = AnimMan::Find(name);
-        if (pCtrl)
-        {
-            pCtrl->SetPivotScale(sx, sy, sz);
-        }
+		AnimMan *pMan = AnimMan::privGetInstance();
+		pMan->pCompareStrategy = AnimMan::posEnumNameCompare;
+		assert(pMan->pCompareStrategy);
+
+		pMan->poNodeCompare->mName = name;
+		AnimNode *pNode = (AnimNode *)pMan->baseFind(pMan->poNodeCompare);
+		if (pNode && pNode->pGameSkin)
+		{
+			pNode->pGameSkin->SetScale(sx, sy, sz);
+		}
     }
 
     void AnimMan::SetUniformScale(Name name, float s)
     {
-        AnimController* pCtrl = AnimMan::Find(name);
-        if (pCtrl)
-        {
-            pCtrl->SetPivotUniformScale(s);
-        }
+		AnimMan *pMan = AnimMan::privGetInstance();
+		pMan->pCompareStrategy = AnimMan::posEnumNameCompare;
+		assert(pMan->pCompareStrategy);
+
+		pMan->poNodeCompare->mName = name;
+		AnimNode *pNode = (AnimNode *)pMan->baseFind(pMan->poNodeCompare);
+		if (pNode && pNode->pGameSkin)
+		{
+			pNode->pGameSkin->SetScale(s, s, s);
+		}
     }
 
     void AnimMan::SetPos(Name name, float x, float y, float z)
     {
-        AnimController *pCtrl = AnimMan::Find(name);
-        if (pCtrl)
-        {
-            pCtrl->SetPivotTrans(x, y, z);
-        }
+		AnimMan *pMan = AnimMan::privGetInstance();
+		pMan->pCompareStrategy = AnimMan::posEnumNameCompare;
+		assert(pMan->pCompareStrategy);
+
+		pMan->poNodeCompare->mName = name;
+		AnimNode *pNode = (AnimNode *)pMan->baseFind(pMan->poNodeCompare);
+		if (pNode && pNode->pGameSkin)
+		{
+			pNode->pGameSkin->SetTrans(x, y, z);
+		}
     }
 
     void AnimMan::SetDelta(Name name, float scale)
@@ -292,30 +337,62 @@ namespace Azul
 
     void AnimMan::SetPivotRotX(Name name, float angle)
     {
-        AnimController* pCtrl = AnimMan::Find(name);
-        if (pCtrl)
-            pCtrl->SetPivotRotX(angle);
+		AnimMan *pMan = AnimMan::privGetInstance();
+		pMan->pCompareStrategy = AnimMan::posEnumNameCompare;
+		assert(pMan->pCompareStrategy);
+
+		pMan->poNodeCompare->mName = name;
+		AnimNode *pNode = (AnimNode *)pMan->baseFind(pMan->poNodeCompare);
+		if (pNode && pNode->pGameSkin)
+		{
+			Quat q(Rot1::X, angle);
+			pNode->pGameSkin->SetQuat(q);
+		}
     }
 
     void AnimMan::SetPivotRotY(Name name, float angle)
     {
-        AnimController* pCtrl = AnimMan::Find(name);
-        if (pCtrl)
-            pCtrl->SetPivotRotY(angle);
+		AnimMan *pMan = AnimMan::privGetInstance();
+		pMan->pCompareStrategy = AnimMan::posEnumNameCompare;
+		assert(pMan->pCompareStrategy);
+
+		pMan->poNodeCompare->mName = name;
+		AnimNode *pNode = (AnimNode *)pMan->baseFind(pMan->poNodeCompare);
+		if (pNode && pNode->pGameSkin)
+		{
+			Quat q(Rot1::Y, angle);
+			pNode->pGameSkin->SetQuat(q);
+		}
     }
 
     void AnimMan::SetPivotRotZ(Name name, float angle)
     {
-        AnimController* pCtrl = AnimMan::Find(name);
-        if (pCtrl)
-            pCtrl->SetPivotRotZ(angle);
+		AnimMan *pMan = AnimMan::privGetInstance();
+		pMan->pCompareStrategy = AnimMan::posEnumNameCompare;
+		assert(pMan->pCompareStrategy);
+
+		pMan->poNodeCompare->mName = name;
+		AnimNode *pNode = (AnimNode *)pMan->baseFind(pMan->poNodeCompare);
+		if (pNode && pNode->pGameSkin)
+		{
+			Quat q(Rot1::Z, angle);
+			pNode->pGameSkin->SetQuat(q);
+		}
     }
 
     void AnimMan::SetPivotTotalRot(Name name, const Rot3 mode, float x, float y, float z)
     {
-        AnimController* pCtrl = AnimMan::Find(name);
-        if (pCtrl)
-            pCtrl->SetPivotTotalRot(mode, x, y, z);
+		AnimMan *pMan = AnimMan::privGetInstance();
+		pMan->pCompareStrategy = AnimMan::posEnumNameCompare;
+		assert(pMan->pCompareStrategy);
+
+		pMan->poNodeCompare->mName = name;
+		AnimNode *pNode = (AnimNode *)pMan->baseFind(pMan->poNodeCompare);
+		if (pNode && pNode->pGameSkin)
+		{
+			Quat q(mode, x, y, z);
+			pNode->pGameSkin->SetQuat(q);
+		}
     }
 
     Clip *AnimMan::GetClip(Name name)
@@ -323,15 +400,12 @@ namespace Azul
         AnimMan *pMan = AnimMan::privGetInstance();
         assert(pMan != nullptr);
 
-        AnimNode *pNode = pMan->poNodeCompare;
-        pNode->mName = name;
-        DLink *pLink = pMan->baseFind(pNode);
-        if (pLink)
-        {
-            AnimNode *pAnimNode = (AnimNode *)pLink;
-            return pAnimNode->pClip;
-        }
-        return nullptr;
+		pMan->pCompareStrategy = AnimMan::posEnumNameCompare;
+		assert(pMan->pCompareStrategy);
+
+		pMan->poNodeCompare->mName = name;
+		AnimNode *pNode = (AnimNode *)pMan->baseFind(pMan->poNodeCompare);
+		return pNode ? pNode->pClip : nullptr;
     }
 
     AnimMan *AnimMan::privGetInstance()
