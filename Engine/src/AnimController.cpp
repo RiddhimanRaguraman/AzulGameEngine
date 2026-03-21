@@ -96,7 +96,7 @@ namespace Azul
 
     Clip *AnimController::GetClip()
     {
-        return this->poAnim->GetClip();
+        return this->poAnim->privGetClip();
     }
 }
 

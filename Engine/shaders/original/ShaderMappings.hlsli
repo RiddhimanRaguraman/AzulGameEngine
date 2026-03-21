@@ -7,6 +7,11 @@
 //  https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/registers---cs-5-0
 //  https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/registers---ps-5-0
 // -------------------------------------------------------------
+#pragma pack_matrix( row_major )
+
+// ---------------------------------------------
+// Structures
+// ---------------------------------------------
 
 struct rowMatrix
 {
@@ -15,6 +20,24 @@ struct rowMatrix
 
 #define BONE_COUNT_MAX 46
 
+struct BoneType
+{
+    float4 t;
+    float4 q;
+    float4 s;
+};
+
+struct MixerData
+{
+    float ts;
+    uint numNodes;
+};
+
+struct WorldData
+{
+    uint hierarchyDepth;
+    uint numBones;
+};
 
 // ------------------------------------------
 // Vertex data s is sampler, x - slot
@@ -77,6 +100,54 @@ struct rowMatrix
 
 #ifdef SRV_tMainTexture
     Texture2D tMainTexture : register(t0);
+#endif
+
+#ifdef SRV_tKeyA
+    StructuredBuffer<BoneType> tKeyA : register(t1); 
+#endif
+
+#ifdef SRV_tKeyB
+    StructuredBuffer<BoneType> tKeyB : register(t2); 
+#endif
+
+#ifdef SRV_tHierarchyTable
+    StructuredBuffer<uint> tHierarchyTable : register(t3); 
+#endif
+
+#ifdef SRV_tSkinBoneWorld
+    StructuredBuffer<rowMatrix> tSkinBoneWorld : register(t4); 
+#endif
+
+// ----------------------------------------------------
+// ux - u is  unordered access views (UAV), x - slot 
+// ----------------------------------------------------
+
+#ifdef UAV_uMixerOut
+    RWStructuredBuffer<BoneType> uMixerOut : register(u0); 
+#endif
+
+#ifdef UAV_uBoneWorldOut
+    RWStructuredBuffer<rowMatrix> uBoneWorldOut : register(u1); 
+#endif
+
+// --------------------------------------------------
+// bx - b is CS constant buffer, x - slot
+//      in compiled shader its displayed as cbX
+//      max count == 15
+// --------------------------------------------------
+
+#ifdef CBV_csMixer
+    cbuffer AA0 : register(b0) 
+    {
+        MixerData csMixer;
+    };
+#endif
+
+#ifdef CBV_csWorld
+    cbuffer AA1 : register(b1) 
+    {
+        WorldData csWorld;
+    };
 #endif
 
 // --------------------------------------------------

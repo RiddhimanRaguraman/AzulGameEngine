@@ -1,5 +1,6 @@
 #include "Prefab.h"
 #include "GameObjectRigidBody.h"
+#include "GameObjectAnimSkin.h"
 
 namespace Azul {
 	Prefab::Prefab()
@@ -47,6 +48,13 @@ namespace Azul {
 	//}
 
 	void Prefab::SetData(GameObjectRigidBody& pGom)
+	{
+		this->poScale->set(*pGom.poScale);
+		*this->poQuat = *pGom.poQuat;
+		this->poTrans->set(*pGom.poTrans);
+	}
+
+	void Prefab::SetData(GameObjectAnimSkin& pGom)
 	{
 		this->poScale->set(*pGom.poScale);
 		*this->poQuat = *pGom.poQuat;

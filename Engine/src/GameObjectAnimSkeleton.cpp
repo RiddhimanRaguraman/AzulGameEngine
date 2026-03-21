@@ -12,7 +12,6 @@
 
 namespace Azul
 {
-	extern Bone HackLocalBone[];
 
 	GameObjectAnimSkeleton::GameObjectAnimSkeleton(GraphicsObject *pGraphicsObject, Bone *_pBoneResult)
 		: GameObjectControlled(pGraphicsObject)
@@ -65,21 +64,12 @@ namespace Azul
 			T.set(this->pBoneResult[index].T);
 			S.set(this->pBoneResult[index].S);
 			Q = this->pBoneResult[index].Q;
-
-			HackLocalBone[index].S = this->pBoneResult[index].S;
-			HackLocalBone[index].Q = this->pBoneResult[index].Q;
-			HackLocalBone[index].T = this->pBoneResult[index].T;
-
 		}
 		else
 		{
 			T.set(0, 0, 0);
 			S.set(1, 1, 1);
 			Q.set(Identity);
-
-			HackLocalBone[index].S = Vec3(1, 1, 1);
-			HackLocalBone[index].Q = Quat(Identity);
-			HackLocalBone[index].T = Vec3(0, 0, 0);
 		}
 
 		// world matrix

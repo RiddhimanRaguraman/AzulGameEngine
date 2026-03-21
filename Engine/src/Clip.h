@@ -33,6 +33,8 @@ namespace Azul
 			Idle_DogBot,
 			walk_Spiderbot,
 			Mousey_Silly_Dance,
+			Mousey_Run,
+			Mousey_Gangnam,
 			Not_Initialized
 		};
 

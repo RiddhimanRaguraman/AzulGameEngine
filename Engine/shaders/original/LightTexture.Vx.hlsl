@@ -63,7 +63,8 @@ VertexShaderOutput main(VertData_pos inPos, VertData_tex inTex, VertData_norm in
 
 	// Get vFragColor
     float fDot = max(0.0, dot(vNorm, vLightDir));
-    outValue.color.xyz = vsLightColor.xyz * fDot;
+    const float ambient = 0.35f;
+    outValue.color.xyz = vsLightColor.xyz * (ambient + (1.0f - ambient) * fDot);
     outValue.color.w = 1.0f;
 
     return outValue;

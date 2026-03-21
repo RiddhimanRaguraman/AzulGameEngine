@@ -6,6 +6,7 @@
 namespace Azul
 {
 	class GameObjectRigidBody;
+	class GameObjectAnimSkin;
 
 	class Prefab : public Prefab_Abstract
 	{
@@ -15,6 +16,7 @@ namespace Azul
 		Prefab(const Prefab&) = delete;
 		virtual ~Prefab();
 		void SetData(GameObjectRigidBody& pGom);
+		void SetData(GameObjectAnimSkin& pGom);
 		void SetScale(float sx, float sy, float sz);
 		void SetTrans(float x, float y, float z);
 		virtual void Update() override;

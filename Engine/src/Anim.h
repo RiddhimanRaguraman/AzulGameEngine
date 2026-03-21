@@ -12,6 +12,8 @@
 #include "TextureObject.h"
 #include "JointTable.h"
 #include "Mixer.h"
+#include "HierarchyTable.h"
+#include "WorldCompute.h"
 
 namespace Azul
 {
@@ -23,19 +25,21 @@ namespace Azul
         Anim &operator = (const Anim &) = delete;
         ~Anim();
 
-        Anim(Skeleton *ptSkeleton, Mixer *pMixer);
+        Anim(HierarchyTable::Name hierarchyName, Clip::Name clipName);
 
         void Animate(AnimTime tCurr);
         AnimTime FindMaxTime();
 
         void SetClip(Clip::Name clipName);
-        Clip *GetClip();
+        Mixer* GetMixer();
+        WorldCompute* GetWorldCompute();
+        Clip *privGetClip();
 
 
     private:
         Skeleton *poSkeleton;
-        Clip *pClip;
-        Mixer *pMixer;
+        Mixer* poMixer;
+        WorldCompute* poWorldCompute;
     };
 
 }

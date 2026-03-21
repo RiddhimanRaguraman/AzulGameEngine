@@ -15,6 +15,7 @@
 #include "ShaderObject.h"
 #include "MathEngine.h"
 #include "HierarchyTableMan.h"
+#include "Prefab_Pivot.h"
 
 namespace Azul
 {
@@ -192,6 +193,10 @@ namespace Azul
             {
             case AnimMan::Name::Dance:
                 return Clip::Name::Mousey_Silly_Dance;
+            case AnimMan::Name::Gangnam:
+                return Clip::Name::Mousey_Gangnam;
+            case AnimMan::Name::Run:
+                return Clip::Name::Mousey_Run;
             default:
                 return Clip::Name::Not_Initialized;
             }
@@ -227,19 +232,9 @@ namespace Azul
 
         ClipMan::Add(clipName, skelName, clipFileName  );
 
-		Skeleton *ptSkeleton = new Skeleton(clipName);
-		assert(ptSkeleton);
-
-        Mixer *ptMixer = new Mixer(ptSkeleton->GetClip());
-        assert(ptMixer);
-
         HierarchyTable::Name Hname = privMapToHierarchyName(skelName);
-        HierarchyTable *pHierarchyTable = HierarchyTableMan::Find(Hname);
 
-        WorldCompute *ptWorldCompute = new WorldCompute(ptMixer, pHierarchyTable);
-        assert(ptWorldCompute);
-
-        Anim *ptAnim = new Anim(ptSkeleton, ptMixer);
+        Anim *ptAnim = new Anim(Hname, clipName);
         assert(ptAnim);
 
         AnimController *pController = new AnimController(ptAnim, delta);
@@ -248,13 +243,13 @@ namespace Azul
 		GraphicsObject_SkinLightTexture *pGraphicsSkin = new GraphicsObject_SkinLightTexture(meshName,
 			                                                                                 ShaderObject::Name::SkinLightTexture,
 			                                                                                 texName,
-                                                                                             ptMixer,
-                                                                                             ptWorldCompute,
+                                                                                             ptAnim->GetMixer(),
+                                                                                             ptAnim->GetWorldCompute(),
                                                                                              _pLightColor,
                                                                                              _pLightPos);
 		assert(pGraphicsSkin);
 
-		GameObjectAnimSkin *pGameSkin = new GameObjectAnimSkin(pGraphicsSkin, ptMixer, ptWorldCompute);
+		GameObjectAnimSkin *pGameSkin = new GameObjectAnimSkin(pGraphicsSkin, ptAnim->GetMixer(),   ptAnim->GetWorldCompute());
 		assert(pGameSkin);
 		pGameSkin->SetName(StringMe(name));
 		GameObjectMan::Add(pGameSkin, GameObjectMan::GetRoot());
@@ -363,6 +358,20 @@ namespace Azul
             pCtrl->SetDelta(scale);
         }
     }
+
+	void AnimMan::SetPrefabPivot(Name name)
+	{
+		AnimMan *pMan = AnimMan::privGetInstance();
+		pMan->pCompareStrategy = AnimMan::posEnumNameCompare;
+		assert(pMan->pCompareStrategy);
+
+		pMan->poNodeCompare->mName = name;
+		AnimNode *pNode = (AnimNode *)pMan->baseFind(pMan->poNodeCompare);
+		if (pNode && pNode->pGameSkin)
+		{
+			pNode->pGameSkin->SetPrefab(new Prefab_Pivot());
+		}
+	}
 
     void AnimMan::SetPivotRotX(Name name, float angle)
     {

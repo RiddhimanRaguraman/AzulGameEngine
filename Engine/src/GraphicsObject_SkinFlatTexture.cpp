@@ -48,7 +48,6 @@ namespace Azul
 	{
 		pMesh->ActivateMesh();
 		pMesh->ActivateConstantBuffers();
-		//pMesh->Transfer_SkinBoneWorldBuffer(this->pBoneWorld);
 
 		pShaderObj->ActivateShader();
 		pShaderObj->ActivateCBV();
@@ -58,7 +57,7 @@ namespace Azul
 
 		pShaderObj->TransferWorldViewProj(pCam, this->poWorld);
 
-		StateDirectXMan::GetContext()->VSSetShaderResources(4, 1, &pWorldCompute->GetBoneWorld()->poShaderResourceView);
+		StateDirectXMan::GetContext()->VSSetShaderResources((UINT)ShaderResourceBufferSlot::BoneWorldIn, 1, &pWorldCompute->GetBoneWorld()->poShaderResourceView);
 
 
 	}

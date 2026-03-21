@@ -19,9 +19,8 @@
 #include "ConvertSkin.h"
 
 #include <exception>
-#include <functional>
-#include <mutex>
-#include <thread>
+#include <future>
+#include <utility>
 #include <vector>
 
 int main()
@@ -35,30 +34,13 @@ int main()
 	system("copy .\\..\\Assets\\*.glb .\\..\\Data");
 	system("copy .\\..\\Assets\\*.xml .\\..\\Data");
 
-	std::vector<std::thread> workers;
-	workers.reserve(32);
-
-	std::mutex exceptionMutex;
+	std::vector<std::future<void>> tasks;
+	tasks.reserve(32);
 	std::exception_ptr firstException = nullptr;
 
-	auto addWork = [&](std::function<void()> task)
+	auto addWork = [&](auto&& task)
 		{
-			workers.emplace_back(
-				[&, task]()
-				{
-					try
-					{
-						task();
-					}
-					catch (...)
-					{
-						std::lock_guard<std::mutex> lock(exceptionMutex);
-						if (firstException == nullptr)
-						{
-							firstException = std::current_exception();
-						}
-					}
-				});
+			tasks.emplace_back(std::async(std::launch::async, std::forward<decltype(task)>(task)));
 		};
 
 	addWork([]() { Azul::CreateTexturePNG("TEST_PNG_RGB.png", "TEST_PNG_RGB"); });
@@ -96,12 +78,21 @@ int main()
 	addWork([]() { Azul::ConvertHierarchy("Mousey_Mesh.glb", "Mousey"); });
 	addWork([]() { Azul::ConvertAnim("Mousey_Anim_Silly_Dancing.glb", "Mousey_SillyDancing"); });
 	addWork([]() { Azul::CreateTexturePNG("Mousey.png", "Mousey"); });
+	addWork([]() { Azul::ConvertAnim("Mousey_Anim_Run_Forward.glb", "Mousey_Run"); });
+	addWork([]() { Azul::ConvertAnim("Mousey_Anim_Gangnam_Style.glb", "Mousey_Gangnam"); });
 
-	for (std::thread& t : workers)
+	for (std::future<void>& f : tasks)
 	{
-		if (t.joinable())
+		try
 		{
-			t.join();
+			f.get();
+		}
+		catch (...)
+		{
+			if (firstException == nullptr)
+			{
+				firstException = std::current_exception();
+			}
 		}
 	}
 

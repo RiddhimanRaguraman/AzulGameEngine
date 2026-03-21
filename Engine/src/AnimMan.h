@@ -31,6 +31,7 @@ namespace Azul
             HitBack,
             Shotup,
             Dance,
+            Gangnam,
             Idle
         };
         
@@ -56,6 +57,7 @@ namespace Azul
         static void SetPivotRotZ(Name name, float angle);
         static void SetPivotTotalRot(Name name, const Rot3 mode, float x, float y, float z);
         static void SetDelta(Name name, float scale);
+		static void SetPrefabPivot(Name name);
         static Clip *GetClip(Name name);
 
         static void Remove(DLink *pNode);

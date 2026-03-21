@@ -9,35 +9,68 @@
 #include "Mixer.h"
 #include "Clip.h"
 #include "ClipMan.h"
+#include "HierarchyTableMan.h"
 
 namespace Azul
 {
-	Anim::Anim(Skeleton *_pSkeleton, Mixer *_pMixer)
-		: poSkeleton{ _pSkeleton },
-		pClip{ this->poSkeleton->GetClip() },
-		pMixer{ _pMixer }
+	Anim::Anim(HierarchyTable::Name hierarchyName, Clip::Name clipName)
 	{
-		assert(poSkeleton);
-		assert(pClip);
-		assert(pMixer);
+		HierarchyTable* pHierarchyTable = HierarchyTableMan::Find(hierarchyName);
+		assert(pHierarchyTable);
+
+		this->poSkeleton = new Skeleton(clipName);
+		assert(this->poSkeleton);
+
+		// Setup Compute shaders data
+		this->poMixer = new Mixer(this->poSkeleton->GetClip());
+		assert(this->poMixer);
+
+		this->poWorldCompute = new WorldCompute(this->poMixer, pHierarchyTable);
+		assert(this->poWorldCompute);
+
 	}
 
 	Anim::~Anim()
 	{
 		delete this->poSkeleton;
 		this->poSkeleton = nullptr;
+
+		delete this->poMixer;
+		this->poMixer = nullptr;
+
+		delete this->poWorldCompute;
+		this->poWorldCompute = nullptr;
+
 	}
 
 	AnimTime Anim::FindMaxTime()
 	{
-		assert(pClip);
-		return this->pClip->GetTotalTime();
+		return this->privGetClip()->GetTotalTime();
 	}
-		
+
 	void Anim::Animate(AnimTime tCurr)
 	{
+		this->privGetClip()->AnimateBones(tCurr, this->poMixer);
+	}
+
+	Mixer* Anim::GetMixer()
+	{
+		assert(this->poMixer);
+		return this->poMixer;
+	}
+
+	WorldCompute* Anim::GetWorldCompute()
+	{
+		assert(this->poWorldCompute);
+		return this->poWorldCompute;
+	}
+
+	Clip* Anim::privGetClip()
+	{
+		assert(this->poSkeleton);
+		Clip* pClip = this->poSkeleton->GetClip();
 		assert(pClip);
-		this->pClip->AnimateBones(tCurr, this->pMixer);
+		return pClip;
 	}
 
 	void Anim::SetClip(Clip::Name clipName)
@@ -46,11 +79,6 @@ namespace Azul
 		this->poSkeleton->SetClip(clipName);
 	}
 
-    Clip *Anim::GetClip()
-    {
-		assert(this->poSkeleton);
-        return this->poSkeleton->GetClip();
-    }
 }
 
 //--- End of File ----

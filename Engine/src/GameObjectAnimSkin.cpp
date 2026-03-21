@@ -33,7 +33,9 @@ namespace Azul
 		cur_rot_y{ 0.0f },
 		cur_rot_z{ 0.0f },
 		poMixer{ _pMixer },
-		poWorldCompute{ _pWorldCompute }
+		poWorldCompute{ _pWorldCompute },
+		setorupdate(false),
+		poPrefab(nullptr)
 	{
 		assert(pGraphicsObject);
 
@@ -47,20 +49,27 @@ namespace Azul
 
 	GameObjectAnimSkin::~GameObjectAnimSkin()
 	{
+		delete this->poPrefab;
 		delete this->poTrans;
 		delete this->poScale;
 		delete this->poQuat;
-		delete this->poMixer;
-		delete this->poWorldCompute;
 	}
 
 	void GameObjectAnimSkin::Update(AnimTime currentTime)
 	{
 		AZUL_UNUSED_VAR(currentTime);
 
-
-		// Goal: update the world matrix
-		this->privUpdate(currentTime);
+		if (setorupdate == true && poPrefab != nullptr)
+		{
+			this->poPrefab->SetData(*this);
+			poPrefab->Update();
+			poPrefab->ReturnWorld(*this->poWorld);
+		}
+		else
+		{
+			this->privUpdate(currentTime);
+			setorupdate = true;
+		}
 
 		// update the bounding volume based on world matrix
 		this->poGraphicsObject->SetWorld(*this->poWorld);
@@ -165,6 +174,11 @@ namespace Azul
 	void GameObjectAnimSkin::SetTrans(float x, float y, float z)
 	{
 		this->poTrans->set(x, y, z);
+	}
+
+	void GameObjectAnimSkin::SetPrefab(Prefab* _poPrefab)
+	{
+		this->poPrefab = _poPrefab;
 	}
 
 	void GameObjectAnimSkin::SetScale(Vec3 &r)

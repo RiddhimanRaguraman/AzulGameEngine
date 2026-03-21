@@ -2,17 +2,13 @@
 // Copyright 2026, Ed Keenan, all rights reserved.
 //--------------------------------------------------------------
 
-#pragma pack_matrix( row_major )
+// Enable data
+#define SRV_tKeyA
+#define SRV_tKeyB
+#define UAV_uMixerOut
+#define CBV_csMixer
 
-// ---------------------------------------------
-// Structure for SRV and UAV Buffer
-// ---------------------------------------------
-struct BoneType
-{
-    float4 t;
-    float4 q;
-    float4 s;
-};
+#include "ShaderMappings.hlsli"
 
 // ---------------------------------------------
 // Functions
@@ -21,45 +17,29 @@ float4 slerp(float4 src, float4 tar, float t);
 float4 lerpMe(float4 src, float4 tar, float t);
 
 // ---------------------------------------------
-// tx - t is shader resource views (SRV), x - slot
+// Local Threads
 // ---------------------------------------------
-
-StructuredBuffer<BoneType> KeyA : register(t1); // slot 1 (ShaderResourceBufferSlot::KeyA)   
-StructuredBuffer<BoneType> KeyB : register(t2); // slot 2 (ShaderResourceBufferSlot::KeyB)
-
-// ------------------------------------------
-// bx - b is constant buffer, x - slot
-// ------------------------------------------
-
-cbuffer AA : register(b0) // slot 0 (ConstantBufferSlot_cs::csMixer)
-{
-    float ts;
-    uint numNodes;
-};
-
-// ----------------------------------------------------
-// ux - u is  unordered access views (UAV), x - slot 
-// ----------------------------------------------------
-
-RWStructuredBuffer<BoneType> MixerOut : register(u0); // slot 0  (UnorderedAccessBufferSlot::MixerABOut)
-
 [numthreads(1, 1, 1)]
+
+// ---------------------------------------------
+// main
+// ---------------------------------------------
 void main(uint3 dtID : SV_DispatchThreadID)
 {
     uint boneIndex = dtID.x;
 
     // protection incase index is outside array range
-    if (dtID.x < numNodes)
+    if (dtID.x < csMixer.numNodes)
     {
-        MixerOut[boneIndex] = KeyA[boneIndex];
+        uMixerOut[boneIndex] = tKeyA[boneIndex];
   
-        float4 trans = lerpMe(KeyA[boneIndex].t, KeyB[boneIndex].t, ts);
-        float4 quat = slerp(KeyA[boneIndex].q, KeyB[boneIndex].q, ts);
-        float4 scale = lerpMe(KeyA[boneIndex].s, KeyB[boneIndex].s, ts);
+        float4 trans = lerpMe(tKeyA[boneIndex].t, tKeyB[boneIndex].t, csMixer.ts);
+        float4 quat = slerp(tKeyA[boneIndex].q, tKeyB[boneIndex].q, csMixer.ts);
+        float4 scale = lerpMe(tKeyA[boneIndex].s, tKeyB[boneIndex].s, csMixer.ts);
 
-        MixerOut[boneIndex].t = trans;
-        MixerOut[boneIndex].q = quat;
-        MixerOut[boneIndex].s = scale;
+        uMixerOut[boneIndex].t = trans;
+        uMixerOut[boneIndex].q = quat;
+        uMixerOut[boneIndex].s = scale;
     }
 	
 }

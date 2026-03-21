@@ -25,10 +25,6 @@
  
 namespace Azul
 {
- 
-	Bone HackLocalBone[15];
-	Mat4 HackWorld[8];
-
 	FontSprite* pFontSprite1;
 
 	//-----------------------------------------------------------------------------
@@ -152,15 +148,15 @@ namespace Azul
 		//   Joint
 		// --------------------------------
 
-		JointTable* pJointTableChicken = JointTableMan::Add(JointTable::Name::ChickenBot, "ChickenBot.j.proto.azul");
-		JointTable* pJointTableMouse = JointTableMan::Add(JointTable::Name::Mousey, "Mousey.j.proto.azul");
+		JointTableMan::Add(JointTable::Name::ChickenBot, "ChickenBot.j.proto.azul");
+		JointTableMan::Add(JointTable::Name::Mousey, "Mousey.j.proto.azul");
 
 		// --------------------------------
 		//   Hierarchy
 		// --------------------------------
 
-		HierarchyTable* pHierarchyChicken = HierarchyTableMan::Add(HierarchyTable::Name::ChickenBot, "ChickenBot.h.proto.azul");
-		HierarchyTable* pHierarchyMouse = HierarchyTableMan::Add(HierarchyTable::Name::Mousey, "Mousey.h.proto.azul");
+		HierarchyTableMan::Add(HierarchyTable::Name::ChickenBot, "ChickenBot.h.proto.azul");
+		HierarchyTableMan::Add(HierarchyTable::Name::Mousey, "Mousey.h.proto.azul");
 
 		// --------------------------------
 		//  Shader
@@ -334,18 +330,31 @@ namespace Azul
 
 		AnimTime delta = 0.5f * AnimTime(AnimTime::Duration::FILM_24_FRAME);
 
+		Vec3 AnimLightColor(2.5f, 2.5f, 2.5f);
+		Vec3 AnimLightPos(0.0f, 6.0f, 6.0f);
+
 		/*ClipMan::Add("ChickenBot_HitBack.a.proto.azul", Clip::Name::HitBack_ChickenBot, Skel::Name::ChickenBot);
-		ClipMan::Add("ChickenBot_ShotUp.a.proto.azul", Clip::Name::ShotUp_ChickenBot, Skel::Name::ChickenBot);*/
+		ClipMan::Add("ChickenBot_ShotUp.a.proto.azul", Clip::Name::ShotUp_ChickenBot, Skel::Name::ChickenBot);
+		ClipMan::Add(Clip::Name::Mousey_Gangnam, "Mousey_Gangnam.a.proto.azul", Skel::Name::Mousey);
+		ClipMan::Add(Clip::Name::Mousey_Run, "Mousey_Run.a.proto.azul", Skel::Name::Mousey);*/
+	
+		AnimMan::Add(AnimMan::Name::Gangnam, "Mousey_Gangnam.a.proto.azul", delta, Skel::Name::Mousey, TextureObject::Name::Mousey, Mesh::Name::Mousey, AnimLightColor, AnimLightPos);
+		AnimMan::SetPos(AnimMan::Name::Gangnam, -1.2f, 0.0f, -1.2f);
+		AnimMan::SetUniformScale(AnimMan::Name::Gangnam, 2.5f);
+		AnimMan::SetPivotTotalRot(AnimMan::Name::Gangnam, Rot3::ZYX, -MATH_PI / 2, 0.0f, -MATH_PI / 2);
+		AnimMan::SetPrefabPivot(AnimMan::Name::Gangnam);
 
-		AnimMan::Add(AnimMan::Name::Dance, "Mousey_SillyDancing.a.proto.azul", delta, Skel::Name::Mousey, TextureObject::Name::Mousey, Mesh::Name::Mousey, LightColor, LightPos);
-		AnimMan::SetPos(AnimMan::Name::Dance, -1.2f, 0.0f, -1.2f);
-		AnimMan::SetUniformScale(AnimMan::Name::Dance, 2.5f);
-		AnimMan::SetPivotTotalRot(AnimMan::Name::Dance, Rot3::ZYX, -MATH_PI / 2, 0.0f, -MATH_PI / 2);
-
-		AnimMan::Add(AnimMan::Name::Run, "ChickenBot_Walk.a.proto.azul", delta, Skel::Name::ChickenBot, TextureObject::Name::ChickenBot, Mesh::Name::ChickenBot, LightColor, LightPos);
+		AnimMan::Add(AnimMan::Name::Run, "Mousey_Run.a.proto.azul", delta, Skel::Name::Mousey, TextureObject::Name::Mousey, Mesh::Name::Mousey, AnimLightColor, AnimLightPos);
 		AnimMan::SetPos(AnimMan::Name::Run, -1.2f, 0.0f, 1.2f);
-		AnimMan::SetUniformScale(AnimMan::Name::Run, 60.0f);
+		AnimMan::SetUniformScale(AnimMan::Name::Run, 2.5f);
 		AnimMan::SetPivotTotalRot(AnimMan::Name::Run, Rot3::ZYX, -MATH_PI / 2, 0.0f, -MATH_PI / 2);
+		AnimMan::SetPrefabPivot(AnimMan::Name::Run);
+
+		//AnimMan::Add(AnimMan::Name::Run, "ChickenBot_Walk.a.proto.azul", delta, Skel::Name::ChickenBot, TextureObject::Name::ChickenBot, Mesh::Name::ChickenBot, AnimLightColor, AnimLightPos);
+		//AnimMan::SetPos(AnimMan::Name::Run, -1.2f, 0.0f, 1.2f);
+		//AnimMan::SetUniformScale(AnimMan::Name::Run, 60.0f);
+		//AnimMan::SetPivotTotalRot(AnimMan::Name::Run, Rot3::ZYX, -MATH_PI / 2, 0.0f, -MATH_PI / 2);
+		//AnimMan::SetPrefabPivot(AnimMan::Name::Run);
 
 		return true;
 	}

@@ -13,9 +13,9 @@
 #define VERTEX_joint
 #define VERTEX_weight
 
-#include "ShaderMappings.hlsli"
+#define SRV_tSkinBoneWorld
 
-StructuredBuffer<rowMatrix> SkinBoneWorld : register(t4); // slot 4
+#include "ShaderMappings.hlsli"
 
 
 // ------------------------------------------------------------
@@ -41,10 +41,10 @@ VertexShaderOutput main(VertData_pos inPos,
 {
     VertexShaderOutput outValue;
 
-    row_major matrix SkinWorld = mul(mul(vsSkinInvBind[inJoint.j.x], SkinBoneWorld[inJoint.j.x].m), inWeight.w.x) +
-	                            mul(mul(vsSkinInvBind[inJoint.j.y], SkinBoneWorld[inJoint.j.y].m), inWeight.w.y) +
-                                mul(mul(vsSkinInvBind[inJoint.j.z], SkinBoneWorld[inJoint.j.z].m), inWeight.w.z) +
-                                mul(mul(vsSkinInvBind[inJoint.j.w], SkinBoneWorld[inJoint.j.w].m), inWeight.w.w);
+    row_major matrix SkinWorld = mul(mul(vsSkinInvBind[inJoint.j.x], tSkinBoneWorld[inJoint.j.x].m), inWeight.w.x) +
+	                            mul(mul(vsSkinInvBind[inJoint.j.y], tSkinBoneWorld[inJoint.j.y].m), inWeight.w.y) +
+                                mul(mul(vsSkinInvBind[inJoint.j.z], tSkinBoneWorld[inJoint.j.z].m), inWeight.w.z) +
+                                mul(mul(vsSkinInvBind[inJoint.j.w], tSkinBoneWorld[inJoint.j.w].m), inWeight.w.w);
     
     // Skin * World * View * Proj
     matrix Mat = mul(mul(mul(SkinWorld, vsWorldMatrix), vsViewMatrix), vsProjectionMatrix);
@@ -76,7 +76,8 @@ VertexShaderOutput main(VertData_pos inPos,
 
 	// Get vFragColor
     float fDot = max(0.0, dot(vNorm, vLightDir));
-    outValue.color.xyz = vsLightColor.xyz * fDot;
+    const float ambient = 0.35f;
+    outValue.color.xyz = vsLightColor.xyz * (ambient + (1.0f - ambient) * fDot);
     outValue.color.w = 1.0f;
     
     return outValue;
