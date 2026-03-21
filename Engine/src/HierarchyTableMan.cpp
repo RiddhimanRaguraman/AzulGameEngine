@@ -91,6 +91,8 @@ namespace Azul
 
 		delete HierarchyTableMan::posInstance;
 		HierarchyTableMan::posInstance = nullptr;
+
+		delete posEnumNameCompare;
 	}
 
 	HierarchyTable *HierarchyTableMan::Add(HierarchyTable::Name JointTableName, const char *pFileName)

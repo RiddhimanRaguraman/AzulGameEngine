@@ -8,6 +8,10 @@
 #include "Mixer.h"
 #include "StringThis.h"
 
+#include "FrameBucket.h"
+#include "AnimFrameBucket.h"
+#include "BufferSRV_cs.h"
+
 namespace Azul
 {
 	Clip::Clip()
@@ -25,6 +29,7 @@ namespace Azul
 	Clip::~Clip()
 	{
 		delete[] this->poHead;
+		this->poHead = nullptr;
 	}
 
 	size_t Clip::GetNumNodes()
@@ -62,15 +67,22 @@ namespace Azul
 		this->poHead = nullptr;
 	}
 
-	void Clip::AnimateBones(AnimTime tCurr, Bone *pResult)
+	void Clip::AnimateBones(AnimTime tCurr, Mixer *pMixer)
 	{
+		assert(pMixer);
+
 		// First one 
 		FrameBucket *pTmp = this->poHead;
+		int count = 0;
 
+		// safety - make sure there are bones to animate
+		if (pTmp->nextBucket != nullptr)
+		{
 		// Find which key frames
 		while(tCurr >= pTmp->KeyTime && pTmp->nextBucket != nullptr)
 		{
 			pTmp = pTmp->nextBucket;
+			count++;
 		}
 
 		// pTmp is the "B" key frame
@@ -78,10 +90,21 @@ namespace Azul
 		FrameBucket *pA = pTmp->prevBucket;
 		FrameBucket *pB = pTmp;
 
-		// find the "S" of the time
-		float tS = (tCurr - pA->KeyTime) / (pB->KeyTime - pA->KeyTime);
+		pMixer->pKeyA = pA->poBoneSRV;
+		pMixer->pKeyB = pB->poBoneSRV;
 
-		Mixer::Blend(pResult, pA->poBone, pB->poBone, tS, (int)this->numNodes);
+		// find the "S" of the time
+		pMixer->tS = (tCurr - pA->KeyTime) / (pB->KeyTime - pA->KeyTime);
+
+		}
+		else
+		{
+			pMixer->pKeyA = pTmp->poBoneSRV;
+			pMixer->pKeyB = pTmp->poBoneSRV;
+
+			// find the "S" of the time
+			pMixer->tS = 0.0f;
+		}
 
 	}
 
@@ -111,20 +134,36 @@ namespace Azul
 			pCurrFrame->prevBucket = (pCurrFrame - 1);
 			pCurrFrame++;
 
-			// Create Bones
-			poHead[i].poBone = new Bone[this->numNodes]();
-
-			// Fill the Bones
-			Bone *pBone = poHead[i].poBone;
-			AnimBone *pEntry = pFrameBucketEntry[i].poBone;
-
-			for(size_t j = 0; j < (size_t)this->numNodes; j++)
+		// ------------------------------------------
+		// Transfer Bone data to SRV Buffer
+		// ------------------------------------------
 			{
-				pBone[j].S.set(pEntry[j].S.x, pEntry[j].S.y, pEntry[j].S.z);
-				pBone[j].Q.set(pEntry[j].Q.qx, pEntry[j].Q.qy, pEntry[j].Q.qz, pEntry[j].Q.qw);
-				pBone[j].T.set(pEntry[j].T.x, pEntry[j].T.y, pEntry[j].T.z);
-			}
+				// make the storage - now its a SRV before it was a BoneArray on CPU
+				poHead[i].poBoneSRV = new BufferSRV_cs(this->numNodes, sizeof(Bone));
 
+				// --- Now fill it ---
+
+				// Temp CPU buffer
+				Bone *pCPUBone = new Bone[this->numNodes]();
+
+				// Fill it
+				Bone *pTmp = &pCPUBone[0];
+				AnimBone *pEntry = pFrameBucketEntry[i].poBone;
+
+				for (size_t j = 0; j < this->numNodes; j++)
+				{
+					pTmp[j].S.set(pEntry[j].S.x, pEntry[j].S.y, pEntry[j].S.z);
+					pTmp[j].Q.set(pEntry[j].Q.qx, pEntry[j].Q.qy, pEntry[j].Q.qz, pEntry[j].Q.qw);
+					pTmp[j].T.set(pEntry[j].T.x, pEntry[j].T.y, pEntry[j].T.z);
+				}
+
+				// pBone is filled so transfer it
+				poHead[i].poBoneSRV->Transfer(pCPUBone);
+
+				// Remove tmp buffer
+				delete[] pCPUBone;
+				pCPUBone = nullptr;
+			}
 			// Critical - keep time in AnimTime
 			poHead[i].KeyTime = pFrameBucketEntry[i].keyTimeIndex * AnimTime(AnimTime::Duration::FILM_24_FRAME);
 		}

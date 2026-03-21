@@ -19,7 +19,7 @@ namespace Azul
 		ShaderObject_LightTexture() = delete;
 		ShaderObject_LightTexture(const ShaderObject_LightTexture &) = delete;
 		ShaderObject_LightTexture &operator = (const ShaderObject_LightTexture &) = delete;
-		virtual ~ShaderObject_LightTexture();
+		virtual ~ShaderObject_LightTexture() = default;
 
 		ShaderObject_LightTexture(ShaderObject_LightTexture::Name _name);
 

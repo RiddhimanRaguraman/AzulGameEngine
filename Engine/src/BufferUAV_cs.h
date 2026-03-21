@@ -11,12 +11,6 @@
 
 namespace Azul
 {
-	//	struct BufType
-	//	{
-	//		int i;
-	//		float f;
-	//	};
-
 	struct BufType
 	{
 		BufType()
@@ -45,6 +39,8 @@ namespace Azul
 
 		void Transfer(void* pBuff);
 		void BindCompute(UnorderedAccessBufferSlot slot);
+
+		ID3D11Buffer *GetD3DBuffer();
 
 	private:
 		void privCreate(size_t count, size_t structSize);

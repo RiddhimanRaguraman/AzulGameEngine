@@ -9,11 +9,12 @@
 #include "Anim.h"
 #include "AnimManCompareStrategyEnumName.h"
 #include "GameObjectMan.h"
-#include "GraphicsObject_SkinFlatTexture.h"
+#include "GraphicsObject_SkinLightTexture.h"
 #include "GameObjectAnimSkin.h"
 #include "Skeleton.h"
 #include "ShaderObject.h"
 #include "MathEngine.h"
+#include "HierarchyTableMan.h"
 
 namespace Azul
 {
@@ -198,7 +199,26 @@ namespace Azul
         return Clip::Name::Not_Initialized;
     }
 
-    DLink *AnimMan::Add(Name name, const char *clipFileName, AnimTime delta, Skel::Name skelName, TextureObject::Name texName, Mesh::Name meshName, JointTable* pJointTable)
+    HierarchyTable::Name AnimMan::privMapToHierarchyName( Skel::Name skelName)
+    {
+        switch (skelName)
+        {
+        case Skel::Name::ChickenBot:
+            return HierarchyTable::Name::ChickenBot;
+        case Skel::Name::DogBot:
+            return HierarchyTable::Name::DogBot;
+        case Skel::Name::SpiderBot:
+            return HierarchyTable::Name::SpiderBot;
+        case Skel::Name::Mousey:
+            return HierarchyTable::Name::Mousey;
+        default:
+            return HierarchyTable::Name::Not_Initialized;
+
+
+        }
+    }
+
+    DLink *AnimMan::Add(Name name, const char *clipFileName, AnimTime delta, Skel::Name skelName, TextureObject::Name texName, Mesh::Name meshName, Vec3 &_pLightColor, Vec3 &_pLightPos)
     {
         AnimMan *pMan = AnimMan::privGetInstance();
         assert(pMan != nullptr);
@@ -210,25 +230,34 @@ namespace Azul
 		Skeleton *ptSkeleton = new Skeleton(clipName);
 		assert(ptSkeleton);
 
-        Anim *pAnim = new Anim(ptSkeleton);
-        assert(pAnim);
+        Mixer *ptMixer = new Mixer(ptSkeleton->GetClip());
+        assert(ptMixer);
 
-        AnimController *pController = new AnimController(pAnim, delta);
+        HierarchyTable::Name Hname = privMapToHierarchyName(skelName);
+        HierarchyTable *pHierarchyTable = HierarchyTableMan::Find(Hname);
+
+        WorldCompute *ptWorldCompute = new WorldCompute(ptMixer, pHierarchyTable);
+        assert(ptWorldCompute);
+
+        Anim *ptAnim = new Anim(ptSkeleton, ptMixer);
+        assert(ptAnim);
+
+        AnimController *pController = new AnimController(ptAnim, delta);
         assert(pController);
 
-		GraphicsObject_SkinFlatTexture *pGraphicsSkin = new GraphicsObject_SkinFlatTexture(meshName,
-			ShaderObject::Name::SkinFlatTexture,
-			texName);
+		GraphicsObject_SkinLightTexture *pGraphicsSkin = new GraphicsObject_SkinLightTexture(meshName,
+			                                                                                 ShaderObject::Name::SkinLightTexture,
+			                                                                                 texName,
+                                                                                             ptMixer,
+                                                                                             ptWorldCompute,
+                                                                                             _pLightColor,
+                                                                                             _pLightPos);
 		assert(pGraphicsSkin);
 
-		GameObjectAnimSkin *pGameSkin = new GameObjectAnimSkin(pGraphicsSkin, ptSkeleton, pJointTable);
+		GameObjectAnimSkin *pGameSkin = new GameObjectAnimSkin(pGraphicsSkin, ptMixer, ptWorldCompute);
 		assert(pGameSkin);
 		pGameSkin->SetName(StringMe(name));
 		GameObjectMan::Add(pGameSkin, GameObjectMan::GetRoot());
-
-		ptSkeleton->SetAnimationHierarchy(pGameSkin);
-
-		pGraphicsSkin->SetBoneWorld(pGameSkin->poBoneWorld);
 
         Clip *pClip = ClipMan::Find(clipName);
         assert(pClip);
@@ -345,8 +374,7 @@ namespace Azul
 		AnimNode *pNode = (AnimNode *)pMan->baseFind(pMan->poNodeCompare);
 		if (pNode && pNode->pGameSkin)
 		{
-			Quat q(Rot1::X, angle);
-			pNode->pGameSkin->SetQuat(q);
+			pNode->pGameSkin->cur_rot_x = angle;
 		}
     }
 
@@ -360,8 +388,7 @@ namespace Azul
 		AnimNode *pNode = (AnimNode *)pMan->baseFind(pMan->poNodeCompare);
 		if (pNode && pNode->pGameSkin)
 		{
-			Quat q(Rot1::Y, angle);
-			pNode->pGameSkin->SetQuat(q);
+			pNode->pGameSkin->cur_rot_y = angle;
 		}
     }
 
@@ -375,8 +402,7 @@ namespace Azul
 		AnimNode *pNode = (AnimNode *)pMan->baseFind(pMan->poNodeCompare);
 		if (pNode && pNode->pGameSkin)
 		{
-			Quat q(Rot1::Z, angle);
-			pNode->pGameSkin->SetQuat(q);
+			pNode->pGameSkin->cur_rot_z = angle;
 		}
     }
 
@@ -392,6 +418,9 @@ namespace Azul
 		{
 			Quat q(mode, x, y, z);
 			pNode->pGameSkin->SetQuat(q);
+			pNode->pGameSkin->cur_rot_x = 0.0f;
+			pNode->pGameSkin->cur_rot_y = 0.0f;
+			pNode->pGameSkin->cur_rot_z = 0.0f;
 		}
     }
 

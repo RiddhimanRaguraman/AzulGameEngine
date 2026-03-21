@@ -21,11 +21,10 @@ namespace Azul
 
 		BufferSRV_cs(size_t count, size_t structSize);
 
-
 		void Transfer(void* pBuff);
 		void BindCompute(ShaderResourceBufferSlot slot);
 		void BindVertex(ShaderResourceBufferSlot slot);
-
+		ID3D11Buffer *GetD3DBuffer();
 	private:
 		void privCreate(size_t count, size_t structSize);
 
@@ -36,7 +35,7 @@ namespace Azul
 		size_t count;
 		size_t structSize;
 		void* pBuff;
-		ID3D11Buffer* poComputeRVSBuffer;
+		ID3D11Buffer *poComputeSRVBuffer;
 		ID3D11ShaderResourceView* poShaderResourceView;
 		bool bCreate;
 	};

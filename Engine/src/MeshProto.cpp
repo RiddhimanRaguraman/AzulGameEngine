@@ -21,8 +21,8 @@ namespace Azul
 		VBVBuffer_weight(),
 		VBVBuffer_joint(),
 		IBVBuffer(),
-		CBVBuffer_InvBind(),
-		CBVBuff_SkinBoneWorld()
+		CBVBuffer_InvBind()
+		//CBVBuff_SkinBoneWorld()
 	{
 		// future proofing it for a file
 		assert(pMeshFileName);
@@ -45,7 +45,7 @@ namespace Azul
 		mB.Deserialize(mB_proto);
 		delete[] poBuff;
 
-		memcpy_s(this->pModelName, Mesh::MESH_MODEL_NAME_SIZE, mB.pMeshName, strlen(mB.pMeshName) + 1);
+		//memcpy_s(this->pModelName, Mesh::MESH_MODEL_NAME_SIZE, mB.pMeshName, strlen(mB.pMeshName) + 1);
 
 		// Now the model is mB...
 		// move it into the Mesh
@@ -176,9 +176,6 @@ namespace Azul
 
 			VBVBuffer_joint.Initialize(mB.vbo_joints.dataSize, mB.vbo_joints.stride, mB.vbo_joints.poData);
 
-			// joint table is initialize (count is the same)		
-			//this->CBVBuff_SkinBoneWorld.Initialize(8 * sizeof(Mat4));
-
 		}
 
 		// Inverse Bind Matrix Array
@@ -188,6 +185,7 @@ namespace Azul
 			assert(mB.vbo_invBind.componentType == vboData::VBO_COMPONENT::FLOAT);
 			assert(mB.vbo_invBind.dataSize > 0);
 			assert(mB.vbo_invBind.poData);
+			//assert(mB.vbo_invBind.count <= BONE_COUNT_MAX);
 
 			numBytes = mB.vbo_invBind.dataSize;
 
@@ -221,20 +219,8 @@ namespace Azul
 	{
 		// Skin extra
 		this->CBVBuffer_InvBind.SetActive(ConstantVSBufferSlot::vsSkinInvBind);
-		this->CBVBuff_SkinBoneWorld.SetActive(ConstantVSBufferSlot::vsSkinBoneWorld);
 	}
 
-	void MeshProto::Transfer_SkinBoneWorldBuffer(Mat4* p)
-	{
-		assert(p);
-		CBVBuff_SkinBoneWorld.Transfer(p);
-	}
-
-	void MeshProto::Initialize_SkinBoneWorldBuffer(size_t _structSize)
-	{
-		AZUL_UNUSED_VAR(_structSize);
-		this->CBVBuff_SkinBoneWorld.Initialize(BONE_COUNT_MAX * sizeof(Mat4));
-	}
 
 	void MeshProto::ActivateMesh()
 	{

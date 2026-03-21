@@ -6,12 +6,14 @@
 #define FRAME_BUCKET_H
 
 #include "AnimTime.h"
-#include "Bone.h"
 
 namespace Azul
 {
-	struct FrameBucket
+	class BufferSRV_cs;
+
+	class FrameBucket
 	{
+	public:
 		FrameBucket();
 		FrameBucket(const FrameBucket &) = delete;
 		FrameBucket &operator=(const FrameBucket &) = delete;
@@ -20,8 +22,7 @@ namespace Azul
 		FrameBucket  *nextBucket;
 		FrameBucket  *prevBucket;
 		AnimTime      KeyTime;
-		Bone         *poBone;
-		char          pad[4];
+		BufferSRV_cs *poBoneSRV;
 	};
 }
 

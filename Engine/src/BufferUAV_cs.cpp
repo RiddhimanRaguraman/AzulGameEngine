@@ -94,6 +94,12 @@ namespace Azul
 
 	}
 
+	ID3D11Buffer *BufferUAV_cs::GetD3DBuffer()
+	{
+		return this->poComputeUAVBuffer;
+	}
+
+
 	BufferUAV_cs::~BufferUAV_cs()
 	{
 		SafeRelease(this->poComputeUAVBuffer);

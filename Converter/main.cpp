@@ -18,6 +18,12 @@
 #include "ConvertHierarchy.h"
 #include "ConvertSkin.h"
 
+#include <exception>
+#include <functional>
+#include <mutex>
+#include <thread>
+#include <vector>
+
 int main()
 {
 	// RAII - initialization
@@ -29,57 +35,92 @@ int main()
 	system("copy .\\..\\Assets\\*.glb .\\..\\Data");
 	system("copy .\\..\\Assets\\*.xml .\\..\\Data");
 
-	// Textures
-	Azul::CreateTexturePNG("TEST_PNG_RGB.png", "TEST_PNG_RGB");
-	Azul::CreateTexturePNG("TEST_PNG_RGBA.png", "TEST_PNG_RGBA");
-	Azul::CreateTextureTGA("TEST_TGA_BGR.tga", "TEST_TGA_BGR");
-	Azul::CreateTextureTGA("TEST_TGA_BGRA.tga", "TEST_TGA_BGRA");
+	std::vector<std::thread> workers;
+	workers.reserve(32);
 
-	Azul::CreateTexturePNG("ChickenbotDiffuse.png", "ChickenBot");
-	//Azul::CreateTexturePNG("DogbotDiffuse.png", "DogBot");
-	//Azul::CreateTexturePNG("Spiderbot_diffuse.png", "SpiderBot");
-	
-	//// Mesh
-	Azul::CreateCubeMesh();
-	Azul::CreateSpriteMesh();
+	std::mutex exceptionMutex;
+	std::exception_ptr firstException = nullptr;
 
-	Azul::ConvertMesh("R2-D2.glb", "R2D2");
-	Azul::CreateTexturePNG("R2D2_BaseColor.png", "R2D2_Base");
-	Azul::CreateTexturePNG("R2D2_ColorID.png", "R2D2_Color");
+	auto addWork = [&](std::function<void()> task)
+		{
+			workers.emplace_back(
+				[&, task]()
+				{
+					try
+					{
+						task();
+					}
+					catch (...)
+					{
+						std::lock_guard<std::mutex> lock(exceptionMutex);
+						if (firstException == nullptr)
+						{
+							firstException = std::current_exception();
+						}
+					}
+				});
+		};
 
-	Azul::ConvertMesh("space_frigate.glb", "space_frigate");
-	Azul::CreateTextureTGA("space_frigate.tga", "space_frigate");
+	addWork([]() { Azul::CreateTexturePNG("TEST_PNG_RGB.png", "TEST_PNG_RGB"); });
+	addWork([]() { Azul::CreateTexturePNG("TEST_PNG_RGBA.png", "TEST_PNG_RGBA"); });
+	addWork([]() { Azul::CreateTextureTGA("TEST_TGA_BGR.tga", "TEST_TGA_BGR"); });
+	addWork([]() { Azul::CreateTextureTGA("TEST_TGA_BGRA.tga", "TEST_TGA_BGRA"); });
 
-	Azul::ConvertMesh("woodencrate.glb", "crate");
-	Azul::CreateTexturePNG("crate_BaseColor.png", "crate");
+	addWork([]() { Azul::CreateTexturePNG("ChickenbotDiffuse.png", "ChickenBot"); });
 
-	//// Font stuff
-	Azul::CreateTexturePNG("FontArial36.png", "FontArial36");
-	Azul::ConvertXML("MetricsArial36.xml", "MetricsArial36");
+	addWork([]() { Azul::CreateCubeMesh(); });
+	addWork([]() { Azul::CreateSpriteMesh(); });
 
-	//char* poJSON = Azul::GLTF::ExportJSON("walk_mesh.glb");
+	addWork([]() { Azul::ConvertMesh("R2-D2.glb", "R2D2"); });
+	addWork([]() { Azul::CreateTexturePNG("R2D2_BaseColor.png", "R2D2_Base"); });
+	addWork([]() { Azul::CreateTexturePNG("R2D2_ColorID.png", "R2D2_Color"); });
 
-	//// Animation
+	addWork([]() { Azul::ConvertMesh("space_frigate.glb", "space_frigate"); });
+	addWork([]() { Azul::CreateTextureTGA("space_frigate.tga", "space_frigate"); });
 
-	Azul::ConvertSkin("ChickenBot_Mesh.glb", "Chickenbot");
-	Azul::ConvertJoint("ChickenBot_Mesh.glb", "ChickenBot");
-	Azul::ConvertHierarchy("ChickenBot_Mesh.glb", "ChickenBot");
-	Azul::ConvertSkeleton("walk_mesh.glb", "ChickenBot");
-	Azul::ConvertAnim("walk_mesh.glb", "ChickenBot_Walk");
-	//Azul::ConvertAnim("runRM+mesh.glb", "ChickenBot_Run");
-	//Azul::ConvertAnim("hit_back+mesh.glb", "ChickenBot_HitBack");
-	//Azul::ConvertAnim("idle+mesh.glb", "ChickenBot_Idle");
-	//Azul::ConvertAnim("shot_up+mesh.glb", "ChickenBot_ShotUp");
+	addWork([]() { Azul::ConvertMesh("woodencrate.glb", "crate"); });
+	addWork([]() { Azul::CreateTexturePNG("crate_BaseColor.png", "crate"); });
 
-	//delete poJSON;
+	addWork([]() { Azul::CreateTexturePNG("FontArial36.png", "FontArial36"); });
+	addWork([]() { Azul::ConvertXML("MetricsArial36.xml", "MetricsArial36"); });
 
-	// Mousey
-	Azul::ConvertJoint("Mousey_Mesh.glb", "Mousey");
-	Azul::ConvertSkin("Mousey_Mesh.glb", "Mousey");
-	Azul::ConvertSkeleton("Mousey_Mesh.glb", "Mousey");
-	Azul::ConvertHierarchy("Mousey_Mesh.glb", "Mousey");
-	Azul::ConvertAnim("Mousey_Anim_Silly_Dancing.glb", "Mousey_SillyDancing");
-	Azul::CreateTexturePNG("Mousey.png", "Mousey");
+	addWork([]() { Azul::ConvertSkin("ChickenBot_Mesh.glb", "Chickenbot"); });
+	addWork([]() { Azul::ConvertJoint("ChickenBot_Mesh.glb", "ChickenBot"); });
+	addWork([]() { Azul::ConvertHierarchy("ChickenBot_Mesh.glb", "ChickenBot"); });
+	addWork([]() { Azul::ConvertSkeleton("walk_mesh.glb", "ChickenBot"); });
+	addWork([]() { Azul::ConvertAnim("walk_mesh.glb", "ChickenBot_Walk"); });
+
+	addWork([]() { Azul::ConvertJoint("Mousey_Mesh.glb", "Mousey"); });
+	addWork([]() { Azul::ConvertSkin("Mousey_Mesh.glb", "Mousey"); });
+	addWork([]() { Azul::ConvertSkeleton("Mousey_Mesh.glb", "Mousey"); });
+	addWork([]() { Azul::ConvertHierarchy("Mousey_Mesh.glb", "Mousey"); });
+	addWork([]() { Azul::ConvertAnim("Mousey_Anim_Silly_Dancing.glb", "Mousey_SillyDancing"); });
+	addWork([]() { Azul::CreateTexturePNG("Mousey.png", "Mousey"); });
+
+	for (std::thread& t : workers)
+	{
+		if (t.joinable())
+		{
+			t.join();
+		}
+	}
+
+	if (firstException != nullptr)
+	{
+		try
+		{
+			std::rethrow_exception(firstException);
+		}
+		catch (const std::exception& e)
+		{
+			Trace::out("Converter worker threw exception: %s\n", e.what());
+		}
+		catch (...)
+		{
+			Trace::out("Converter worker threw unknown exception\n");
+		}
+		return 1;
+	}
 
 
 	//Azul::ConvertSkeleton("DogBot_Mesh.glb", "DogBot");

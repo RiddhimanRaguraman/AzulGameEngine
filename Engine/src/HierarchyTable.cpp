@@ -22,7 +22,7 @@ namespace Azul
 		delete[] this->poHierarchyTable;
 	}
 
-	size_t HierarchyTable::GetNumBones()
+	size_t HierarchyTable::GetNumJoints()
 	{
 		return this->mNumBones;
 	}

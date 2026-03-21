@@ -11,7 +11,7 @@
 #include "GameMan.h"
 #include "TexNodeMan.h"
 #include "StateDirectXMan.h"
-
+#include "BufferSRV_cs.h"
 namespace Azul
 {
 
@@ -22,19 +22,17 @@ namespace Azul
 	// ---------------------------------------------
 	GraphicsObject_SkinFlatTexture::GraphicsObject_SkinFlatTexture(Mesh::Name meshName,
 		ShaderObject::Name shaderName,
-		TextureObject::Name textName)
+		TextureObject::Name textName,
+		Mixer *_pMixer,
+		WorldCompute *_pWorldCompute)
 		: GraphicsObject(meshName, shaderName),
-		pTex{ nullptr },
-		pBoneWorld{ nullptr }
+		pTex{ nullptr }, pMixer{ _pMixer },
+		pWorldCompute{ _pWorldCompute }
 	{
 		this->pTex = TexNodeMan::Find(textName);
 		assert(pTex);
-	}
-
-	void GraphicsObject_SkinFlatTexture::SetBoneWorld(Mat4* _pBoneWorld)
-	{
-		assert(_pBoneWorld);
-		this->pBoneWorld = _pBoneWorld;
+		assert(pMixer);
+		assert(pWorldCompute);
 	}
 
 
@@ -50,15 +48,19 @@ namespace Azul
 	{
 		pMesh->ActivateMesh();
 		pMesh->ActivateConstantBuffers();
-		pMesh->Transfer_SkinBoneWorldBuffer(this->pBoneWorld);
+		//pMesh->Transfer_SkinBoneWorldBuffer(this->pBoneWorld);
 
 		pShaderObj->ActivateShader();
 		pShaderObj->ActivateCBV();
 
-		Camera* pCam = CameraNodeMan::GetCurrent(Camera::Type::PERSPECTIVE_3D);
+		Camera *pCam = CameraNodeMan::GetCurrent(Camera::Type::PERSPECTIVE_3D);
 		assert(pCam);
 
 		pShaderObj->TransferWorldViewProj(pCam, this->poWorld);
+
+		StateDirectXMan::GetContext()->VSSetShaderResources(4, 1, &pWorldCompute->GetBoneWorld()->poShaderResourceView);
+
+
 	}
 
 	void GraphicsObject_SkinFlatTexture::Draw()

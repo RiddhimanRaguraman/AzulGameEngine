@@ -14,6 +14,7 @@
 
 #include "TextureObject.h"
 #include "Skel.h"
+#include "HierarchyTable.h"
 
 namespace Azul
 {
@@ -32,11 +33,18 @@ namespace Azul
             Dance,
             Idle
         };
-
+        
         static void Create(int reserveNum = 0, int reserveGrow = 1);
         static void Destroy();
 
-        static DLink* Add(Name name, const char* clipFileName, AnimTime delta, Skel::Name skelName, TextureObject::Name texName, Mesh::Name meshName, JointTable* pJointTable);
+        static DLink* Add(  Name name, 
+                            const char* clipFileName, 
+                            AnimTime delta, 
+                            Skel::Name skelName, 
+                            TextureObject::Name texName, 
+                            Mesh::Name meshName, 
+                            Vec3 &_pLightColor, 
+                            Vec3 &_pLightPos);
         static AnimController *Find(Name name);
         static void Update();
 
@@ -55,7 +63,7 @@ namespace Azul
 
     private:
         static AnimMan *privGetInstance();
-
+        static HierarchyTable::Name privMapToHierarchyName(Skel::Name skelName);
         AnimMan() = delete;
         AnimMan(const AnimMan &) = delete;
         AnimMan &operator = (const AnimMan &) = delete;

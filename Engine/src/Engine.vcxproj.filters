@@ -552,6 +552,9 @@
     <ClInclude Include="HierarchyTable.h">
       <Filter>src\Hierarchy</Filter>
     </ClInclude>
+    <ClInclude Include="WorldCompute.h">
+      <Filter>src\Anim</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -949,6 +952,9 @@
     </ClCompile>
     <ClCompile Include="HierarchyTable.cpp">
       <Filter>src\Hierarchy</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldCompute.cpp">
+      <Filter>src\Anim</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

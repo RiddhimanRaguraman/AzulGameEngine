@@ -14,6 +14,7 @@
 #include "AnimTime.h"
 #include "Bone.h"
 #include "Skeleton.h"
+#include "WorldCompute.h"
 
 namespace Azul
 {
@@ -21,7 +22,8 @@ namespace Azul
 	{
 	public:
 		
-		GameObjectAnimSkin(GraphicsObject* graphicsObject, Skeleton* pSkeleton, JointTable* pJointTable);
+		GameObjectAnimSkin(	GraphicsObject* graphicsObject, 
+							Mixer *pMixer, WorldCompute *pWorldCompute);
 		// Big four
 		GameObjectAnimSkin() = delete;
 		GameObjectAnimSkin(const GameObjectAnimSkin&) = delete;
@@ -41,13 +43,12 @@ namespace Azul
 		void SetTrans(Vec3 &r);
 
 	private:
-		void privUpdateBoneWorldArray();
 		void privUpdate(AnimTime currTime);
+		void privMixerExecute();
+		void privWorldComputeExecute();
 
 	public:
-		Mat4* poBoneWorld;
-		Skeleton* pSkeleton;
-		JointTable* pJointTable;
+		
 
 		Vec3 *poScale;
 		Quat *poQuat;
@@ -60,6 +61,9 @@ namespace Azul
 		float cur_rot_x;
 		float cur_rot_y;
 		float cur_rot_z;
+
+		Mixer *poMixer;
+		WorldCompute *poWorldCompute;
 	};
 }
 

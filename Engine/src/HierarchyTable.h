@@ -15,6 +15,8 @@ namespace Azul
 		enum Name
 		{
 			ChickenBot,
+			DogBot,
+			SpiderBot,
 			Mousey,
 			Not_Initialized
 		};
@@ -25,7 +27,7 @@ namespace Azul
 		HierarchyTable &operator = (const HierarchyTable &) = delete;
 		virtual ~HierarchyTable();
 
-		size_t	GetNumBones();
+		size_t	GetNumJoints();
 		size_t  GetDepth();
 		void SetHierarchyTableName(Name JointTableName);
 

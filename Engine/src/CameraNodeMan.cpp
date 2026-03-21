@@ -59,6 +59,7 @@ namespace Azul
             pNode = pIt->Next();
             delete pDeleteMe;
         }
+      
     }
 
     //--------------------------------------------------------------

@@ -38,7 +38,7 @@ namespace Azul
 
     }
 
-    void AnimController::SetPivotScale(float sx, float sy, float sz)
+    /*void AnimController::SetPivotScale(float sx, float sy, float sz)
     {
         this->poAnim->SetPivotScale(sx, sy, sz);
     }
@@ -71,7 +71,7 @@ namespace Azul
     void AnimController::SetPivotTotalRot(const Rot3 mode, float x, float y, float z)
     {
         this->poAnim->SetPivotTotalRot(mode, x, y, z);
-    }
+    }*/
 
     void AnimController::SetDelta(float scale)
     {

@@ -130,6 +130,7 @@ namespace Azul
 		pMan->poNodeCompare->SetClipName(_name);
 
 		Clip *pData = (Clip *)pMan->baseFind(pMan->poNodeCompare);
+		assert(pData);
 		return pData;
 	}
 

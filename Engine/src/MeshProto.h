@@ -25,8 +25,6 @@ namespace Azul
 		virtual void ActivateMesh() override;
 		virtual void RenderIndexBuffer() override;
 		virtual void ActivateConstantBuffers() override;
-		virtual void Initialize_SkinBoneWorldBuffer(size_t _structSize) override;
-		virtual void Transfer_SkinBoneWorldBuffer(Mat4* p) override;
 	private:
 		// Data
 		BufferVBV_ia VBVBuffer_pos;
@@ -41,7 +39,6 @@ namespace Azul
 
 		// Not part of VertexBuffer.. but part of the Mesh
 		BufferCBV_vs CBVBuffer_InvBind;
-		BufferCBV_vs CBVBuff_SkinBoneWorld;
 
 	};
 }

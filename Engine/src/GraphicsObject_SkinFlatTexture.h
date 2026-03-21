@@ -6,6 +6,8 @@
 #define GRAPHICS_OBJECT_SKIN_FLAT_TEXTURE_H
 
 #include "GraphicsObject.h"
+#include "Mixer.h"
+#include "WorldCompute.h"
 #include "TextureObject.h"
 
 namespace Azul
@@ -15,7 +17,9 @@ namespace Azul
 	public:
 		GraphicsObject_SkinFlatTexture(Mesh::Name meshName,
 			ShaderObject::Name shaderName,
-			TextureObject::Name textName);
+			TextureObject::Name textName,
+			Mixer *pMixer,
+			WorldCompute *pWorldCompute);
 
 		GraphicsObject_SkinFlatTexture() = delete;
 		GraphicsObject_SkinFlatTexture(const GraphicsObject_SkinFlatTexture&) = delete;
@@ -28,13 +32,15 @@ namespace Azul
 		virtual void Draw() override;
 		virtual void RestoreState() override;
 
-		void SetBoneWorld(Mat4* pBoneWorld);
 
-		// data:  place uniform instancing here
+		// ---------------------------------------------
+		// Data
+		// ---------------------------------------------e
 		TextureObject* pTex;
 
 		// HACK
-		Mat4* pBoneWorld;
+		Mixer *pMixer;
+		WorldCompute *pWorldCompute;
 	};
 }
 

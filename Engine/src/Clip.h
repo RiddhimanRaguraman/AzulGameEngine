@@ -5,14 +5,17 @@
 #ifndef CLIP_H
 #define CLIP_H
 
+#include "DLink.h"
 #include "AnimTime.h"
-#include "Bone.h"
 #include "Skel.h"
-#include "AnimClip.h"
-#include "FrameBucket.h"
+
 
 namespace Azul
 {
+	class Mixer;
+	class FrameBucket;
+	class AnimFrameBucket;
+
 	class Clip : public DLink
 	{
 	public:
@@ -50,7 +53,7 @@ namespace Azul
 				 AnimFrameBucket *pFrameBucket,
 				 Skel::Name skelName);
 
-		void AnimateBones(AnimTime tCurr, Bone *pResult);
+		void AnimateBones(AnimTime tCurr, Mixer *pMixer);
 		virtual void Dump() override;
 		virtual void Wash() override;
 

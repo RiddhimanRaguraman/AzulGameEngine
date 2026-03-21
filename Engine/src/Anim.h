@@ -11,6 +11,7 @@
 #include "Skeleton.h"
 #include "TextureObject.h"
 #include "JointTable.h"
+#include "Mixer.h"
 
 namespace Azul
 {
@@ -22,9 +23,7 @@ namespace Azul
         Anim &operator = (const Anim &) = delete;
         ~Anim();
 
-        Anim(Skeleton *ptSkeleton);
-
-        //Anim(Clip::Name clipName, TextureObject::Name texName, Mesh::Name meshName, JointTable* pJointTable);
+        Anim(Skeleton *ptSkeleton, Mixer *pMixer);
 
         void Animate(AnimTime tCurr);
         AnimTime FindMaxTime();
@@ -32,17 +31,11 @@ namespace Azul
         void SetClip(Clip::Name clipName);
         Clip *GetClip();
 
-        void SetPivotScale(float sx, float sy, float sz);
-        void SetUniformPivotScale(float s);
-        void SetPivotTrans(float x, float y, float z);
-        void SetPivotRotX(float angle);
-        void SetPivotRotY(float angle);
-        void SetPivotRotZ(float angle);
-        void SetPivotTotalRot(const Rot3 mode, float x, float y, float z);
 
     private:
-
         Skeleton *poSkeleton;
+        Clip *pClip;
+        Mixer *pMixer;
     };
 
 }

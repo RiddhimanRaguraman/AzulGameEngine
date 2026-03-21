@@ -308,6 +308,7 @@
     <ClInclude Include="TextureObject.h" />
     <ClInclude Include="TimerController.h" />
     <ClInclude Include="WindowColors.h" />
+    <ClInclude Include="WorldCompute.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\shaders\original\ShaderMappings.hlsli" />
@@ -450,6 +451,7 @@
     <ClCompile Include="TextureNull.cpp" />
     <ClCompile Include="TextureObject.cpp" />
     <ClCompile Include="TimerController.cpp" />
+    <ClCompile Include="WorldCompute.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libs\AnimTime\AnimTime.vcxproj">

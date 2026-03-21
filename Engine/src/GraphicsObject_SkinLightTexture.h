@@ -7,6 +7,8 @@
 
 #include "GraphicsObject.h"
 #include "TextureObject.h"
+#include "Mixer.h"
+#include "WorldCompute.h"
 
 namespace Azul
 {
@@ -16,6 +18,8 @@ namespace Azul
 		GraphicsObject_SkinLightTexture(Mesh::Name meshName,
 			ShaderObject::Name shaderName,
 			TextureObject::Name textName,
+			Mixer *pMixer,
+			WorldCompute *pWorldCompute,
 			Vec3& LightColor,
 			Vec3& LightPos);
 
@@ -30,15 +34,14 @@ namespace Azul
 		virtual void Draw() override;
 		virtual void RestoreState() override;
 
-		void SetBoneWorld(Mat4* pBoneWorld);
-
 		// data:  place uniform instancing here
 		TextureObject* pTex;
 		Vec3* poLightColor;
 		Vec3* poLightPos;
 
 		// HACK
-		Mat4* pBoneWorld;
+		Mixer *pMixer;
+		WorldCompute *pWorldCompute;
 	};
 }
 

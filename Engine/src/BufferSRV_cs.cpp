@@ -11,7 +11,7 @@ namespace Azul
 		: count{ _count },
 		structSize{ _structSize },
 		pBuff{ nullptr },
-		poComputeRVSBuffer{ nullptr },
+		poComputeSRVBuffer{ nullptr },
 		poShaderResourceView{ nullptr },
 		bCreate{ false }
 	{
@@ -43,7 +43,7 @@ namespace Azul
 		HRESULT hr;
 		hr = StateDirectXMan::GetDevice()->CreateBuffer(&BufferDesc,
 			nullptr,
-			&this->poComputeRVSBuffer);
+			&this->poComputeSRVBuffer);
 		assert(SUCCEEDED(hr));
 
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
@@ -53,7 +53,7 @@ namespace Azul
 		srvDesc.BufferEx.Flags = 0;
 		srvDesc.BufferEx.NumElements = (unsigned int)this->count;    // number of structures
 
-		hr = StateDirectXMan::GetDevice()->CreateShaderResourceView(poComputeRVSBuffer, &srvDesc, &this->poShaderResourceView);
+		hr = StateDirectXMan::GetDevice()->CreateShaderResourceView(poComputeSRVBuffer, &srvDesc, &this->poShaderResourceView);
 		assert(SUCCEEDED(hr));
 	}
 
@@ -65,7 +65,7 @@ namespace Azul
 		this->pBuff = _pBuff;
 		assert(pBuff);
 
-		StateDirectXMan::GetContext()->UpdateSubresource(poComputeRVSBuffer,
+		StateDirectXMan::GetContext()->UpdateSubresource(poComputeSRVBuffer,
 			0,
 			nullptr,
 			pBuff,
@@ -91,9 +91,15 @@ namespace Azul
 
 	}
 
+	ID3D11Buffer *BufferSRV_cs::GetD3DBuffer()
+	{
+		return this->poComputeSRVBuffer;
+	}
+
+
 	BufferSRV_cs::~BufferSRV_cs()
 	{
-		SafeRelease(this->poComputeRVSBuffer);
+		SafeRelease(this->poComputeSRVBuffer);
 		SafeRelease(this->poShaderResourceView);
 	}
 

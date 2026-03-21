@@ -20,11 +20,6 @@ namespace Azul
 
 	};
 
-	ShaderObject_LightTexture::~ShaderObject_LightTexture()
-	{
-
-	}
-
 	ShaderObject_LightTexture::ShaderObject_LightTexture(ShaderObject_LightTexture::Name _name)
 		: ShaderObject(_name),
 		ConstantBuff_Projection { sizeof(Mat4) },

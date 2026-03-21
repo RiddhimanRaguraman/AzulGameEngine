@@ -29,7 +29,7 @@ namespace Azul
 	Bone HackLocalBone[15];
 	Mat4 HackWorld[8];
 
-  FontSprite* pFontSprite1;
+	FontSprite* pFontSprite1;
 
 	//-----------------------------------------------------------------------------
 	//  Game::Game()
@@ -59,6 +59,7 @@ namespace Azul
 	//-----------------------------------------------------------------------------
 	bool Game::LoadContent()
 	{
+		
 		CameraNodeMan::Create();
 		MeshNodeMan::Create();
 		TexNodeMan::Create();
@@ -69,7 +70,7 @@ namespace Azul
 		SkelMan::Create();
 		ClipMan::Create();
         AnimMan::Create();
-		JointTableMan::Create();
+		JointTableMan::Create(); 
 		HierarchyTableMan::Create();
 
 		// --------------------------------- 
@@ -79,8 +80,9 @@ namespace Azul
 		//---------------------------------------------------------------------------------------------------------
 		// Setup the current 3D perspective Camera
 		//---------------------------------------------------------------------------------------------------------
+		
 		Camera* pCam3D = new Camera(Camera::Type::PERSPECTIVE_3D);
-
+		
 		pCam3D->setViewport(0, 0, this->mWindowWidth, this->mWindowHeight);
 		pCam3D->setPerspective(35.0f,
 			float(pCam3D->getScreenWidth()) / float(pCam3D->getScreenHeight()),
@@ -291,9 +293,9 @@ namespace Azul
 
 		// FontSprite
 		pGraphicsObject = new GraphicsObject_Sprite(Mesh::Name::SPRITE,
-			ShaderObject::Name::Sprite,
-			Image::GreenBird,  //anything
-			Rect(100, 100, 100, 100));
+													ShaderObject::Name::Sprite,
+													Image::GreenBird,  //anything
+													Rect(100, 100, 100, 100));
 		pFontSprite1 = new FontSprite(pGraphicsObject);
 		GameObjectMan::Add(pFontSprite1, GameObjectMan::GetRoot());
 
@@ -303,18 +305,18 @@ namespace Azul
 		FontSprite* pFontSprite(nullptr);
 
 		pGraphicsObject = new GraphicsObject_Sprite(Mesh::Name::SPRITE,
-			ShaderObject::Name::Sprite,
-			Image::GreenBird,  //anything
-			Rect(100, 100, 100, 100));
+													ShaderObject::Name::Sprite,
+													Image::GreenBird,  //anything
+													Rect(100, 100, 100, 100));
 		pFontSprite = new FontSprite(pGraphicsObject);
 		GameObjectMan::Add(pFontSprite, GameObjectMan::GetRoot());
 
 		pFontSprite->Set(FontSprite::Name::TestMessage, "Dance", Glyph::Name::Arial36pt, 250, 250, color2);
 
 		pGraphicsObject = new GraphicsObject_Sprite(Mesh::Name::SPRITE,
-			ShaderObject::Name::Sprite,
-			Image::GreenBird,  //anything
-			Rect(100, 100, 100, 100));
+													ShaderObject::Name::Sprite,
+													Image::GreenBird,  //anything
+													Rect(100, 100, 100, 100));
 		pFontSprite = new FontSprite(pGraphicsObject);
 		GameObjectMan::Add(pFontSprite, GameObjectMan::GetRoot());
 
@@ -324,7 +326,7 @@ namespace Azul
 		// Create Animation
 		// ---------------------------------
 
-		//// load skeleton
+		// load skeleton
 		SkelMan::Add(Skel::Name::ChickenBot, "ChickenBot.s.proto.azul");
 		SkelMan::Add(Skel::Name::Mousey, "Mousey.s.proto.azul");
 		//SkelMan::Add("DogBot.s.proto.azul", Skel::Name::DogBot);
@@ -335,13 +337,12 @@ namespace Azul
 		/*ClipMan::Add("ChickenBot_HitBack.a.proto.azul", Clip::Name::HitBack_ChickenBot, Skel::Name::ChickenBot);
 		ClipMan::Add("ChickenBot_ShotUp.a.proto.azul", Clip::Name::ShotUp_ChickenBot, Skel::Name::ChickenBot);*/
 
-		AnimMan::Add(AnimMan::Name::Dance, "Mousey_SillyDancing.a.proto.azul", delta, Skel::Name::Mousey, TextureObject::Name::Mousey, Mesh::Name::Mousey, pJointTableMouse);
+		AnimMan::Add(AnimMan::Name::Dance, "Mousey_SillyDancing.a.proto.azul", delta, Skel::Name::Mousey, TextureObject::Name::Mousey, Mesh::Name::Mousey, LightColor, LightPos);
 		AnimMan::SetPos(AnimMan::Name::Dance, -1.2f, 0.0f, -1.2f);
 		AnimMan::SetUniformScale(AnimMan::Name::Dance, 2.5f);
 		AnimMan::SetPivotTotalRot(AnimMan::Name::Dance, Rot3::ZYX, -MATH_PI / 2, 0.0f, -MATH_PI / 2);
 
-
-		AnimMan::Add(AnimMan::Name::Run, "ChickenBot_Walk.a.proto.azul", delta, Skel::Name::ChickenBot, TextureObject::Name::ChickenBot, Mesh::Name::ChickenBot, pJointTableChicken);
+		AnimMan::Add(AnimMan::Name::Run, "ChickenBot_Walk.a.proto.azul", delta, Skel::Name::ChickenBot, TextureObject::Name::ChickenBot, Mesh::Name::ChickenBot, LightColor, LightPos);
 		AnimMan::SetPos(AnimMan::Name::Run, -1.2f, 0.0f, 1.2f);
 		AnimMan::SetUniformScale(AnimMan::Name::Run, 60.0f);
 		AnimMan::SetPivotTotalRot(AnimMan::Name::Run, Rot3::ZYX, -MATH_PI / 2, 0.0f, -MATH_PI / 2);

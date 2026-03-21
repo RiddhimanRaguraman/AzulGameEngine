@@ -12,35 +12,32 @@
 
 namespace Azul
 {
-	Anim::Anim(Skeleton *pSkeleton)
-		: poSkeleton{ pSkeleton }
+	Anim::Anim(Skeleton *_pSkeleton, Mixer *_pMixer)
+		: poSkeleton{ _pSkeleton },
+		pClip{ this->poSkeleton->GetClip() },
+		pMixer{ _pMixer }
 	{
 		assert(poSkeleton);
+		assert(pClip);
+		assert(pMixer);
 	}
 
 	Anim::~Anim()
 	{
+		delete this->poSkeleton;
 		this->poSkeleton = nullptr;
 	}
 
 	AnimTime Anim::FindMaxTime()
 	{
-		assert(this->poSkeleton);
-
-		Clip *pClip = this->poSkeleton->GetClip();
 		assert(pClip);
-
-		return pClip->GetTotalTime();
+		return this->pClip->GetTotalTime();
 	}
-
+		
 	void Anim::Animate(AnimTime tCurr)
 	{
-		assert(this->poSkeleton);
-
-		Clip *pClip = this->poSkeleton->GetClip();
 		assert(pClip);
-
-		pClip->AnimateBones(tCurr, this->poSkeleton->GetBoneResult());
+		this->pClip->AnimateBones(tCurr, this->pMixer);
 	}
 
 	void Anim::SetClip(Clip::Name clipName)
@@ -54,43 +51,6 @@ namespace Azul
 		assert(this->poSkeleton);
         return this->poSkeleton->GetClip();
     }
-
-    void Anim::SetPivotScale(float sx, float sy, float sz)
-    {
-        this->poSkeleton->SetPivotScale(sx, sy, sz);
-    }
-
-    void Anim::SetUniformPivotScale(float s)
-    {
-        this->poSkeleton->SetUniformPivotScale(s);
-
-    }
-
-    void Anim::SetPivotTrans(float x, float y, float z)
-    {
-        this->poSkeleton->SetPivotTrans(x, y, z);
-    }
-
-	void Anim::SetPivotRotX(float angle)
-	{
-		this->poSkeleton->SetPivotRotX(angle);
-	}
-	void Anim::SetPivotRotY(float angle)
-	{
-		this->poSkeleton->SetPivotRotY(angle);
-		
-	}
-	void Anim::SetPivotRotZ(float angle)
-	{
-		this->poSkeleton->SetPivotRotZ(angle);
-		
-	}
-	void Anim::SetPivotTotalRot(const Rot3 mode, float x, float y, float z)
-	{
-		this->poSkeleton->SetPivotTotalRot(mode, x, y, z);
-		
-	}
-
 }
 
 //--- End of File ----

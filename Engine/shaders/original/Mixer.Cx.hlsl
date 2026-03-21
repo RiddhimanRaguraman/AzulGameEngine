@@ -24,8 +24,8 @@ float4 lerpMe(float4 src, float4 tar, float t);
 // tx - t is shader resource views (SRV), x - slot
 // ---------------------------------------------
 
-StructuredBuffer<BoneType> BoneA : register(t1); // slot 1 (ShaderResourceBufferSlot::KeyA)   
-StructuredBuffer<BoneType> BoneB : register(t2); // slot 2 (ShaderResourceBufferSlot::KeyB)
+StructuredBuffer<BoneType> KeyA : register(t1); // slot 1 (ShaderResourceBufferSlot::KeyA)   
+StructuredBuffer<BoneType> KeyB : register(t2); // slot 2 (ShaderResourceBufferSlot::KeyB)
 
 // ------------------------------------------
 // bx - b is constant buffer, x - slot
@@ -34,14 +34,14 @@ StructuredBuffer<BoneType> BoneB : register(t2); // slot 2 (ShaderResourceBuffer
 cbuffer AA : register(b0) // slot 0 (ConstantBufferSlot_cs::csMixer)
 {
     float ts;
-    uint numBones;
+    uint numNodes;
 };
 
 // ----------------------------------------------------
 // ux - u is  unordered access views (UAV), x - slot 
 // ----------------------------------------------------
 
-RWStructuredBuffer<BoneType> BoneOut : register(u0); // slot 0  (UnorderedAccessBufferSlot::MixerABOut)
+RWStructuredBuffer<BoneType> MixerOut : register(u0); // slot 0  (UnorderedAccessBufferSlot::MixerABOut)
 
 [numthreads(1, 1, 1)]
 void main(uint3 dtID : SV_DispatchThreadID)
@@ -49,17 +49,17 @@ void main(uint3 dtID : SV_DispatchThreadID)
     uint boneIndex = dtID.x;
 
     // protection incase index is outside array range
-    if (dtID.x < numBones)
+    if (dtID.x < numNodes)
     {
-        BoneOut[boneIndex] = BoneA[boneIndex];
+        MixerOut[boneIndex] = KeyA[boneIndex];
   
-        float4 trans = lerpMe(BoneA[boneIndex].t, BoneB[boneIndex].t, ts);
-        float4 quat = slerp(BoneA[boneIndex].q, BoneB[boneIndex].q, ts);
-        float4 scale = lerpMe(BoneA[boneIndex].s, BoneB[boneIndex].s, ts);
+        float4 trans = lerpMe(KeyA[boneIndex].t, KeyB[boneIndex].t, ts);
+        float4 quat = slerp(KeyA[boneIndex].q, KeyB[boneIndex].q, ts);
+        float4 scale = lerpMe(KeyA[boneIndex].s, KeyB[boneIndex].s, ts);
 
-        BoneOut[boneIndex].t = trans;
-        BoneOut[boneIndex].q = quat;
-        BoneOut[boneIndex].s = scale;
+        MixerOut[boneIndex].t = trans;
+        MixerOut[boneIndex].q = quat;
+        MixerOut[boneIndex].s = scale;
     }
 	
 }
