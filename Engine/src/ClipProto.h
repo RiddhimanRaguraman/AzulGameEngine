@@ -6,6 +6,7 @@
 #define CLIP_PROTO_H
 
 #include "Clip.h"
+#include "HierarchyTable.h"
 
 namespace Azul
 {
@@ -13,7 +14,7 @@ namespace Azul
 	{
 	public:
 		// Data
-		ClipProto(const char *const pFileName, Clip::Name clipName, Skel::Name skelName);
+		ClipProto(const char *const pFileName, Clip::Name clipName, Skel::Name skelName, HierarchyTable::Name hierarchyName);
 
 		ClipProto() = delete;
 		ClipProto(const ClipProto &) = delete;

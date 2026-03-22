@@ -16,6 +16,10 @@
 #include "MathEngine.h"
 #include "HierarchyTableMan.h"
 #include "Prefab_Pivot.h"
+#include "ComputeBlend_OneAnim.h"
+#include "ComputeBlend_TwoAnim.h"
+
+#include <Windows.h>
 
 namespace Azul
 {
@@ -85,7 +89,8 @@ namespace Azul
     }
 
     AnimMan::AnimMan(int reserveNum, int reserveGrow)
-        : ManBase(new DLinkMan(), new DLinkMan(), reserveNum, reserveGrow)
+        : ManBase(new DLinkMan(), new DLinkMan(), reserveNum, reserveGrow),
+        poBlendTwoAnimController(nullptr)
     {
         this->proFillReservedPool(reserveNum);
         this->poNodeCompare = new AnimNode();
@@ -204,6 +209,87 @@ namespace Azul
         return Clip::Name::Not_Initialized;
     }
 
+    static Clip::Name privMapToClipNameFromFile(const char* clipFileName, Skel::Name skelName)
+    {
+        assert(clipFileName);
+
+        if (skelName == Skel::Name::Mousey)
+        {
+            if (std::strstr(clipFileName, "Gangnam") != nullptr)
+            {
+                return Clip::Name::Mousey_Gangnam;
+            }
+
+            if (std::strstr(clipFileName, "Run") != nullptr)
+            {
+                return Clip::Name::Mousey_Run;
+            }
+
+            if (std::strstr(clipFileName, "Silly") != nullptr || std::strstr(clipFileName, "Dance") != nullptr)
+            {
+                return Clip::Name::Mousey_Silly_Dance;
+            }
+        }
+
+        if (skelName == Skel::Name::ChickenBot)
+        {
+            if (std::strstr(clipFileName, "Walk") != nullptr)
+            {
+                return Clip::Name::Walk_ChickenBot;
+            }
+            if (std::strstr(clipFileName, "Run") != nullptr)
+            {
+                return Clip::Name::Run_ChickenBot;
+            }
+            if (std::strstr(clipFileName, "HitBack") != nullptr)
+            {
+                return Clip::Name::HitBack_ChickenBot;
+            }
+            if (std::strstr(clipFileName, "Shot") != nullptr || std::strstr(clipFileName, "ShotUp") != nullptr)
+            {
+                return Clip::Name::ShotUp_ChickenBot;
+            }
+            if (std::strstr(clipFileName, "Idle") != nullptr)
+            {
+                return Clip::Name::Idle_ChickenBot;
+            }
+        }
+
+        if (skelName == Skel::Name::DogBot)
+        {
+            if (std::strstr(clipFileName, "Walk") != nullptr)
+            {
+                return Clip::Name::Walk_DogBot;
+            }
+            if (std::strstr(clipFileName, "Run") != nullptr)
+            {
+                return Clip::Name::Run_DogBot;
+            }
+            if (std::strstr(clipFileName, "HitBack") != nullptr)
+            {
+                return Clip::Name::HitBack_DogBot;
+            }
+            if (std::strstr(clipFileName, "Shot") != nullptr || std::strstr(clipFileName, "ShotUp") != nullptr)
+            {
+                return Clip::Name::ShotUp_DogBot;
+            }
+            if (std::strstr(clipFileName, "Idle") != nullptr)
+            {
+                return Clip::Name::Idle_DogBot;
+            }
+        }
+
+        if (skelName == Skel::Name::SpiderBot)
+        {
+            if (std::strstr(clipFileName, "walk") != nullptr || std::strstr(clipFileName, "Walk") != nullptr)
+            {
+                return Clip::Name::walk_Spiderbot;
+            }
+        }
+
+        return Clip::Name::Not_Initialized;
+    }
+
     HierarchyTable::Name AnimMan::privMapToHierarchyName( Skel::Name skelName)
     {
         switch (skelName)
@@ -223,33 +309,34 @@ namespace Azul
         }
     }
 
-    DLink *AnimMan::Add(Name name, const char *clipFileName, AnimTime delta, Skel::Name skelName, TextureObject::Name texName, Mesh::Name meshName, Vec3 &_pLightColor, Vec3 &_pLightPos)
+    DLink *AnimMan::Add(Name name, const char *clipFileName, Skel::Name skelName, TextureObject::Name texName, Mesh::Name meshName, Vec3 &_pLightColor, Vec3 &_pLightPos)
     {
         AnimMan *pMan = AnimMan::privGetInstance();
         assert(pMan != nullptr);
 
         Clip::Name clipName = privMapToClipName(name, skelName);
-
-        ClipMan::Add(clipName, skelName, clipFileName  );
-
         HierarchyTable::Name Hname = privMapToHierarchyName(skelName);
 
-        Anim *ptAnim = new Anim(Hname, clipName);
-        assert(ptAnim);
+        //HierarchyTable* pHtable = HierarchyTableMan::Find(Hname);
 
-        AnimController *pController = new AnimController(ptAnim, delta);
+        ClipMan::Add(clipName, clipFileName, skelName, Hname);
+
+        Anim *ptAnim = new Anim(clipName);
+        assert(ptAnim);
+        ComputeBlend_OneAnim* pBlend = new ComputeBlend_OneAnim(ptAnim);
+
+        AnimController *pController = new AnimController_OneAnim(ptAnim, pBlend, 1.0f);
         assert(pController);
 
-		GraphicsObject_SkinLightTexture *pGraphicsSkin = new GraphicsObject_SkinLightTexture(meshName,
-			                                                                                 ShaderObject::Name::SkinLightTexture,
-			                                                                                 texName,
-                                                                                             ptAnim->GetMixer(),
-                                                                                             ptAnim->GetWorldCompute(),
+        GraphicsObject_SkinLightTexture* pGraphicsSkin = new GraphicsObject_SkinLightTexture(meshName,
+                                                                                             ShaderObject::Name::SkinLightTexture,
+                                                                                             texName,
+                                                                                             pBlend,
                                                                                              _pLightColor,
                                                                                              _pLightPos);
 		assert(pGraphicsSkin);
 
-		GameObjectAnimSkin *pGameSkin = new GameObjectAnimSkin(pGraphicsSkin, ptAnim->GetMixer(),   ptAnim->GetWorldCompute());
+		GameObjectAnimSkin *pGameSkin = new GameObjectAnimSkin(pGraphicsSkin, pBlend);
 		assert(pGameSkin);
 		pGameSkin->SetName(StringMe(name));
 		GameObjectMan::Add(pGameSkin, GameObjectMan::GetRoot());
@@ -258,6 +345,54 @@ namespace Azul
         assert(pClip);
 
         AnimNode *pNode = (AnimNode *)pMan->baseAddToFront();
+        assert(pNode);
+        pNode->Set(name, pClip, pController, pGameSkin);
+        return pNode;
+    }
+
+    DLink* AnimMan::Add(Name name, const char* clipFileName1, const char* clipFileName2, Skel::Name skelName, TextureObject::Name texName, Mesh::Name meshName, Vec3& _pLightColor, Vec3& _pLightPos)
+    {
+        AnimMan* pMan = AnimMan::privGetInstance();
+        assert(pMan != nullptr);
+
+        Clip::Name clipName1 = privMapToClipNameFromFile(clipFileName1, skelName);
+        Clip::Name clipName2 = privMapToClipNameFromFile(clipFileName2, skelName);
+        assert(clipName1 != Clip::Name::Not_Initialized);
+        assert(clipName2 != Clip::Name::Not_Initialized);
+        HierarchyTable::Name Hname = privMapToHierarchyName(skelName);
+
+        //HierarchyTable* pHtable = HierarchyTableMan::Find(Hname);
+
+        ClipMan::Add(clipName1, clipFileName1, skelName, Hname);
+        ClipMan::Add(clipName2, clipFileName2, skelName, Hname);
+
+        Anim* pAnimA = new Anim(clipName1);
+        Anim* pAnimB = new Anim(clipName2);
+        ComputeBlend_TwoAnim* pBlend = new ComputeBlend_TwoAnim(pAnimA, pAnimB);
+
+        AnimController_TwoAnim *pTwoController = new AnimController_TwoAnim(pAnimA, 1.0f, pAnimB, 1.0f, pBlend);
+        assert(pTwoController);
+        AnimController *pController = pTwoController;
+
+        pMan->poBlendTwoAnimController = pTwoController;
+
+        GraphicsObject_SkinLightTexture* pGraphicsSkin = new GraphicsObject_SkinLightTexture(meshName,
+            ShaderObject::Name::SkinLightTexture,
+            texName,
+            pBlend,
+            _pLightColor,
+            _pLightPos);
+        assert(pGraphicsSkin);
+
+        GameObjectAnimSkin* pGameSkin = new GameObjectAnimSkin(pGraphicsSkin, pBlend);
+        assert(pGameSkin);
+        pGameSkin->SetName(StringMe(name));
+        GameObjectMan::Add(pGameSkin, GameObjectMan::GetRoot());
+
+        Clip* pClip = ClipMan::Find(clipName1);
+        assert(pClip);
+
+        AnimNode* pNode = (AnimNode*)pMan->baseAddToFront();
         assert(pNode);
         pNode->Set(name, pClip, pController, pGameSkin);
         return pNode;
@@ -276,7 +411,7 @@ namespace Azul
         return pData ? pData->GetController() : nullptr;
     }
 
-    void AnimMan::Update()
+    void AnimMan::Update(AnimTime tCurr)
     {
         AnimMan *pMan = AnimMan::privGetInstance();
         assert(pMan != nullptr);
@@ -288,8 +423,58 @@ namespace Azul
             AnimController *c = n->GetController();
             if (c)
             {
-                c->Update();
+                c->Update(tCurr);
             }
+        }
+    }
+
+    void AnimMan::BlendAnimation(AnimTime tDelta)
+    {
+        static float sBlendTs = 0.0f;
+        static bool sBlendOn = false;
+        static float sStartTs = 0.0f;
+        static float sTargetTs = 0.0f;
+        static float sElapsedSec = 1.0f;
+
+        const SHORT spaceState = GetAsyncKeyState(VK_SPACE);
+        if (spaceState & 0x0001)
+        {
+            sBlendOn = !sBlendOn;
+            sStartTs = sBlendTs;
+            sTargetTs = sBlendOn ? 1.0f : 0.0f;
+            sElapsedSec = 0.0f;
+        }
+
+        const float dtSec = tDelta / AnimTime(AnimTime::Duration::ONE_SECOND);
+        sElapsedSec += dtSec;
+
+        float t = sElapsedSec / 1.0f;
+        if (t < 0.0f)
+        {
+            t = 0.0f;
+        }
+        else if (t > 1.0f)
+        {
+            t = 1.0f;
+        }
+
+        sBlendTs = sStartTs + (sTargetTs - sStartTs) * t;
+
+        if (sBlendTs < 0.0f)
+        {
+            sBlendTs = 0.0f;
+        }
+        else if (sBlendTs > 1.0f)
+        {
+            sBlendTs = 1.0f;
+        }
+
+        AnimMan *pMan = AnimMan::privGetInstance();
+        assert(pMan != nullptr);
+
+        if (pMan->poBlendTwoAnimController)
+        {
+            pMan->poBlendTwoAnimController->SetBlendTs(sBlendTs);
         }
     }
 
@@ -350,15 +535,6 @@ namespace Azul
 		}
     }
 
-    void AnimMan::SetDelta(Name name, float scale)
-    {
-        AnimController *pCtrl = AnimMan::Find(name);
-        if (pCtrl)
-        {
-            pCtrl->SetDelta(scale);
-        }
-    }
-
 	void AnimMan::SetPrefabPivot(Name name)
 	{
 		AnimMan *pMan = AnimMan::privGetInstance();
@@ -372,6 +548,24 @@ namespace Azul
 			pNode->pGameSkin->SetPrefab(new Prefab_Pivot());
 		}
 	}
+
+    void AnimMan::SetBlendTs(Name name, float ts)
+    {
+        AnimMan* pMan = AnimMan::privGetInstance();
+        pMan->pCompareStrategy = AnimMan::posEnumNameCompare;
+        assert(pMan->pCompareStrategy);
+
+        pMan->poNodeCompare->mName = name;
+        AnimNode* pNode = (AnimNode*)pMan->baseFind(pMan->poNodeCompare);
+        if (pNode && pNode->pController)
+        {
+            AnimController_TwoAnim* pTwo = dynamic_cast<AnimController_TwoAnim*>(pNode->pController);
+            if (pTwo)
+            {
+                pTwo->SetBlendTs(ts);
+            }
+        }
+    }
 
     void AnimMan::SetPivotRotX(Name name, float angle)
     {

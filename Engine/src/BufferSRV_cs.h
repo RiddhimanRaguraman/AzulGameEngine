@@ -14,7 +14,7 @@ namespace Azul
 	class BufferSRV_cs
 	{
 	public:
-		BufferSRV_cs() = delete;
+		BufferSRV_cs();
 		BufferSRV_cs(const BufferSRV_cs& r) = delete;
 		BufferSRV_cs& operator=(const BufferSRV_cs&) = delete;
 		virtual ~BufferSRV_cs();
@@ -22,8 +22,10 @@ namespace Azul
 		BufferSRV_cs(size_t count, size_t structSize);
 
 		void Transfer(void* pBuff);
-		void BindCompute(ShaderResourceBufferSlot slot);
-		void BindVertex(ShaderResourceBufferSlot slot);
+		void BindComputeToCS(ShaderResourceBufferSlot slot);
+		void BindComputeToVS(ShaderResourceBufferSlot slot);
+		void Initialize(size_t _count, size_t _structSize);
+
 		ID3D11Buffer *GetD3DBuffer();
 	private:
 		void privCreate(size_t count, size_t structSize);

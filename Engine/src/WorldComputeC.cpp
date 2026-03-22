@@ -2,20 +2,20 @@
 // Copyright 2026, Ed Keenan, all rights reserved.
 //----------------------------------------------------------------------------
 
-#include "WorldCompute.h"
+#include "WorldComputeC.h"
 #include "File.h"
 #include "HierarchyTableMan.h"
 #include "HierarchyData.h"
 #include "MathEngine.h"
-#include "Mixer.h"
+#include "MixerA.h"
 #include "BufferCBV_cs.h"
 #include "BufferSRV_cs.h"
 #include "BufferUAV_cs.h"
 
 namespace Azul
 {
-	WorldCompute::WorldCompute(Mixer *pMixer, HierarchyTable *pHierarchyTable)
-		: 
+	WorldComputeC::WorldComputeC(Mixer *pMixer, HierarchyTable *pHierarchyTable)
+		:
 		pLocalBone{pMixer->GetMixerResult()},
 		mHierarchy{pHierarchyTable->GetDepth() * pHierarchyTable->GetNumJoints(), sizeof(unsigned int)},
 		mUAVWorldMat{pHierarchyTable->GetNumJoints(), sizeof(Mat4)},
@@ -23,7 +23,7 @@ namespace Azul
 		numJoints{(uint32_t)pHierarchyTable->GetNumJoints()},
 		hierarchyDepth{(uint32_t)pHierarchyTable->GetDepth()},
 		mWorldConstant{0},
-		mBoneWorld{pHierarchyTable->GetNumJoints(), sizeof(Mat4)}
+		mSRVBufferToVS_BoneWorld{ pHierarchyTable->GetNumJoints(), sizeof(Mat4) }
 	{
 		assert(pMixer);
 
@@ -52,7 +52,7 @@ namespace Azul
 
 		// 5) numJoints
 		//       num of rows in hierarchy table
-		
+
 		// 6) hierarchy depth
 		//       num of columns in hierarchy table
 
@@ -72,42 +72,42 @@ namespace Azul
 
 	}
 
-	WorldCompute::~WorldCompute()
+	WorldComputeC::~WorldComputeC()
 	{
 		// nothing since the buffers are objects
 	}
 
-	BufferUAV_cs *WorldCompute::GetLocalBone()
+	BufferUAV_cs *WorldComputeC::GetLocalBone()
 	{
 		return this->pLocalBone;
 	}
 
-	BufferSRV_cs *WorldCompute::GetHierarchy()
+	BufferSRV_cs *WorldComputeC::GetHierarchy()
 	{
 		return &this->mHierarchy;
 	}
 
-	BufferUAV_cs *WorldCompute::GetUAVWorldMat()
+	BufferUAV_cs *WorldComputeC::GetUAVWorldMat()
 	{
 		return &this->mUAVWorldMat;
 	}
 
-	BufferCBV_cs *WorldCompute::GetWorldConstBuffer()
+	BufferCBV_cs *WorldComputeC::GetWorldConstBuffer()
 	{
 		return &this->mWorldConstBuffer;
 	}
 
-	BufferSRV_cs *WorldCompute::GetBoneWorld()
+	BufferSRV_cs *WorldComputeC::GetBoneWorld()
 	{
-		return &this->mBoneWorld;
+		return &this->mSRVBufferToVS_BoneWorld;
 	}
 
-	size_t WorldCompute::GetNumJoints()
+	size_t WorldComputeC::GetNumJoints()
 	{
 		return this->numJoints;
 	}
 
-	void *WorldCompute::GetRawConstBuffer()
+	void *WorldComputeC::GetRawConstBuffer()
 	{
 		static WorldConstant tmp{0};
 

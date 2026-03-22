@@ -2,28 +2,27 @@
 // Copyright 2026, Ed Keenan, all rights reserved.
 //--------------------------------------------------------------
 
-#include "ShaderObject_BasicCompute.h"
+#include "ShaderObject_MixerC.h"
 #include "Mesh.h"
 #include "StateDirectXMan.h"
 #include "ShaderMappings.h"
 
 // User generated headers... 
-#include "BasicCompute.Cx.h"
+#include "MixerC.Cx.h"
 
 namespace Azul
 {
-	ShaderObject_BasicCompute::~ShaderObject_BasicCompute()
+	ShaderObject_MixerC::~ShaderObject_MixerC()
 	{
 	}
 
-	ShaderObject_BasicCompute::ShaderObject_BasicCompute(ShaderObject_BasicCompute::Name _name)
+	ShaderObject_MixerC::ShaderObject_MixerC(ShaderObject_MixerC::Name _name)
 		: ShaderObject(_name),
-		ComputeShader{sizeof(g_BasicCompute_CxShader),
-					  (void *)g_BasicCompute_CxShader}
+		ComputeShader{sizeof(g_MixerC_CxShader), (void *)g_MixerC_CxShader}
 	{
 	}
 
-	void ShaderObject_BasicCompute::ActivateShader()
+	void ShaderObject_MixerC::ActivateShader()
 	{
 		this->ComputeShader.SetActive();
 	}

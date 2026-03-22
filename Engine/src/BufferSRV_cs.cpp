@@ -7,6 +7,28 @@
 
 namespace Azul
 {
+	BufferSRV_cs::BufferSRV_cs()
+		: count{ 0 },
+		structSize{ 0 },
+		pBuff{ nullptr },
+		poComputeSRVBuffer{ nullptr },
+		poShaderResourceView{ nullptr },
+		bCreate{ false }
+	{
+	}
+
+	void BufferSRV_cs::Initialize(size_t _count, size_t _structSize)
+	{
+		assert(this->bCreate == false);
+		assert(this->count == 0);
+		assert(this->pBuff == nullptr);
+		assert(this->poComputeSRVBuffer == nullptr);
+		assert(this->poShaderResourceView == nullptr);
+		this->count = _count;
+		this->structSize = _structSize;
+		this->privCreate(this->count, this->structSize);
+	}
+
 	BufferSRV_cs::BufferSRV_cs(size_t _count, size_t _structSize)
 		: count{ _count },
 		structSize{ _structSize },
@@ -73,29 +95,24 @@ namespace Azul
 			0);
 	}
 
-	void BufferSRV_cs::BindCompute(ShaderResourceBufferSlot slot)
+	void BufferSRV_cs::BindComputeToCS(ShaderResourceBufferSlot slot)
 	{
-
 		StateDirectXMan::GetContext()->CSSetShaderResources((size_t)slot,
 			1,
 			&this->poShaderResourceView);
-
 	}
 
-	void BufferSRV_cs::BindVertex(ShaderResourceBufferSlot slot)
+	void BufferSRV_cs::BindComputeToVS(ShaderResourceBufferSlot slot)
 	{
-
 		StateDirectXMan::GetContext()->VSSetShaderResources((size_t)slot,
 			1,
 			&this->poShaderResourceView);
-
 	}
 
 	ID3D11Buffer *BufferSRV_cs::GetD3DBuffer()
 	{
 		return this->poComputeSRVBuffer;
 	}
-
 
 	BufferSRV_cs::~BufferSRV_cs()
 	{

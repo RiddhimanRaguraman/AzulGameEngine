@@ -17,7 +17,7 @@ namespace Azul
 
 		bool status = false;
 
-	if(pDataA->mName == pDataB->mName)
+	if(pDataA->mClipName == pDataB->mClipName)
 		{
 			status = true;
 		}

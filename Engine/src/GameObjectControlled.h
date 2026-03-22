@@ -6,12 +6,6 @@
 #define GAME_OBJECT_CONTROLLED_H
 
 #include "GameObject.h"
-#include "MathEngine.h"
-#include "ShaderObject.h"
-#include "Mesh.h"
-#include "GraphicsObject.h"
-#include "PCSNode.h"
-#include "AnimTime.h"
 
 namespace Azul
 {
@@ -27,7 +21,6 @@ namespace Azul
 		virtual ~GameObjectControlled() = default;
 
 		virtual void Update(AnimTime currTime);
-		virtual void SetIndex(int i) = 0;
 
 	public:
 		int index;

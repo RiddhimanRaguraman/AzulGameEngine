@@ -2,28 +2,27 @@
 // Copyright 2026, Ed Keenan, all rights reserved.
 //--------------------------------------------------------------
 
-#include "ShaderObject_World.h"
+#include "ShaderObject_MixerB.h"
 #include "Mesh.h"
 #include "StateDirectXMan.h"
-#include "ShaderMappings.h" 
+#include "ShaderMappings.h"
 
 // User generated headers... 
-#include "World.Cx.h"
+#include "MixerB.Cx.h"
 
 namespace Azul
 {
-	ShaderObject_World::~ShaderObject_World()
+	ShaderObject_MixerB::~ShaderObject_MixerB()
 	{
 	}
 
-	ShaderObject_World::ShaderObject_World(ShaderObject_World::Name _name)
+	ShaderObject_MixerB::ShaderObject_MixerB(ShaderObject_MixerB::Name _name)
 		: ShaderObject(_name),
-		ComputeShader{sizeof(g_World_CxShader),
-					  (void *)g_World_CxShader}
+		ComputeShader{sizeof(g_MixerB_CxShader), (void *)g_MixerB_CxShader}
 	{
 	}
 
-	void ShaderObject_World::ActivateShader()
+	void ShaderObject_MixerB::ActivateShader()
 	{
 		this->ComputeShader.SetActive();
 	}

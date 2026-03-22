@@ -9,7 +9,6 @@
 #include "GameObjectRigidBody.h"
 #include "GameObjectControlled.h"
 #include "GameObjectAnimSkin.h"
-#include "GameObjectAnimSkeleton.h"
 #include "GameObjectSprite.h"
 #include "PCSTree.h"
 #include "AnimTime.h"

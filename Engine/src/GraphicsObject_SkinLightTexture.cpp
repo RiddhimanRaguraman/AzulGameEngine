@@ -10,7 +10,6 @@
 #include "CameraNodeMan.h"
 #include "GameMan.h"
 #include "TexNodeMan.h"
-#include "StateDirectXMan.h"
 
 namespace Azul
 {
@@ -23,16 +22,14 @@ namespace Azul
 	GraphicsObject_SkinLightTexture::GraphicsObject_SkinLightTexture(Mesh::Name meshName,
 		ShaderObject::Name shaderName,
 		TextureObject::Name textName,
-		Mixer *_pMixer,
-		WorldCompute *_pWorldCompute,
+		ComputeBlend* _pBlend,
 		Vec3& LightColor,
 		Vec3& LightPos)
 		: GraphicsObject(meshName, shaderName),
 		pTex{ nullptr },
 		poLightColor(nullptr),
 		poLightPos(nullptr),
-		pMixer{ _pMixer },
-		pWorldCompute{ _pWorldCompute }
+		poComputeBlend{ _pBlend }
 	{
 		this->pTex = TexNodeMan::Find(textName);
 		assert(pTex);
@@ -42,14 +39,15 @@ namespace Azul
 
 		assert(poLightColor);
 		assert(poLightPos);
-		assert(pMixer);
-		assert(pWorldCompute);
+		assert(this->poComputeBlend);
 	}
 
 	GraphicsObject_SkinLightTexture::~GraphicsObject_SkinLightTexture()
 	{
 		delete poLightColor;
 		delete poLightPos;
+		delete this->poComputeBlend;
+		this->poComputeBlend = nullptr;
 	}
 
 	void GraphicsObject_SkinLightTexture::SetState()
@@ -63,7 +61,7 @@ namespace Azul
 	void GraphicsObject_SkinLightTexture::SetDataGPU()
 	{
 		pMesh->ActivateMesh();
-		pMesh->ActivateConstantBuffers();
+		pMesh->ActivateSRVBuffers();
 
 		pShaderObj->ActivateShader();
 		pShaderObj->ActivateCBV();
@@ -74,8 +72,8 @@ namespace Azul
 		pShaderObj->TransferWorldViewProj(pCam, this->poWorld);
 		pShaderObj->TransferPos(this->poLightPos);
 		pShaderObj->TransferColor(this->poLightColor);
-		StateDirectXMan::GetContext()->VSSetShaderResources((UINT)ShaderResourceBufferSlot::BoneWorldIn, 1, &pWorldCompute->GetBoneWorld()->poShaderResourceView);
-
+		// associate the world matrix
+		this->poComputeBlend->BindWorldBoneArray();
 	}
 
 	void GraphicsObject_SkinLightTexture::Draw()

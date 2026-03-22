@@ -5,36 +5,22 @@
 #ifndef ANIM_CONTROLLER_H
 #define ANIM_CONTROLLER_H
 
-#include "TimerController.h"
-#include "GameObjectControlled.h"
-#include "Anim.h"
+#include "AnimTime.h"
 
 namespace Azul
 {
     class AnimController
     {
     public:
-        AnimController(Anim* pAnim, AnimTime delta);
+
+        AnimController() = default;
         AnimController(const AnimController &) = delete;
         AnimController &operator = (const AnimController &) = delete;
-        virtual	~AnimController();
+        virtual	~AnimController() ;
 
-        void Update();
-
-        //void SetPivotScale(float sx, float sy, float sz);
-        //void SetPivotUniformScale(float s);
-        //void SetPivotTrans(float x, float y, float z);
-        //void SetPivotRotX(float angle);
-        //void SetPivotRotY(float angle);
-        //void SetPivotRotZ(float angle);
-        //void SetPivotTotalRot(const Rot3 mode, float x, float y, float z);
-        void SetDelta(float scale);
-        void SetClip(Clip::Name clipName);
-        Clip *GetClip();
-
-	private:
-		TimerController *poTimerControl;
-		Anim *poAnim;
+        virtual void Update(AnimTime tCurr) = 0;
+       /* void SetClip(Clip::Name clipName);
+        Clip *GetClip();*/
 
 	};
 }

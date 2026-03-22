@@ -12,12 +12,14 @@
 #include "ShaderObject_FlatTexture.h"
 #include "ShaderObject_SkinFlatTexture.h"
 #include "ShaderObject_SkinLightTexture.h"
-#include "ShaderObject_World.h"
+#include "ShaderObject_WorldA.h"
+#include "ShaderObject_WorldC.h"
 #include "ShaderObject_LightTexture.h"
 #include "ShaderObject_ConstColor.h"
 #include "ShaderObject_Sprite.h"
-#include "ShaderObject_BasicCompute.h"
-#include "ShaderObject_Mixer.h"
+#include "ShaderObject_MixerA.h"
+#include "ShaderObject_MixerB.h"
+#include "ShaderObject_MixerC.h"
 
 namespace Azul
 {

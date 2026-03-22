@@ -57,6 +57,13 @@ namespace Azul
 		strcpy_s(pTmp, 128, StringMe(this->name));
 		return pTmp;
 	}
+	
+	void Mesh::ActivateSRVBuffers()
+	{
+		// Default - false
+		assert(false);
+	}
+
 	void Mesh::ActivateConstantBuffers()
 	{
 		// Default - false

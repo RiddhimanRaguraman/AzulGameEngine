@@ -11,22 +11,6 @@
 
 namespace Azul
 {
-	struct BufType
-	{
-		BufType()
-			: GroupID(),
-			GroupThreadID(),
-			DispatchThreadID(),
-			GroupIndex{ 0 }
-		{
-		};
-
-		Vec3ui GroupID;         // Dispatch
-		Vec3ui GroupThreadID;   // Local
-		Vec3ui DispatchThreadID; // combo 
-		int    GroupIndex;      // flatten index
-	};
-
 	class BufferUAV_cs
 	{
 	public:

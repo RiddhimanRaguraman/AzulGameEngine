@@ -3,10 +3,11 @@
 //--------------------------------------------------------------
 
 // Enable data
-#define SRV_tKeyA
-#define SRV_tKeyB
-#define UAV_uMixerOut
-#define CBV_csMixer
+#define SRV_tKeyAa
+#define SRV_tKeyAb
+#define UAV_uMixerOutAx
+#define CBV_csMixerA
+        
 
 #include "ShaderMappings.hlsli"
 
@@ -29,17 +30,17 @@ void main(uint3 dtID : SV_DispatchThreadID)
     uint boneIndex = dtID.x;
 
     // protection incase index is outside array range
-    if (dtID.x < csMixer.numNodes)
+    if (dtID.x < csMixerA.numNodes)
     {
-        uMixerOut[boneIndex] = tKeyA[boneIndex];
+        uMixerOutAx[boneIndex] = tKeyAa[boneIndex];
   
-        float4 trans = lerpMe(tKeyA[boneIndex].t, tKeyB[boneIndex].t, csMixer.ts);
-        float4 quat = slerp(tKeyA[boneIndex].q, tKeyB[boneIndex].q, csMixer.ts);
-        float4 scale = lerpMe(tKeyA[boneIndex].s, tKeyB[boneIndex].s, csMixer.ts);
+        float4 trans = lerpMe(tKeyAa[boneIndex].t, tKeyAb[boneIndex].t, csMixerA.ts);
+        float4 quat = slerp(tKeyAa[boneIndex].q, tKeyAb[boneIndex].q, csMixerA.ts);
+        float4 scale = lerpMe(tKeyAa[boneIndex].s, tKeyAb[boneIndex].s, csMixerA.ts);
 
-        uMixerOut[boneIndex].t = trans;
-        uMixerOut[boneIndex].q = quat;
-        uMixerOut[boneIndex].s = scale;
+        uMixerOutAx[boneIndex].t = trans;
+        uMixerOutAx[boneIndex].q = quat;
+        uMixerOutAx[boneIndex].s = scale;
     }
 	
 }
@@ -64,7 +65,6 @@ float4 slerp(float4 src, float4 tar, float t)
 
 	// Not sure if dot is 3D or 4D... need 4D
 	//float cosom = dot(src, tar);
-	
     float cosom = src.x * tar.x + src.y * tar.y + src.z * tar.z + src.w * tar.w;
 
     if (cosom >= 1.0f)

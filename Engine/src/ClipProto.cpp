@@ -13,7 +13,7 @@ namespace Azul
 	{
 	}
 
-	ClipProto::ClipProto(const char *const pFileName, Clip::Name clipName, Skel::Name skelName)
+	ClipProto::ClipProto(const char *const pFileName, Clip::Name clipName, Skel::Name skelName, HierarchyTable::Name hierarchyName)
 	{
 		assert(pFileName);
 
@@ -39,10 +39,11 @@ namespace Azul
 		//assert(strcmp(mB.pVersion, "2.0.0") == 0);
 
 		ClipMan::Add(clipName,
-					 skelName,
 					 mB.numNodes,
 					 mB.numKeyFrames,
-					 mB.poFrameBucketEntry);
+					 mB.poFrameBucketEntry,
+					 skelName,
+					 hierarchyName);
 
 	}
 }

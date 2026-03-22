@@ -14,6 +14,18 @@ namespace Azul
 			strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(HierarchyTable::ChickenBot));
 			break;
 
+		case HierarchyTable::Name::DogBot:
+			strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(HierarchyTable::DogBot));
+			break;
+
+		case HierarchyTable::Name::SpiderBot:
+			strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(HierarchyTable::SpiderBot));
+			break;
+
+		case HierarchyTable::Name::Mousey:
+			strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(HierarchyTable::Mousey));
+			break;
+
 		case HierarchyTable::Name::Not_Initialized:
 			strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(HierarchyTable::Not_Initialized));
 			break;
@@ -29,6 +41,10 @@ namespace Azul
 		{
 		case JointTable::Name::ChickenBot:
 			strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(JointTable::ChickenBot));
+			break;
+
+		case JointTable::Name::Mousey:
+			strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(JointTable::Mousey));
 			break;
 
 		case JointTable::Name::Not_Initialized:
@@ -74,6 +90,22 @@ namespace Azul
 			strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(Clip::Idle_DogBot));
 			break;
 
+		case Clip::Name::walk_Spiderbot:
+			strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(Clip::walk_Spiderbot));
+			break;
+
+		case Clip::Name::Mousey_Silly_Dance:
+			strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(Clip::Mousey_Silly_Dance));
+			break;
+
+		case Clip::Name::Mousey_Run:
+			strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(Clip::Mousey_Run));
+			break;
+
+		case Clip::Name::Mousey_Gangnam:
+			strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(Clip::Mousey_Gangnam));
+			break;
+
 		case Clip::Name::Not_Initialized:
 			strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(Clip::Not_Initialized));
 			break;
@@ -92,6 +124,14 @@ namespace Azul
 			break;
 		case Skel::Name::DogBot:
 			strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(Skel::DogBot));
+			break;
+
+		case Skel::Name::SpiderBot:
+			strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(Skel::SpiderBot));
+			break;
+
+		case Skel::Name::Mousey:
+			strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(Skel::Mousey));
 			break;
 
 		case Skel::Name::Not_Initialized:
@@ -173,10 +213,6 @@ namespace Azul
 				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(ShaderObject::LightTexture));
 				break;
 
-			case ShaderObject::Name::BasicCompute:
-				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(ShaderObject::BasicCompute));
-				break;
-
 			case ShaderObject::Name::SkinFlatTexture:
 				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(ShaderObject::SkinFlatTexture));
 				break;
@@ -185,8 +221,16 @@ namespace Azul
 				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(ShaderObject::SkinLightTexture));
 				break;
 
-			case ShaderObject::Name::MixerCompute:
-				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(ShaderObject::MixerCompute));
+			case ShaderObject::Name::MixerACompute:
+				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(ShaderObject::MixerACompute));
+				break;
+
+			case ShaderObject::Name::MixerBCompute:
+				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(ShaderObject::MixerBCompute));
+				break; 
+
+			case ShaderObject::Name::MixerCCompute:
+				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(ShaderObject::MixerCCompute));
 				break;
 
 			case ShaderObject::Name::ConstColor:
@@ -211,7 +255,7 @@ namespace Azul
 		switch(status)
 		{
 			case TextureObject::Name::NullTexture:
-				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(TextureObject::NullShader));
+				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(TextureObject::NullTexture));
 				break;
 
 			case TextureObject::Name::Duckweed:
@@ -231,6 +275,9 @@ namespace Azul
 	{
 		switch(status)
 		{
+		case AnimMan::Name::Gangnam:
+			strcpy_s(this->buffer, BUFFER_SIZE, "Gangnam");
+			break;
 		case AnimMan::Name::Walk:
 			strcpy_s(this->buffer, BUFFER_SIZE, "Walk");
 			break;
@@ -254,6 +301,8 @@ namespace Azul
 			break;
 		default:
 			assert(false);
+			/*strcpy_s(this->buffer, BUFFER_SIZE, "Unknown");
+			break;*/
 		}
 	}
 

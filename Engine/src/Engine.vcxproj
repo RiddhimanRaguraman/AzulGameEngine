@@ -158,13 +158,19 @@
     <ClInclude Include="..\shaders\Compiled\ConstColor.Vx.h" />
     <ClInclude Include="..\shaders\Compiled\ConstColorLight.px.h" />
     <ClInclude Include="..\shaders\Compiled\ConstColorLight.Vx.h" />
+    <ClInclude Include="..\shaders\Compiled\MixerA.Cx.h" />
+    <ClInclude Include="..\shaders\Compiled\MixerB.Cx.h" />
+    <ClInclude Include="..\shaders\Compiled\MixerC.Cx.h" />
     <ClInclude Include="..\shaders\Compiled\SkinFlatTexture.Px.h" />
     <ClInclude Include="..\shaders\Compiled\SkinFlatTexture.Vx.h" />
     <ClInclude Include="..\shaders\Compiled\SkinLightTexture.Px.h" />
     <ClInclude Include="..\shaders\Compiled\SkinLightTexture.Vx.h" />
     <ClInclude Include="..\shaders\Compiled\Sprite.Px.h" />
     <ClInclude Include="..\shaders\Compiled\Sprite.Vx.h" />
-    <ClInclude Include="..\shaders\Compiled\World.Cx.h" />
+    <ClInclude Include="..\shaders\Compiled\WorldA.Cx.h" />
+    <ClInclude Include="..\shaders\Compiled\WorldC.Cx.h" />
+    <ClInclude Include="AnimController_OneAnim.h" />
+    <ClInclude Include="AnimController_TwoAnim.h" />
     <ClInclude Include="AnimMan.h" />
     <ClInclude Include="..\shaders\Compiled\ColorByVertex.Px.h" />
     <ClInclude Include="..\shaders\Compiled\ColorByVertex.Vx.h" />
@@ -201,12 +207,14 @@
     <ClInclude Include="ClipMan.h" />
     <ClInclude Include="ClipProto.h" />
     <ClInclude Include="Color.h" />
+    <ClInclude Include="ComputeBlend.h" />
+    <ClInclude Include="ComputeBlend_OneAnim.h" />
+    <ClInclude Include="ComputeBlend_TwoAnim.h" />
     <ClInclude Include="FontSprite.h" />
     <ClInclude Include="FrameBucket.h" />
     <ClInclude Include="GameMan.h" />
     <ClInclude Include="GameObjectControlled.h" />
     <ClInclude Include="GameObjectAnimSkin.h" />
-    <ClInclude Include="GameObjectAnimSkeleton.h" />
     <ClInclude Include="GameObjectRigidBody.h" />
     <ClInclude Include="GameObjectSprite.h" />
     <ClInclude Include="Glyph.h" />
@@ -232,6 +240,9 @@
     <ClInclude Include="MeshNodeCompareStrategyEnumName.h" />
     <ClInclude Include="MeshProto.h" />
     <ClInclude Include="Mixer.h" />
+    <ClInclude Include="MixerA.h" />
+    <ClInclude Include="MixerB.h" />
+    <ClInclude Include="MixerC.h" />
     <ClInclude Include="Prefab.h" />
     <ClInclude Include="PrefabAnim.h" />
     <ClInclude Include="Prefab_Abstract.h" />
@@ -248,16 +259,18 @@
     <ClInclude Include="GraphicsObject_FlatTexture.h" />
     <ClInclude Include="GraphicsObject_LightTexture.h" />
     <ClInclude Include="ShaderObjectNodeCompareStrategyEnumName.h" />
-    <ClInclude Include="ShaderObject_BasicCompute.h" />
     <ClInclude Include="ShaderObject_ConstColor.h" />
     <ClInclude Include="ShaderObject_ConstColorLight.h" />
     <ClInclude Include="ShaderObject_FlatTexture.h" />
     <ClInclude Include="ShaderObject_LightTexture.h" />
-    <ClInclude Include="ShaderObject_Mixer.h" />
+    <ClInclude Include="ShaderObject_MixerA.h" />
+    <ClInclude Include="ShaderObject_MixerB.h" />
+    <ClInclude Include="ShaderObject_MixerC.h" />
     <ClInclude Include="ShaderObject_SkinFlatTexture.h" />
     <ClInclude Include="ShaderObject_SkinLightTexture.h" />
     <ClInclude Include="ShaderObject_Sprite.h" />
-    <ClInclude Include="ShaderObject_World.h" />
+    <ClInclude Include="ShaderObject_WorldA.h" />
+    <ClInclude Include="ShaderObject_WorldC.h" />
     <ClInclude Include="Skel.h" />
     <ClInclude Include="SkelCompareStrategyEnumName.h" />
     <ClInclude Include="Skeleton.h" />
@@ -308,7 +321,9 @@
     <ClInclude Include="TextureObject.h" />
     <ClInclude Include="TimerController.h" />
     <ClInclude Include="WindowColors.h" />
-    <ClInclude Include="WorldCompute.h" />
+    <ClInclude Include="WorldComputeA.h" />
+    <ClInclude Include="WorldComputeC.h" />
+    <ClInclude Include="WorldConstant.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\shaders\original\ShaderMappings.hlsli" />
@@ -320,6 +335,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Anim.cpp" />
+    <ClCompile Include="AnimController_OneAnim.cpp" />
+    <ClCompile Include="AnimController_TwoAnim.cpp" />
     <ClCompile Include="AnimMan.cpp" />
     <ClCompile Include="AnimController.cpp" />
     <ClCompile Include="AnimManCompareStrategyEnumName.cpp" />
@@ -347,12 +364,14 @@
     <ClCompile Include="ClipMan.cpp" />
     <ClCompile Include="ClipProto.cpp" />
     <ClCompile Include="Color.cpp" />
+    <ClCompile Include="ComputeBlend.cpp" />
+    <ClCompile Include="ComputeBlend_OneAnim.cpp" />
+    <ClCompile Include="ComputeBlend_TwoAnim.cpp" />
     <ClCompile Include="FontSprite.cpp" />
     <ClCompile Include="FrameBucket.cpp" />
     <ClCompile Include="GameMan.cpp" />
     <ClCompile Include="GameObjectControlled.cpp" />
     <ClCompile Include="GameObjectAnimSkin.cpp" />
-    <ClCompile Include="GameObjectAnimSkeleton.cpp" />
     <ClCompile Include="GameObjectRigidBody.cpp" />
     <ClCompile Include="GameObjectSprite.cpp" />
     <ClCompile Include="Glyph.cpp" />
@@ -378,6 +397,9 @@
     <ClCompile Include="MeshNodeCompareStrategyEnumName.cpp" />
     <ClCompile Include="MeshProto.cpp" />
     <ClCompile Include="Mixer.cpp" />
+    <ClCompile Include="MixerA.cpp" />
+    <ClCompile Include="MixerB.cpp" />
+    <ClCompile Include="MixerC.cpp" />
     <ClCompile Include="Prefab.cpp" />
     <ClCompile Include="PrefabAnim.cpp" />
     <ClCompile Include="Prefab_FiboSpiral.cpp" />
@@ -393,16 +415,18 @@
     <ClCompile Include="GraphicsObject_FlatTexture.cpp" />
     <ClCompile Include="GraphicsObject_LightTexture.cpp" />
     <ClCompile Include="ShaderObjectNodeCompareStrategyEnumName.cpp" />
-    <ClCompile Include="ShaderObject_BasicCompute.cpp" />
     <ClCompile Include="ShaderObject_ConstColor.cpp" />
     <ClCompile Include="ShaderObject_ConstColorLight.cpp" />
     <ClCompile Include="ShaderObject_FlatTexture.cpp" />
     <ClCompile Include="ShaderObject_LightTexture.cpp" />
-    <ClCompile Include="ShaderObject_Mixer.cpp" />
+    <ClCompile Include="ShaderObject_MixerA.cpp" />
+    <ClCompile Include="ShaderObject_MixerB.cpp" />
+    <ClCompile Include="ShaderObject_MixerC.cpp" />
     <ClCompile Include="ShaderObject_SkinFlatTexture.cpp" />
     <ClCompile Include="ShaderObject_SkinLightTexture.cpp" />
     <ClCompile Include="ShaderObject_Sprite.cpp" />
-    <ClCompile Include="ShaderObject_World.cpp" />
+    <ClCompile Include="ShaderObject_WorldA.cpp" />
+    <ClCompile Include="ShaderObject_WorldC.cpp" />
     <ClCompile Include="Skel.cpp" />
     <ClCompile Include="SkelCompareStrategyEnumName.cpp" />
     <ClCompile Include="Skeleton.cpp" />
@@ -451,7 +475,8 @@
     <ClCompile Include="TextureNull.cpp" />
     <ClCompile Include="TextureObject.cpp" />
     <ClCompile Include="TimerController.cpp" />
-    <ClCompile Include="WorldCompute.cpp" />
+    <ClCompile Include="WorldComputeA.cpp" />
+    <ClCompile Include="WorldComputeC.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libs\AnimTime\AnimTime.vcxproj">
@@ -474,17 +499,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\shaders\original\BasicCompute.Cx.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">g_BasicCompute_CxShader</VariableName>
-      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Shaders/Compiled/BasicCompute.Cx.h</HeaderFileOutput>
-      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)_d.cso</ObjectFileOutput>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">g_BasicCompute_CxShader</VariableName>
-      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../Shaders/Compiled/BasicCompute.Cx.h</HeaderFileOutput>
-    </FxCompile>
     <FxCompile Include="..\shaders\original\ColorByVertex.Px.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
@@ -595,17 +609,38 @@
       <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../Shaders/Compiled/LightTexture.Vx.h</HeaderFileOutput>
       <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">g_LightTexture_VxShader</VariableName>
     </FxCompile>
-    <FxCompile Include="..\shaders\original\Mixer.Cx.hlsl">
+    <FxCompile Include="..\shaders\original\MixerA.Cx.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">g_Mixer_CxShader</VariableName>
-      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Shaders/Compiled/Mixer.Cx.h</HeaderFileOutput>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">g_MixerA_CxShader</VariableName>
+      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Shaders/Compiled/MixerA.Cx.h</HeaderFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)_d.cso</ObjectFileOutput>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">g_Mixer_CxShader</VariableName>
-      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../Shaders/Compiled/Mixer.Cx.h</HeaderFileOutput>
-      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename).cso</ObjectFileOutput>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">g_MixerA_CxShader</VariableName>
+      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../Shaders/Compiled/MixerA.Cx.h</HeaderFileOutput>
+    </FxCompile>
+    <FxCompile Include="..\shaders\original\MixerB.Cx.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">g_MixerB_CxShader</VariableName>
+      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Shaders/Compiled/MixerB.Cx.h</HeaderFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">g_MixerB_CxShader</VariableName>
+      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../Shaders/Compiled/MixerB.Cx.h</HeaderFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)_d.cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="..\shaders\original\MixerC.Cx.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">g_MixerC_CxShader</VariableName>
+      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Shaders/Compiled/MixerC.Cx.h</HeaderFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">g_MixerC_CxShader</VariableName>
+      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../Shaders/Compiled/MixerC.Cx.h</HeaderFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)_d.cso</ObjectFileOutput>
     </FxCompile>
     <FxCompile Include="..\shaders\original\Null.Px.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
@@ -695,15 +730,26 @@
       <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">g_Sprite_VxShader</VariableName>
       <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../Shaders/Compiled/Sprite.Vx.h</HeaderFileOutput>
     </FxCompile>
-    <FxCompile Include="..\shaders\original\World.Cx.hlsl">
+    <FxCompile Include="..\shaders\original\WorldA.Cx.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">g_World_CxShader</VariableName>
-      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Shaders/Compiled/World.Cx.h</HeaderFileOutput>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">g_WorldA_CxShader</VariableName>
+      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Shaders/Compiled/WorldA.Cx.h</HeaderFileOutput>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">g_World_CxShader</VariableName>
-      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../Shaders/Compiled/World.Cx.h</HeaderFileOutput>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">g_WorldA_CxShader</VariableName>
+      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../Shaders/Compiled/WorldA.Cx.h</HeaderFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)_d.cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="..\shaders\original\WorldC.Cx.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">g_WorldC_CxShader</VariableName>
+      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Shaders/Compiled/WorldC.Cx.h</HeaderFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <VariableName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">g_WorldC_CxShader</VariableName>
+      <HeaderFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../Shaders/Compiled/WorldC.Cx.h</HeaderFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)_d.cso</ObjectFileOutput>
     </FxCompile>
   </ItemGroup>

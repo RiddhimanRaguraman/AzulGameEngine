@@ -6,15 +6,8 @@
 #define GAME_OBJECT_ANIM_SKIN_H
 
 #include "GameObjectControlled.h"
-#include "MathEngine.h"
-#include "ShaderObject.h"
-#include "Mesh.h"
-#include "GraphicsObject.h"
-#include "PCSNode.h"
-#include "AnimTime.h"
-#include "Bone.h"
-#include "Skeleton.h"
-#include "WorldCompute.h"
+#include "ComputeBlend.h"
+
 
 namespace Azul
 {
@@ -22,8 +15,7 @@ namespace Azul
 	{
 	public:
 		
-		GameObjectAnimSkin(	GraphicsObject* graphicsObject, 
-							Mixer *pMixer, WorldCompute *pWorldCompute);
+		GameObjectAnimSkin(	GraphicsObject* graphicsObject, ComputeBlend* pBlend);
 		// Big four
 		GameObjectAnimSkin() = delete;
 		GameObjectAnimSkin(const GameObjectAnimSkin&) = delete;
@@ -31,8 +23,6 @@ namespace Azul
 		virtual ~GameObjectAnimSkin();
 
 		virtual void Update(AnimTime currTime) override;
-
-		virtual void SetIndex(int i) override;
 
 		void SetScale(float sx, float sy, float sz);
 		void SetQuat(float qx, float qy, float qz, float qw);
@@ -45,8 +35,7 @@ namespace Azul
 
 	private:
 		void privUpdate(AnimTime currTime);
-		void privMixerExecute();
-		void privWorldComputeExecute();
+
 
 	public:
 		
@@ -63,8 +52,7 @@ namespace Azul
 		float cur_rot_y;
 		float cur_rot_z;
 
-		Mixer *poMixer;
-		WorldCompute *poWorldCompute;
+		ComputeBlend* pBlend;
 		Prefab* poPrefab;
 		bool setorupdate;
 		char pad[3];

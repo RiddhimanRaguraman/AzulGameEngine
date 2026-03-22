@@ -2,23 +2,23 @@
 // Copyright 2026, Ed Keenan, all rights reserved.
 //--------------------------------------------------------------
 
-#ifndef SHADER_OBJECT_WORLD_H
-#define SHADER_OBJECT_WORLD_H
+#ifndef SHADER_OBJECT_MIXER_A_H
+#define SHADER_OBJECT_MIXER_A_H
 
 #include "ShaderObject.h"
-#include "BufferComputeShader_cs.h" 
+#include "BufferComputeShader_cs.h"
 
 namespace Azul
 {
-	class ShaderObject_World : public ShaderObject
+	class ShaderObject_MixerA : public ShaderObject
 	{
 	public:
-		ShaderObject_World() = delete;
-		ShaderObject_World(const ShaderObject_World &) = delete;
-		ShaderObject_World &operator = (const ShaderObject_World &) = delete;
-		virtual ~ShaderObject_World();
+		ShaderObject_MixerA() = delete;
+		ShaderObject_MixerA(const ShaderObject_MixerA &) = delete;
+		ShaderObject_MixerA &operator = (const ShaderObject_MixerA &) = delete;
+		virtual ~ShaderObject_MixerA();
 
-		ShaderObject_World(ShaderObject_World::Name _name);
+		ShaderObject_MixerA(ShaderObject_MixerA::Name _name);
 
 		virtual void ActivateShader() override;
 

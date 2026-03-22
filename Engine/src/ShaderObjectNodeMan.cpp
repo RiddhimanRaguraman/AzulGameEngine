@@ -126,14 +126,20 @@ namespace Azul
 			case ShaderObject::Name::SkinLightTexture:
 				pShader = new ShaderObject_SkinLightTexture(ShaderObject::Name::SkinLightTexture);
 				break;
-			case ShaderObject::Name::BasicCompute:
-				pShader = new ShaderObject_BasicCompute(ShaderObject::Name::BasicCompute);
+			case ShaderObject::Name::MixerACompute:
+				pShader = new ShaderObject_MixerA(ShaderObject::Name::MixerACompute);
 				break;
-			case ShaderObject::Name::MixerCompute:
-				pShader = new ShaderObject_Mixer(ShaderObject::Name::MixerCompute);
+			case ShaderObject::Name::MixerBCompute:
+				pShader = new ShaderObject_MixerB(ShaderObject::Name::MixerBCompute);
 				break;
-			case ShaderObject::Name::WorldCompute:
-				pShader = new ShaderObject_World(ShaderObject::Name::WorldCompute);
+			case ShaderObject::Name::MixerCCompute:
+				pShader = new ShaderObject_MixerC(ShaderObject::Name::MixerCCompute);
+				break;
+			case ShaderObject::Name::WorldComputeA:
+				pShader = new ShaderObject_WorldA(ShaderObject::Name::WorldComputeA);
+				break;
+			case ShaderObject::Name::WorldComputeC:
+				pShader = new ShaderObject_WorldC(ShaderObject::Name::WorldComputeC);
 				break;
 			case ShaderObject::Name::Sprite:
 				pShader = new ShaderObject_Sprite(ShaderObject::Name::Sprite);

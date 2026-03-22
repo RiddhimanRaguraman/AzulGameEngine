@@ -4,7 +4,7 @@
 #define CBV_vsWorldMatrix
 #define CBV_vsLightColor
 #define CBV_vsLightPos
-#define CBV_vsSkinInvBind
+//#define CBV_vsSkinInvBind
 //#define CBV_vsSkinBoneWorld
 
 #define VERTEX_pos
@@ -14,6 +14,7 @@
 #define VERTEX_weight
 
 #define SRV_tSkinBoneWorld
+#define SRV_tSkinInvBind
 
 #include "ShaderMappings.hlsli"
 
@@ -41,10 +42,10 @@ VertexShaderOutput main(VertData_pos inPos,
 {
     VertexShaderOutput outValue;
 
-    row_major matrix SkinWorld = mul(mul(vsSkinInvBind[inJoint.j.x], tSkinBoneWorld[inJoint.j.x].m), inWeight.w.x) +
-	                            mul(mul(vsSkinInvBind[inJoint.j.y], tSkinBoneWorld[inJoint.j.y].m), inWeight.w.y) +
-                                mul(mul(vsSkinInvBind[inJoint.j.z], tSkinBoneWorld[inJoint.j.z].m), inWeight.w.z) +
-                                mul(mul(vsSkinInvBind[inJoint.j.w], tSkinBoneWorld[inJoint.j.w].m), inWeight.w.w);
+    row_major matrix SkinWorld = mul(mul(tSkinInvBind[inJoint.j.x].m, tSkinBoneWorld[inJoint.j.x].m), inWeight.w.x) +
+	                    mul(mul(tSkinInvBind[inJoint.j.y].m, tSkinBoneWorld[inJoint.j.y].m), inWeight.w.y) +
+                        mul(mul(tSkinInvBind[inJoint.j.z].m, tSkinBoneWorld[inJoint.j.z].m), inWeight.w.z) +
+                        mul(mul(tSkinInvBind[inJoint.j.w].m, tSkinBoneWorld[inJoint.j.w].m), inWeight.w.w);
     
     // Skin * World * View * Proj
     matrix Mat = mul(mul(mul(SkinWorld, vsWorldMatrix), vsViewMatrix), vsProjectionMatrix);

@@ -5,7 +5,7 @@
 // Enable data
 #define CBV_csWorld
 #define SRV_tHierarchyTable
-#define UAV_uMixerOut
+#define UAV_uMixerOutAx
 #define UAV_uBoneWorldOut
 
 #include "ShaderMappings.hlsli"
@@ -49,7 +49,7 @@ void main(uint3 dtID : SV_DispatchThreadID)
             if (parentIndex != -1)
             {
 			    // concatenate
-                tmp = mul(Bone2Matrix(uMixerOut[parentIndex]), tmp);
+                tmp = mul(Bone2Matrix(uMixerOutAx[parentIndex]), tmp);
             }
         }
 
@@ -118,10 +118,10 @@ row_major matrix RotMatrix(float4 q)
     wy = q.w * y2;
     wz = q.w * z2;
 
-    result[0] = float4(1.0 - (yy + zz),      xy + wz,        xz - wy, 0);
-    result[1] = float4(        xy - wz, 1 - (xx + zz),       yz + wx, 0);
-    result[2] = float4(        xz + wy,       yz - wx, 1 - (xx + yy), 0);
-    result[3] = float4(              0,             0,             0, 1);
+    result[0] = float4(1.0 - (yy + zz), xy + wz, xz - wy, 0);
+    result[1] = float4(xy - wz, 1 - (xx + zz), yz + wx, 0);
+    result[2] = float4(xz + wy, yz - wx, 1 - (xx + yy), 0);
+    result[3] = float4(0, 0, 0, 1);
 
     return result;
 }

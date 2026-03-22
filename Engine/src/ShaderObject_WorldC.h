@@ -2,23 +2,23 @@
 // Copyright 2026, Ed Keenan, all rights reserved.
 //--------------------------------------------------------------
 
-#ifndef SHADER_OBJECT_BASIC_COMPUTE_H
-#define SHADER_OBJECT_BASIC_COMPUTE_H
+#ifndef SHADER_OBJECT_WORLD_C_H
+#define SHADER_OBJECT_WORLD_C_H
 
 #include "ShaderObject.h"
 #include "BufferComputeShader_cs.h"
 
 namespace Azul
 {
-	class ShaderObject_BasicCompute : public ShaderObject
+	class ShaderObject_WorldC : public ShaderObject
 	{
 	public:
-		ShaderObject_BasicCompute() = delete;
-		ShaderObject_BasicCompute(const ShaderObject_BasicCompute &) = delete;
-		ShaderObject_BasicCompute &operator = (const ShaderObject_BasicCompute &) = delete;
-		virtual ~ShaderObject_BasicCompute();
+		ShaderObject_WorldC() = delete;
+		ShaderObject_WorldC(const ShaderObject_WorldC &) = delete;
+		ShaderObject_WorldC &operator = (const ShaderObject_WorldC &) = delete;
+		virtual ~ShaderObject_WorldC();
 
-		ShaderObject_BasicCompute(ShaderObject_BasicCompute::Name _name);
+		ShaderObject_WorldC(ShaderObject_WorldC::Name _name);
 
 		virtual void ActivateShader() override;
 

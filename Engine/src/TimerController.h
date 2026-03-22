@@ -12,20 +12,17 @@ namespace Azul
 	class TimerController
 	{
 	public:
-		TimerController(AnimTime Delta, AnimTime Min, AnimTime Max);
+		TimerController(AnimTime Min, AnimTime Max);
 
 		TimerController() = delete;
 		TimerController(const TimerController &) = delete;
 		TimerController &operator = (const TimerController &) = delete;
 		virtual ~TimerController() = default;
 
-		void Update();
+		void Update(AnimTime tDelta);
 
 		void SetCurrTime(const AnimTime time);
 		AnimTime GetCurrTime() const;
-
-		void SetDeltaTime(const AnimTime time);
-		AnimTime GetDeltaTime() const;
 
 		void SetMaxTime(const AnimTime time);
 		AnimTime GetMaxTime() const;
@@ -35,7 +32,6 @@ namespace Azul
 
 	private:
 		AnimTime tCurr;
-		AnimTime tDelta;
 		AnimTime tMax;
 		AnimTime tMin;
 	};

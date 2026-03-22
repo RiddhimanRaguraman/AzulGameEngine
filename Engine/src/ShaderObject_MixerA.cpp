@@ -2,28 +2,27 @@
 // Copyright 2026, Ed Keenan, all rights reserved.
 //--------------------------------------------------------------
 
-#include "ShaderObject_Mixer.h"
+#include "ShaderObject_MixerA.h"
 #include "Mesh.h"
 #include "StateDirectXMan.h"
 #include "ShaderMappings.h"
 
 // User generated headers... 
-#include "Mixer.Cx.h"
+#include "MixerA.Cx.h"
 
 namespace Azul
 {
-	ShaderObject_Mixer::~ShaderObject_Mixer()
+	ShaderObject_MixerA::~ShaderObject_MixerA()
 	{
 	}
 
-	ShaderObject_Mixer::ShaderObject_Mixer(ShaderObject_Mixer::Name _name)
+	ShaderObject_MixerA::ShaderObject_MixerA(ShaderObject_MixerA::Name _name)
 		: ShaderObject(_name),
-		ComputeShader{sizeof(g_Mixer_CxShader),
-					  (void *)g_Mixer_CxShader}
+		ComputeShader{sizeof(g_MixerA_CxShader),(void *)g_MixerA_CxShader}
 	{
 	}
 
-	void ShaderObject_Mixer::ActivateShader()
+	void ShaderObject_MixerA::ActivateShader()
 	{
 		this->ComputeShader.SetActive();
 	}

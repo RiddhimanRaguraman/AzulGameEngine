@@ -2,35 +2,27 @@
 // Copyright 2026, Ed Keenan, all rights reserved.
 //----------------------------------------------------------------------------
 
-#ifndef WORLD_COMPUTE_H
-#define WORLD_COMPUTE_H
+#ifndef WORLD_COMPUTE_C_H
+#define WORLD_COMPUTE_C_H
 
 #include "HierarchyTable.h"
 #include "Mixer.h"
 #include "BufferCBV_cs.h"
 #include "BufferSRV_cs.h"
 #include "BufferUAV_cs.h"
+#include "WorldConstant.h"
 
 namespace Azul
 {
-	// structure for Constant Compute buffer needs to be multiple of 16 bytes
-	struct WorldConstant
-	{
-		unsigned int hierarchyDepth;
-		unsigned int numJoints;
-		int pad0;
-		int pad1;
-	};
-
-	class WorldCompute
+	class WorldComputeC
 	{
 	public:
-		WorldCompute(Mixer *pMixer, HierarchyTable *pHierarchyTable);
+		WorldComputeC(Mixer *pMixer, HierarchyTable *pHierarchyTable);
 
-		WorldCompute() = delete;
-		WorldCompute(const WorldCompute &) = delete;
-		WorldCompute &operator = (const WorldCompute &) = delete;
-		virtual ~WorldCompute();
+		WorldComputeC() = delete;
+		WorldComputeC(const WorldComputeC &) = delete;
+		WorldComputeC &operator = (const WorldComputeC &) = delete;
+		virtual ~WorldComputeC();
 
 		void *GetRawConstBuffer();
 		size_t GetNumJoints();
@@ -53,7 +45,7 @@ namespace Azul
 		WorldConstant mWorldConstant;
 
 		// for Skin Vertex shader (can't have a UAV only a SRV)
-		BufferSRV_cs mBoneWorld;  
+		BufferSRV_cs mSRVBufferToVS_BoneWorld;
 
 	};
 }

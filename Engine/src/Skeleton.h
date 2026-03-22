@@ -5,10 +5,8 @@
 #ifndef SKELETON_H
 #define SKELETON_H
 
-#include "GameObjectControlled.h"
 #include "Bone.h"
 #include "Skel.h"
-#include "JointTable.h"
 #include "Clip.h"
 namespace Azul
 {
@@ -24,19 +22,13 @@ namespace Azul
 		~Skeleton();
 
 		void SetClip(Clip::Name clipName);
-
-		// GameObjectControlled* GetFirstBone();
-		// GameObjectControlled* FindBoneByIndex(int index);
 		
 		int GetNumNodes() const;
 		Clip *GetClip();
 		Bone *GetBoneResult();
 
-    private:
-		//void privSetAnimationHierarchy();
 
     private:
-        //GameObjectControlled *pFirstBone;
 		int             mNumNodes;
 		Bone *poBoneResult;
 		Skel *pSkel;

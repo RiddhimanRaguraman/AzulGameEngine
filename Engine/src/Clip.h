@@ -8,11 +8,14 @@
 #include "DLink.h"
 #include "AnimTime.h"
 #include "Skel.h"
-
+#include "HierarchyTable.h"
+#include "Mixer.h"
+#include "MixerA.h"
+#include "MixerB.h"
+#include "MixerC.h"
 
 namespace Azul
 {
-	class Mixer;
 	class FrameBucket;
 	class AnimFrameBucket;
 
@@ -47,15 +50,23 @@ namespace Azul
 		AnimTime GetTotalTime();
 		size_t GetNumNodes();
 		Skel::Name GetSkelName();
+		
 		void SetClipName(Name clipName);
+		Clip::Name GetClipName() const;
+
+		HierarchyTable::Name GetHierarchyName() const;
 
 		void Set(Clip::Name clipName,
 				 unsigned int numNodes,
 				 unsigned int numKeyFrames,
 				 AnimFrameBucket *pFrameBucket,
-				 Skel::Name skelName);
+				 Skel::Name skelName,
+	   			 HierarchyTable::Name hierarchyName);
 
-		void AnimateBones(AnimTime tCurr, Mixer *pMixer);
+		void AnimateBones(AnimTime tCurr, MixerA *pMixer);
+		void AnimateBones(AnimTime tCurr, MixerB* pMixer);
+		void AnimateBones(AnimTime tCurr, MixerC* pMixer);
+
 		virtual void Dump() override;
 		virtual void Wash() override;
 
@@ -64,12 +75,13 @@ namespace Azul
 		int  privFindNumFrames();
 
 	public:
-		Name         mName;
-		size_t       numNodes;
-		size_t       numFrames;
-		Skel::Name   skelName;
-		AnimTime     TotalTime;
-		FrameBucket *poHead;
+		Clip::Name           mClipName;
+		size_t               numNodes;
+		size_t               numFrames;
+		Skel::Name           mSkelName;
+		HierarchyTable::Name mHierarchyName;
+		AnimTime             TotalTime;
+		FrameBucket* poHead;
 	};
 }
 

@@ -8,6 +8,7 @@
 #include "Mesh.h"
 #include "BufferIBV_ia.h"
 #include "BufferVBV_ia.h"
+#include "BufferSRV_cs.h"
 
 namespace Azul
 {
@@ -24,7 +25,7 @@ namespace Azul
 
 		virtual void ActivateMesh() override;
 		virtual void RenderIndexBuffer() override;
-		virtual void ActivateConstantBuffers() override;
+		virtual void ActivateSRVBuffers() override;
 	private:
 		// Data
 		BufferVBV_ia VBVBuffer_pos;
@@ -38,7 +39,7 @@ namespace Azul
 		BufferIBV_ia IBVBuffer;
 
 		// Not part of VertexBuffer.. but part of the Mesh
-		BufferCBV_vs CBVBuffer_InvBind;
+		BufferSRV_cs SRVBufferToVS_InvBind;
 
 	};
 }

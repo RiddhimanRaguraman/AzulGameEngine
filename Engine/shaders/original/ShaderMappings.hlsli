@@ -7,6 +7,7 @@
 //  https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/registers---cs-5-0
 //  https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/registers---ps-5-0
 // -------------------------------------------------------------
+
 #pragma pack_matrix( row_major )
 
 // ---------------------------------------------
@@ -17,8 +18,6 @@ struct rowMatrix
 {
     row_major matrix m;
 };
-
-#define BONE_COUNT_MAX 46
 
 struct BoneType
 {
@@ -38,6 +37,9 @@ struct WorldData
     uint hierarchyDepth;
     uint numBones;
 };
+
+//#define BONE_COUNT_MAX 60
+
 
 // ------------------------------------------
 // Vertex data s is sampler, x - slot
@@ -87,6 +89,7 @@ struct WorldData
 
 // ------------------------------------------
 // sx - s is sampler, x - slot
+//      max count == 16
 // ------------------------------------------
 
 #ifdef SAMPLER_sA
@@ -102,12 +105,12 @@ struct WorldData
     Texture2D tMainTexture : register(t0);
 #endif
 
-#ifdef SRV_tKeyA
-    StructuredBuffer<BoneType> tKeyA : register(t1); 
+#ifdef SRV_tKeyAa
+    StructuredBuffer<BoneType> tKeyAa : register(t1); 
 #endif
 
-#ifdef SRV_tKeyB
-    StructuredBuffer<BoneType> tKeyB : register(t2); 
+#ifdef SRV_tKeyAb
+    StructuredBuffer<BoneType> tKeyAb : register(t2); 
 #endif
 
 #ifdef SRV_tHierarchyTable
@@ -118,16 +121,41 @@ struct WorldData
     StructuredBuffer<rowMatrix> tSkinBoneWorld : register(t4); 
 #endif
 
+#ifdef SRV_tSkinInvBind
+    StructuredBuffer<rowMatrix> tSkinInvBind : register(t5); 
+#endif
+
+#ifdef SRV_tKeyBa
+    StructuredBuffer<BoneType> tKeyBa : register(t6); 
+#endif
+
+#ifdef SRV_tKeyBb
+    StructuredBuffer<BoneType> tKeyBb : register(t7); 
+#endif
+
 // ----------------------------------------------------
 // ux - u is  unordered access views (UAV), x - slot 
+//      max count == 8
 // ----------------------------------------------------
 
-#ifdef UAV_uMixerOut
-    RWStructuredBuffer<BoneType> uMixerOut : register(u0); 
-#endif
+//#ifdef UAV_xxxx
+//    RWStructuredBuffer<BoneType> uTestOut : register(u0); 
+//#endif
 
 #ifdef UAV_uBoneWorldOut
     RWStructuredBuffer<rowMatrix> uBoneWorldOut : register(u1); 
+#endif
+
+#ifdef UAV_uMixerOutAx
+    RWStructuredBuffer<BoneType> uMixerOutAx : register(u2); 
+#endif
+
+#ifdef UAV_uMixerOutBx
+    RWStructuredBuffer<BoneType> uMixerOutBx : register(u3); 
+#endif
+
+#ifdef UAV_uMixerOutCx
+    RWStructuredBuffer<BoneType> uMixerOutCx : register(u4); 
 #endif
 
 // --------------------------------------------------
@@ -136,17 +164,38 @@ struct WorldData
 //      max count == 15
 // --------------------------------------------------
 
-#ifdef CBV_csMixer
-    cbuffer AA0 : register(b0) 
-    {
-        MixerData csMixer;
-    };
-#endif
+//#ifdef CBV_xxxx
+//    cbuffer AA0 : register(b0) 
+//    {
+//        MixerData xxxx;
+//    };
+//#endif
 
 #ifdef CBV_csWorld
     cbuffer AA1 : register(b1) 
     {
         WorldData csWorld;
+    };
+#endif
+
+#ifdef CBV_csMixerA
+    cbuffer AA2 : register(b2) 
+    {
+        MixerData csMixerA;
+    };
+#endif
+
+#ifdef CBV_csMixerB
+    cbuffer AA3 : register(b3) 
+    {
+        MixerData csMixerB;
+    };
+#endif
+
+#ifdef CBV_csMixerC
+    cbuffer AA4 : register(b4) 
+    {
+        MixerData csMixerC;
     };
 #endif
 
@@ -157,53 +206,53 @@ struct WorldData
 // --------------------------------------------------
 
 #ifdef CBV_vsProjectionMatrix
-    cbuffer AA0 : register(b0) // slot 0  (ConstantVSBufferSlot::vsProjection)
+    cbuffer AA0 : register(b0) 
     {
         row_major matrix vsProjectionMatrix;
     }
 #endif
 
 #ifdef CBV_vsViewMatrix
-    cbuffer AA1 : register(b1) // slot 1 (ConstantVSBufferSlot::vsView)
+    cbuffer AA1 : register(b1) 
     {
         row_major matrix vsViewMatrix;
     }
 #endif
 
 #ifdef CBV_vsWorldMatrix
-    cbuffer AA2 : register(b2) // slot 2 (ConstantVSBufferSlot::vsWorld)
+    cbuffer AA2 : register(b2)
     {
         row_major matrix vsWorldMatrix; // this is the pivot
     }
 #endif
 
 #ifdef CBV_vsLightColor
-    cbuffer AA3 : register(b3) // slot 3 (ConstantVSBufferSlot::vsLightColor)
+    cbuffer AA3 : register(b3) 
     {
         float4 vsLightColor;
     }
 #endif
 
 #ifdef CBV_vsLightPos
-    cbuffer AA4 : register(b4) // slot 4 (ConstantVSBufferSlot::vsLightPos)
+    cbuffer AA4 : register(b4) 
     {
         float4 vsLightPos;
     }
 #endif
 
-#ifdef CBV_vsSkinInvBind
-    cbuffer AA5 : register(b5) // slot 5 (ConstantVSBufferSlot::vsSkinInvBind)
-    {
-       row_major matrix vsSkinInvBind[BONE_COUNT_MAX];
-    }
-#endif
+//#ifdef CBV_vsSkinInvBind
+//    cbuffer AA5 : register(b5) 
+//    {
+//       row_major matrix vsSkinInvBind[BONE_COUNT_MAX];
+//    }
+//#endif
 
-#ifdef CBV_vsSkinBoneWorld
-    cbuffer AA6 : register(b6) // slot 6 (ConstantVSBufferSlot::vsSkinBoneWorld)
-    {
-       row_major matrix vsSkinBoneWorld[BONE_COUNT_MAX];
-    }
-#endif
+//#ifdef CBV_vsSkinBoneWorld
+//    cbuffer AA6 : register(b6) 
+//    {
+//       row_major matrix vsSkinBoneWorld[BONE_COUNT_MAX];
+//    }
+//#endif
 
 
 // --------------------------------------------------
@@ -214,21 +263,21 @@ struct WorldData
 
 
 #ifdef CBV_psUVMatrix
-    cbuffer AA0 : register(b0) // slot 0 (ConstantPSBufferSlot::psSpriteUVMatrix)
+    cbuffer AA0 : register(b0) 
     {
         row_major matrix psUVMatrix;
     }
 #endif
 
 #ifdef CBV_psColorScale
-    cbuffer AA1 : register(b1) // slot 1 (ConstantPSBufferSlot::psSpriteColorScale)
+    cbuffer AA1 : register(b1) 
     {
         float4 psColorScale;
     }
 #endif
 
 #ifdef CBV_psColor
-    cbuffer AA2 : register(b2) // slot 2 (ConstantPSBufferSlot::psColor)
+    cbuffer AA2 : register(b2) 
     {
         float4 psColor;
     }

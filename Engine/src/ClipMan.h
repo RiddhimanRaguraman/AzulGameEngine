@@ -8,6 +8,7 @@
 #include "ManBase.h"
 #include "Clip.h"
 #include "AnimClip.h"
+#include "HierarchyTable.h"
 
 namespace Azul
 {
@@ -25,12 +26,13 @@ namespace Azul
 		static void Remove(Clip *pNode);
 		static void Dump();
 
-		static void Add(Clip::Name clipName, Skel::Name skelName, const char *const pFileName);
+		static void Add(Clip::Name clipName, const char* const pFileName, Skel::Name skelName, HierarchyTable::Name hierarchyName);
 		static void Add(Clip::Name clipName,
-						Skel::Name skelName,
-						unsigned int numNodes,
-						unsigned int numKeyFrames,
-						AnimFrameBucket *pFrameBucket);
+			unsigned int numNodes,
+			unsigned int numKeyFrames,
+			AnimFrameBucket* pFrameBucket,
+			Skel::Name skelName,
+			HierarchyTable::Name hierarchyName);
 
 
 		//----------------------------------------------------------------------

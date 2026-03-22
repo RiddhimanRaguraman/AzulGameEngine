@@ -21,8 +21,7 @@ namespace Azul
 		VBVBuffer_weight(),
 		VBVBuffer_joint(),
 		IBVBuffer(),
-		CBVBuffer_InvBind()
-		//CBVBuff_SkinBoneWorld()
+		SRVBufferToVS_InvBind()
 	{
 		// future proofing it for a file
 		assert(pMeshFileName);
@@ -197,28 +196,16 @@ namespace Azul
 			//	pMat[i].Print("InvBind");
 			//}
 
-			CBVBuffer_InvBind.Initialize(BONE_COUNT_MAX * sizeof(Mat4));
-			
-			// Create a temp buffer that is the full size
-			Mat4* pTemp = new Mat4[BONE_COUNT_MAX]();
-			for (unsigned int i = 0; i < BONE_COUNT_MAX; i++)
-			{
-				pTemp[i].set(Identity);
-			}
 
-			// Copy the data over
-			memcpy_s(pTemp, mB.vbo_invBind.dataSize, mB.vbo_invBind.poData, mB.vbo_invBind.dataSize);
-
-			CBVBuffer_InvBind.Transfer(pTemp);
-
-			delete[] pTemp;
+			SRVBufferToVS_InvBind.Initialize(mB.vbo_invBind.count, sizeof(Mat4));
+			SRVBufferToVS_InvBind.Transfer(mB.vbo_invBind.poData);
 		}
 	}
 
-	void MeshProto::ActivateConstantBuffers()
+	void MeshProto::ActivateSRVBuffers()
 	{
 		// Skin extra
-		this->CBVBuffer_InvBind.SetActive(ConstantVSBufferSlot::vsSkinInvBind);
+		this->SRVBufferToVS_InvBind.BindComputeToVS(ShaderResourceBufferSlot::InvBind);
 	}
 
 

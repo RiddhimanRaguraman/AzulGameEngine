@@ -6,14 +6,8 @@
 #define ANIM_H
 
 #include "AnimTimer.h"
-#include "MathEngine.h"
 #include "Clip.h"
 #include "Skeleton.h"
-#include "TextureObject.h"
-#include "JointTable.h"
-#include "Mixer.h"
-#include "HierarchyTable.h"
-#include "WorldCompute.h"
 
 namespace Azul
 {
@@ -25,21 +19,18 @@ namespace Azul
         Anim &operator = (const Anim &) = delete;
         ~Anim();
 
-        Anim(HierarchyTable::Name hierarchyName, Clip::Name clipName);
+        Anim(Clip::Name clipName);
 
-        void Animate(AnimTime tCurr);
         AnimTime FindMaxTime();
 
         void SetClip(Clip::Name clipName);
-        Mixer* GetMixer();
-        WorldCompute* GetWorldCompute();
-        Clip *privGetClip();
+        Clip *GetClip();
 
 
     private:
         Skeleton *poSkeleton;
-        Mixer* poMixer;
-        WorldCompute* poWorldCompute;
+        Clip* pClip;
+        Clip::Name mClipName;
     };
 
 }

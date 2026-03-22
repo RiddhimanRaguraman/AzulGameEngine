@@ -19,13 +19,19 @@ namespace Azul
 		{
 			NullShader,
 			ColorByVertex,
+
 			FlatTexture,
 			LightTexture,
-			BasicCompute,
 			SkinFlatTexture,
 			SkinLightTexture,
-			WorldCompute,
-			MixerCompute,
+
+			WorldComputeA,
+			WorldComputeC,
+			
+			MixerACompute,
+			MixerBCompute,
+			MixerCCompute,
+
 			ConstColor,
 			Sprite,
 			Uninitialized

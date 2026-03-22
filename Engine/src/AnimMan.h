@@ -9,9 +9,11 @@
 #include "DLink.h"
 #include "DLinkMan.h"
 #include "AnimController.h"
+#include "AnimController_TwoAnim.h"
+#include "AnimController_OneAnim.h"
 #include "Clip.h"
 #include "AnimTime.h"
-
+#include "Mesh.h"
 #include "TextureObject.h"
 #include "Skel.h"
 #include "HierarchyTable.h"
@@ -40,14 +42,22 @@ namespace Azul
 
         static DLink* Add(  Name name, 
                             const char* clipFileName, 
-                            AnimTime delta, 
                             Skel::Name skelName, 
                             TextureObject::Name texName, 
                             Mesh::Name meshName, 
                             Vec3 &_pLightColor, 
                             Vec3 &_pLightPos);
+        static DLink* Add(Name name,
+                          const char* clipFileName1,
+                          const char* clipFileName2,
+                          Skel::Name skelName,
+                          TextureObject::Name texName,
+                          Mesh::Name meshName,
+                          Vec3& _pLightColor,
+                          Vec3& _pLightPos);
         static AnimController *Find(Name name);
-        static void Update();
+        static void Update(AnimTime tCurr);
+        static void BlendAnimation(AnimTime tDelta);
 
         static void SetScale(Name name, float sx, float sy, float sz);
         static void SetUniformScale(Name name, float s);
@@ -56,8 +66,8 @@ namespace Azul
         static void SetPivotRotY(Name name, float angle);
         static void SetPivotRotZ(Name name, float angle);
         static void SetPivotTotalRot(Name name, const Rot3 mode, float x, float y, float z);
-        static void SetDelta(Name name, float scale);
 		static void SetPrefabPivot(Name name);
+        static void SetBlendTs(Name name, float ts);
         static Clip *GetClip(Name name);
 
         static void Remove(DLink *pNode);
@@ -105,6 +115,7 @@ namespace Azul
 
     private:
         AnimNode *poNodeCompare;
+        AnimController_TwoAnim *poBlendTwoAnimController;
         static AnimMan *posInstance;
         static CompareStrategyBase *posEnumNameCompare;
     };

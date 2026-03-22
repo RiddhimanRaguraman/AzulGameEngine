@@ -5,7 +5,7 @@
 #include "Clip.h"
 #include "AnimTime.h"
 #include "Bone.h"
-#include "Mixer.h"
+#include "MixerA.h"
 #include "StringThis.h"
 
 #include "FrameBucket.h"
@@ -16,10 +16,11 @@ namespace Azul
 {
 	Clip::Clip()
 		: DLink(),
-		mName(Clip::Name::Not_Initialized),
+		mClipName(Clip::Name::Not_Initialized),
 		numNodes(0),
 		numFrames(0),
-		skelName(Skel::Name::Not_Initialized),
+		mSkelName(Skel::Name::Not_Initialized),
+		mHierarchyName(HierarchyTable::Name::Not_Initialized),
 		TotalTime(AnimTime::Duration::ZERO),
 		poHead(nullptr)
 	{
@@ -39,85 +40,137 @@ namespace Azul
 
 	Skel::Name Clip::GetSkelName()
 	{
-		return this->skelName;
+		return this->mSkelName;
 	}
 
 	void Clip::SetClipName(Name clipName)
 	{
-		this->mName = clipName;
+		this->mClipName = clipName;
 	}
 
+	Clip::Name Clip::GetClipName() const
+	{
+		return this->mClipName;
+	}
 
+	HierarchyTable::Name Clip::GetHierarchyName() const
+	{
+		return this->mHierarchyName;
+	}
 
 	void Clip::Dump()
 	{
 		Trace::out("      Clip(%p)\n", this);
-		Trace::out("      Name: %s \n", StringMe(this->mName));
+		Trace::out("      Name: %s \n", StringMe(this->mClipName));
 
 		DLink::Dump();
 	}
 
 	void Clip::Wash()
 	{
-		this->mName = Clip::Name::Not_Initialized;
+		this->mClipName = Clip::Name::Not_Initialized;
 		this->numNodes = 0;
 		this->numFrames = 0;
-		this->skelName = Skel::Name::Not_Initialized;
+		this->mSkelName = Skel::Name::Not_Initialized;
+		this->mHierarchyName = HierarchyTable::Name::Not_Initialized;
 		this->TotalTime = AnimTime(AnimTime::Duration::ZERO);
 		this->poHead = nullptr;
 	}
 
-	void Clip::AnimateBones(AnimTime tCurr, Mixer *pMixer)
+	void Clip::AnimateBones(AnimTime tCurr, MixerA* pMixer)
 	{
 		assert(pMixer);
 
 		// First one 
-		FrameBucket *pTmp = this->poHead;
-		int count = 0;
+		FrameBucket* pTmp = this->poHead;
 
 		// safety - make sure there are bones to animate
 		if (pTmp->nextBucket != nullptr)
 		{
-		// Find which key frames
-		while(tCurr >= pTmp->KeyTime && pTmp->nextBucket != nullptr)
-		{
-			pTmp = pTmp->nextBucket;
-			count++;
-		}
+			// Find which key frames
+			while (tCurr >= pTmp->KeyTime && pTmp->nextBucket != nullptr)
+			{
+				pTmp = pTmp->nextBucket;
+			}
 
-		// pTmp is the "B" key frame
-		// pTmp->prev is the "A" key frame
-		FrameBucket *pA = pTmp->prevBucket;
-		FrameBucket *pB = pTmp;
+			// pTmp is the "B" key frame
+			// pTmp->prev is the "A" key frame
+			FrameBucket* pA = pTmp->prevBucket;
+			FrameBucket* pB = pTmp;
 
-		pMixer->pKeyA = pA->poBoneSRV;
-		pMixer->pKeyB = pB->poBoneSRV;
+			pMixer->pKeyAa = pA->poBoneSRV;
+			pMixer->pKeyAb = pB->poBoneSRV;
 
-		// find the "S" of the time
-		pMixer->tS = (tCurr - pA->KeyTime) / (pB->KeyTime - pA->KeyTime);
-
+			// find the "S" of the time
+			pMixer->poMixerConstant->ts = (tCurr - pA->KeyTime) / (pB->KeyTime - pA->KeyTime);
 		}
 		else
 		{
-			pMixer->pKeyA = pTmp->poBoneSRV;
-			pMixer->pKeyB = pTmp->poBoneSRV;
+			pMixer->pKeyAa = pTmp->poBoneSRV;
+			pMixer->pKeyAb = pTmp->poBoneSRV;
 
 			// find the "S" of the time
-			pMixer->tS = 0.0f;
+			pMixer->poMixerConstant->ts = 0.0f;
 		}
+	}
+
+	void Clip::AnimateBones(AnimTime tCurr, MixerB* pMixer)
+	{
+		assert(pMixer);
+
+		// First one 
+		FrameBucket* pTmp = this->poHead;
+
+		// safety - make sure there are bones to animate
+		if (pTmp->nextBucket != nullptr)
+		{
+			// Find which key frames
+			while (tCurr >= pTmp->KeyTime && pTmp->nextBucket != nullptr)
+			{
+				pTmp = pTmp->nextBucket;
+			}
+
+			// pTmp is the "B" key frame
+			// pTmp->prev is the "A" key frame
+			FrameBucket* pA = pTmp->prevBucket;
+			FrameBucket* pB = pTmp;
+
+			pMixer->pKeyBa = pA->poBoneSRV;
+			pMixer->pKeyBb = pB->poBoneSRV;
+
+			// find the "S" of the time
+			pMixer->poMixerConstant->ts = (tCurr - pA->KeyTime) / (pB->KeyTime - pA->KeyTime);
+		}
+		else
+		{
+			pMixer->pKeyBa = pTmp->poBoneSRV;
+			pMixer->pKeyBb = pTmp->poBoneSRV;
+
+			// find the "S" of the time
+			pMixer->poMixerConstant->ts = 0.0f;
+		}
+	}
+
+
+	void Clip::AnimateBones(AnimTime, MixerC*)
+	{
+		assert(false);
+
 
 	}
 
 	void Clip::Set(Clip::Name _clipName,
-				   unsigned int _numBones,
+				   unsigned int _numNodes,
 				   unsigned int _numKeyFrames,
-				   AnimFrameBucket *pFrameBucketEntry,
-				   Skel::Name _skelName)
+				   AnimFrameBucket* pFrameBucketEntry,
+				   Skel::Name _skelName,
+				   HierarchyTable::Name _hierarchyName)
 	{
-		this->mName = _clipName;
-		this->numNodes = _numBones;
+		this->mClipName = _clipName;
+		this->numNodes = _numNodes;
 		this->numFrames = _numKeyFrames;
-		this->skelName = _skelName;
+		this->mSkelName = _skelName;
+		this->mHierarchyName = _hierarchyName;
 
 		// create the array of FrameBuckets
 		this->poHead = new FrameBucket[this->numFrames]();

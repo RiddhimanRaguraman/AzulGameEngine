@@ -1,22 +1,26 @@
 //----------------------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
+// Copyright 2026, Ed Keenan, all rights reserved.
 //----------------------------------------------------------------------------
 
 #ifndef MIXER_H
 #define MIXER_H
 
-#include "AnimTimer.h"
 #include "BufferCBV_cs.h"
 #include "BufferUAV_cs.h"
+
 
 namespace Azul
 {
 	class Clip;
-	class BufferSRV_cs;
 
 	// structure for Constant Compute buffer needs to be multiple of 16 bytes
 	struct MixerConstant
 	{
+		MixerConstant(unsigned int _numNodes, float _ts)
+			: ts(_ts), numNodes(_numNodes),pad0(0),pad1(0)
+		{
+		}
+
 		float ts;
 		unsigned int numNodes;
 		int pad0;
@@ -38,13 +42,10 @@ namespace Azul
 		void *GetRawConstBuffer();
 		size_t GetNumNodes();
 
-	public:
-		BufferSRV_cs *pKeyA;
-		BufferSRV_cs *pKeyB;
+	public:		
 		BufferUAV_cs  mMixerResult;
 		BufferCBV_cs  mMixerConstBuffer;
-		float		  tS;
-		size_t        numNodes;
+		MixerConstant *poMixerConstant;
 	};
 }
 

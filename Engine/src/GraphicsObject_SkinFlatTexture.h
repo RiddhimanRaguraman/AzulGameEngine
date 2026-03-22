@@ -6,9 +6,8 @@
 #define GRAPHICS_OBJECT_SKIN_FLAT_TEXTURE_H
 
 #include "GraphicsObject.h"
-#include "Mixer.h"
-#include "WorldCompute.h"
 #include "TextureObject.h"
+#include "ComputeBlend.h"
 
 namespace Azul
 {
@@ -18,13 +17,12 @@ namespace Azul
 		GraphicsObject_SkinFlatTexture(Mesh::Name meshName,
 			ShaderObject::Name shaderName,
 			TextureObject::Name textName,
-			Mixer *pMixer,
-			WorldCompute *pWorldCompute);
+			ComputeBlend* pBlend);
 
 		GraphicsObject_SkinFlatTexture() = delete;
 		GraphicsObject_SkinFlatTexture(const GraphicsObject_SkinFlatTexture&) = delete;
 		GraphicsObject_SkinFlatTexture& operator = (const GraphicsObject_SkinFlatTexture&) = delete;
-		virtual ~GraphicsObject_SkinFlatTexture() = default;
+		virtual ~GraphicsObject_SkinFlatTexture();
 
 		// Rendermaterial contract
 		virtual void SetState() override;
@@ -37,10 +35,8 @@ namespace Azul
 		// Data
 		// ---------------------------------------------e
 		TextureObject* pTex;
+		ComputeBlend* poComputeBlend;
 
-		// HACK
-		Mixer *pMixer;
-		WorldCompute *pWorldCompute;
 	};
 }
 

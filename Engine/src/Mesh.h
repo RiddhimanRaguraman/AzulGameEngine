@@ -298,6 +298,7 @@ namespace Azul
 		virtual void ActivateMesh() = 0;
 		virtual void RenderIndexBuffer() = 0;
 		// optional override
+		virtual void ActivateSRVBuffers();
 		virtual void ActivateConstantBuffers();
 		virtual void TransferConstantBuffers();
 		virtual void Initialize_SkinBoneWorldBuffer(size_t _structSize);

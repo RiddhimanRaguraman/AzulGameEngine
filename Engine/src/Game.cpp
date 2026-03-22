@@ -167,9 +167,11 @@ namespace Azul
 		ShaderObjectNodeMan::Add(ShaderObject::Name::LightTexture);
 		ShaderObjectNodeMan::Add(ShaderObject::Name::SkinFlatTexture);
 		ShaderObjectNodeMan::Add(ShaderObject::Name::SkinLightTexture);
-		ShaderObjectNodeMan::Add(ShaderObject::Name::BasicCompute);
-		ShaderObjectNodeMan::Add(ShaderObject::Name::MixerCompute);
-		ShaderObjectNodeMan::Add(ShaderObject::Name::WorldCompute);
+		ShaderObjectNodeMan::Add(ShaderObject::Name::MixerACompute);
+		ShaderObjectNodeMan::Add(ShaderObject::Name::MixerBCompute);
+		ShaderObjectNodeMan::Add(ShaderObject::Name::MixerCCompute);
+		ShaderObjectNodeMan::Add(ShaderObject::Name::WorldComputeA);
+		ShaderObjectNodeMan::Add(ShaderObject::Name::WorldComputeC);
 
 		// --------------------------------
 		//  Texture
@@ -209,95 +211,10 @@ namespace Azul
 
 
 		// ---------------------------------------------
-		//  GraphicsObject -- needs model + shader
+		// Font print
 		// ---------------------------------------------
 		GraphicsObject* pGraphicsObject(nullptr);
-		GameObjectRigidBody* pGameObj(nullptr);
-
-		Vec3 LightColor(1.0f, 1.0f, 1.0f);
-		Vec3 LightPos(1.0f, 1.0f, 100.0f);
-		Vec3 color(Azul::Colors::Blue);
-		
-
-		pGraphicsObject = new GraphicsObject_Wireframe(Mesh::Name::R2D2,
-			ShaderObject::Name::LightTexture,
-			color);
-
-		pGameObj = new GameObjectRigidBody(pGraphicsObject);
-		pGameObj->SetName("R2D2");
-		pGameObj->SetScale(80.0f);
-		pGameObj->SetTrans(0.0f, 0.0f, 3.5f);
-		pGameObj->SetRotY(1.57f);
-		pGameObj->SetPrefab(new Prefab_Pivot());
-		GameObjectMan::Add(pGameObj, GameObjectMan::GetRoot());
-
-		pGraphicsObject = new GraphicsObject_LightTexture(Mesh::Name::R2D2,
-			ShaderObject::Name::LightTexture,
-			TextureObject::Name::R2D2_BASE,
-			LightColor, LightPos);
-
-		pGameObj = new GameObjectRigidBody(pGraphicsObject);
-		pGameObj->SetName("R2D2");
-		pGameObj->SetScale(80.0f);
-		pGameObj->SetTrans(0.0f, 0.0f, -3.8f);
-		pGameObj->SetRotY(1.57f);
-		pGameObj->SetPrefab(new Prefab_Pivot());
-		GameObjectMan::Add(pGameObj, GameObjectMan::GetRoot());
-
-		pGraphicsObject = new GraphicsObject_LightTexture(Mesh::Name::SPACE_FRIGATE,
-			ShaderObject::Name::LightTexture,
-			TextureObject::Name::SpaceFrigate,
-			LightColor, LightPos);
-
-		pGameObj = new GameObjectRigidBody(pGraphicsObject);
-		pGameObj->SetName("Fig");
-		pGameObj->SetScale(0.04f);
-		pGameObj->SetTrans(-3.0f, 0.0f, 3.8f);
-		pGameObj->SetRotY(1.57f);
-		pGameObj->SetRotZ(-1.57f);
-		pGameObj->SetPrefab(new Prefab_Pivot());
-		GameObjectMan::Add(pGameObj, GameObjectMan::GetRoot());
-
-		pGraphicsObject = new GraphicsObject_LightTexture(Mesh::Name::CRATE,
-			ShaderObject::Name::LightTexture,
-			TextureObject::Name::Crate,
-			LightColor, LightPos);
-
-		pGameObj = new GameObjectRigidBody(pGraphicsObject);
-		pGameObj->SetName("crate");
-		pGameObj->SetScale(0.8f);
-		pGameObj->SetTrans(-3.0f, 0.0f, -3.8f);
-		pGameObj->SetRotY(1.57f);
-		pGameObj->SetPrefab(new Prefab_Pivot());
-		GameObjectMan::Add(pGameObj, GameObjectMan::GetRoot());
-
-		pGraphicsObject = new GraphicsObject_Sprite(Mesh::Name::SPRITE,
-													ShaderObject::Name::Sprite,
-													Image::GreenBird,
-													Rect(500, 100, 100, 100));
-		
-		GameObjectSprite* pSprite1 = new GameObjectSprite(pGraphicsObject);
-		GameObjectMan::Add(pSprite1, GameObjectMan::GetRoot());
-
-		pGraphicsObject = new GraphicsObject_Sprite(Mesh::Name::SPRITE,
-													ShaderObject::Name::Sprite,
-													Image::WhiteBird,
-													Rect(300, 100, 100, 100));
-
-		GameObjectSprite* pSprite2 = new GameObjectSprite(pGraphicsObject);
-		GameObjectMan::Add(pSprite2, GameObjectMan::GetRoot());
-
-		// FontSprite
-		pGraphicsObject = new GraphicsObject_Sprite(Mesh::Name::SPRITE,
-													ShaderObject::Name::Sprite,
-													Image::GreenBird,  //anything
-													Rect(100, 100, 100, 100));
-		pFontSprite1 = new FontSprite(pGraphicsObject);
-		GameObjectMan::Add(pFontSprite1, GameObjectMan::GetRoot());
-
 		Color color2(0.0f, 0, 1.0f, 1.0f);
-		pFontSprite1->Set(FontSprite::Name::TestMessage, "ABCD", Glyph::Name::Arial36pt, 300, 550, color2);
-
 		FontSprite* pFontSprite(nullptr);
 
 		pGraphicsObject = new GraphicsObject_Sprite(Mesh::Name::SPRITE,
@@ -307,16 +224,16 @@ namespace Azul
 		pFontSprite = new FontSprite(pGraphicsObject);
 		GameObjectMan::Add(pFontSprite, GameObjectMan::GetRoot());
 
-		pFontSprite->Set(FontSprite::Name::TestMessage, "Dance", Glyph::Name::Arial36pt, 250, 250, color2);
+		pFontSprite->Set(FontSprite::Name::TestMessage, "Press Spacebar to blend animation ", Glyph::Name::Arial36pt, 20, 550, color2);
 
 		pGraphicsObject = new GraphicsObject_Sprite(Mesh::Name::SPRITE,
-													ShaderObject::Name::Sprite,
-													Image::GreenBird,  //anything
-													Rect(100, 100, 100, 100));
+			ShaderObject::Name::Sprite,
+			Image::GreenBird,  //anything
+			Rect(100, 100, 100, 100));
 		pFontSprite = new FontSprite(pGraphicsObject);
 		GameObjectMan::Add(pFontSprite, GameObjectMan::GetRoot());
 
-		pFontSprite->Set(FontSprite::Name::TestMessage, "Walk", Glyph::Name::Arial36pt, 450, 250, color2);
+		pFontSprite->Set(FontSprite::Name::TestMessage, "Press 1 to switch scene ", Glyph::Name::Arial36pt, 20, 40, color2);
 
 		// ---------------------------------
 		// Create Animation
@@ -325,37 +242,23 @@ namespace Azul
 		// load skeleton
 		SkelMan::Add(Skel::Name::ChickenBot, "ChickenBot.s.proto.azul");
 		SkelMan::Add(Skel::Name::Mousey, "Mousey.s.proto.azul");
-		//SkelMan::Add("DogBot.s.proto.azul", Skel::Name::DogBot);
-		//SkelMan::Add("SpiderBot.s.proto.azul", Skel::Name::SpiderBot);
 
 		AnimTime delta = 0.5f * AnimTime(AnimTime::Duration::FILM_24_FRAME);
 
 		Vec3 AnimLightColor(2.5f, 2.5f, 2.5f);
 		Vec3 AnimLightPos(0.0f, 6.0f, 6.0f);
-
-		/*ClipMan::Add("ChickenBot_HitBack.a.proto.azul", Clip::Name::HitBack_ChickenBot, Skel::Name::ChickenBot);
-		ClipMan::Add("ChickenBot_ShotUp.a.proto.azul", Clip::Name::ShotUp_ChickenBot, Skel::Name::ChickenBot);
-		ClipMan::Add(Clip::Name::Mousey_Gangnam, "Mousey_Gangnam.a.proto.azul", Skel::Name::Mousey);
-		ClipMan::Add(Clip::Name::Mousey_Run, "Mousey_Run.a.proto.azul", Skel::Name::Mousey);*/
 	
-		AnimMan::Add(AnimMan::Name::Gangnam, "Mousey_Gangnam.a.proto.azul", delta, Skel::Name::Mousey, TextureObject::Name::Mousey, Mesh::Name::Mousey, AnimLightColor, AnimLightPos);
-		AnimMan::SetPos(AnimMan::Name::Gangnam, -1.2f, 0.0f, -1.2f);
-		AnimMan::SetUniformScale(AnimMan::Name::Gangnam, 2.5f);
+		AnimMan::Add(AnimMan::Name::Gangnam, "Mousey_Gangnam.a.proto.azul","Mousey_SillyDancing.a.proto.azul", Skel::Name::Mousey, TextureObject::Name::Mousey, Mesh::Name::Mousey, AnimLightColor, AnimLightPos);
+		AnimMan::SetPos(AnimMan::Name::Gangnam, -3.5f, 0.0f, 0.0f);
+		AnimMan::SetUniformScale(AnimMan::Name::Gangnam, 3.5f);
 		AnimMan::SetPivotTotalRot(AnimMan::Name::Gangnam, Rot3::ZYX, -MATH_PI / 2, 0.0f, -MATH_PI / 2);
-		AnimMan::SetPrefabPivot(AnimMan::Name::Gangnam);
+		//AnimMan::SetPrefabPivot(AnimMan::Name::Gangnam);
 
-		AnimMan::Add(AnimMan::Name::Run, "Mousey_Run.a.proto.azul", delta, Skel::Name::Mousey, TextureObject::Name::Mousey, Mesh::Name::Mousey, AnimLightColor, AnimLightPos);
-		AnimMan::SetPos(AnimMan::Name::Run, -1.2f, 0.0f, 1.2f);
-		AnimMan::SetUniformScale(AnimMan::Name::Run, 2.5f);
-		AnimMan::SetPivotTotalRot(AnimMan::Name::Run, Rot3::ZYX, -MATH_PI / 2, 0.0f, -MATH_PI / 2);
-		AnimMan::SetPrefabPivot(AnimMan::Name::Run);
-
-		//AnimMan::Add(AnimMan::Name::Run, "ChickenBot_Walk.a.proto.azul", delta, Skel::Name::ChickenBot, TextureObject::Name::ChickenBot, Mesh::Name::ChickenBot, AnimLightColor, AnimLightPos);
+		//AnimMan::Add(AnimMan::Name::Run, "Mousey_Run.a.proto.azul", Skel::Name::Mousey, TextureObject::Name::Mousey, Mesh::Name::Mousey, AnimLightColor, AnimLightPos);
 		//AnimMan::SetPos(AnimMan::Name::Run, -1.2f, 0.0f, 1.2f);
-		//AnimMan::SetUniformScale(AnimMan::Name::Run, 60.0f);
+		//AnimMan::SetUniformScale(AnimMan::Name::Run, 2.5f);
 		//AnimMan::SetPivotTotalRot(AnimMan::Name::Run, Rot3::ZYX, -MATH_PI / 2, 0.0f, -MATH_PI / 2);
 		//AnimMan::SetPrefabPivot(AnimMan::Name::Run);
-
 		return true;
 	}
 
@@ -369,10 +272,14 @@ namespace Azul
     void Game::Update()
     {
 
-		this->intervalTimer.Toc();
+		AnimTime tDelta = this->intervalTimer.Toc();
 		this->intervalTimer.Tic();
 
+		// capture time
+		AnimTime tCurr = this->globalTimer.Toc();
+
 		CameraNodeMan::Update();
+
 		// ------------------------------------
 		// Animate Me
 		// ------------------------------------
@@ -422,19 +329,20 @@ namespace Azul
 			}
 		}*/
 
-        AnimMan::Update();
+		AnimMan::BlendAnimation(tDelta);
+        AnimMan::Update(tDelta);
 
-		static int count = 0;
-		count++;
-		char buff[20];
-		memset(buff, 0x0, 20);
-		sprintf_s(buff, 20, "Test: %d", count);
-		pFontSprite1->UpdateMessage(buff);
+		//static int count = 0;
+		//count++;
+		//char buff[20];
+		//memset(buff, 0x0, 20);
+		//sprintf_s(buff, 20, "Test: %d", count);
+		//pFontSprite1->UpdateMessage(buff);
 
 		// ------------------------------------
 		// Update GameObjects
 		// ------------------------------------
-		GameObjectMan::Update(this->globalTimer.Toc());
+		GameObjectMan::Update(tCurr);
 
 	}
 

@@ -7,15 +7,14 @@
 namespace Azul
 {
 
-	TimerController::TimerController(AnimTime Delta, AnimTime Min, AnimTime Max)
+	TimerController::TimerController(AnimTime  Min, AnimTime Max)
 		: tCurr(AnimTime::Duration::ZERO),
-		tDelta(Delta),
 		tMax(Max),
 		tMin(Min)
 	{
 	}
 
-	void TimerController::Update()
+	void TimerController::Update(AnimTime tDelta)
 	{
 		tCurr += tDelta;
 
@@ -42,16 +41,6 @@ namespace Azul
 	AnimTime TimerController::GetCurrTime() const
 	{
 		return this->tCurr;
-	}
-
-	void TimerController::SetDeltaTime(const AnimTime time)
-	{
-		this->tDelta = time;
-	}
-
-	AnimTime TimerController::GetDeltaTime() const
-	{
-		return this->tDelta;
 	}
 
 	void TimerController::SetMaxTime(const AnimTime time)

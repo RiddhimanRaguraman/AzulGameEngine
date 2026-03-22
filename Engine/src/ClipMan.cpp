@@ -95,23 +95,24 @@ namespace Azul
 		ClipMan::posInstance = nullptr;
 	}
 
-	void ClipMan::Add(Clip::Name clipName, Skel::Name skelName, const char *const pFileName)
+	void ClipMan::Add(Clip::Name clipName, const char* const pFileName, Skel::Name skelName, HierarchyTable::Name hierarchyName)
 	{
-		ClipProto(pFileName, clipName, skelName);
+		ClipProto(pFileName, clipName, skelName, hierarchyName);
 	}
 
 	void ClipMan::Add(Clip::Name clipName,
-					  Skel::Name skelName,
 					  unsigned int numNodes,
 					  unsigned int numKeyFrames,
-					  AnimFrameBucket *pFrameBucket)
+					  AnimFrameBucket *pFrameBucket,
+					  Skel::Name skelName,
+					  HierarchyTable::Name hierarchyName)
 	{
 		ClipMan *pMan = ClipMan::privGetInstance();
 
 		Clip *pNode = (Clip *)pMan->baseAddToFront();
 		assert(pNode != nullptr);
 
-		pNode->Set(clipName, numNodes, numKeyFrames, pFrameBucket, skelName);
+		pNode->Set(clipName, numNodes, numKeyFrames, pFrameBucket, skelName, hierarchyName);
 	}
 
 	Clip *ClipMan::Find(Clip::Name _name)

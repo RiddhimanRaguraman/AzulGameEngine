@@ -85,6 +85,12 @@
     <Filter Include="src\Hierarchy">
       <UniqueIdentifier>{43bd6850-3523-44bf-835c-7cdf0000c9aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Compute">
+      <UniqueIdentifier>{f7d32e18-eb00-4082-973a-8ff33b043a33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Mixer">
+      <UniqueIdentifier>{ff20c113-908c-46d5-9734-57023c606cdc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\shaders\Compiled\Null.Px.h">
@@ -285,13 +291,7 @@
     <ClInclude Include="GameObjectAnimSkin.h">
       <Filter>src\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjectAnimSkeleton.h">
-      <Filter>src\GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="TimerController.h">
-      <Filter>src\Anim</Filter>
-    </ClInclude>
-    <ClInclude Include="Mixer.h">
       <Filter>src\Anim</Filter>
     </ClInclude>
     <ClInclude Include="Bone.h">
@@ -522,23 +522,11 @@
     <ClInclude Include="BufferUAV_cs.h">
       <Filter>src\Buffers\cs - Compute Shader</Filter>
     </ClInclude>
-    <ClInclude Include="ShaderObject_BasicCompute.h">
-      <Filter>src\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="GraphicsObject_SkinLightTexture.h">
       <Filter>src\GraphicsObject</Filter>
     </ClInclude>
     <ClInclude Include="BufferCBV_cs.h">
       <Filter>src\Buffers\cs - Compute Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="ShaderObject_Mixer.h">
-      <Filter>src\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="ShaderObject_World.h">
-      <Filter>src\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="..\shaders\Compiled\World.Cx.h">
-      <Filter>Shaders\Compiled</Filter>
     </ClInclude>
     <ClInclude Include="HierarchyTableCompareStrategyEnumName.h">
       <Filter>src\Hierarchy</Filter>
@@ -552,8 +540,71 @@
     <ClInclude Include="HierarchyTable.h">
       <Filter>src\Hierarchy</Filter>
     </ClInclude>
-    <ClInclude Include="WorldCompute.h">
+    <ClInclude Include="ComputeBlend.h">
+      <Filter>src\Compute</Filter>
+    </ClInclude>
+    <ClInclude Include="ComputeBlend_OneAnim.h">
+      <Filter>src\Compute</Filter>
+    </ClInclude>
+    <ClInclude Include="MixerA.h">
+      <Filter>src\Mixer</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderObject_MixerA.h">
+      <Filter>src\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shaders\Compiled\MixerA.Cx.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shaders\Compiled\MixerB.Cx.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shaders\Compiled\MixerC.Cx.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderObject_MixerB.h">
+      <Filter>src\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderObject_MixerC.h">
+      <Filter>src\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimController_TwoAnim.h">
       <Filter>src\Anim</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimController_OneAnim.h">
+      <Filter>src\Anim</Filter>
+    </ClInclude>
+    <ClInclude Include="ComputeBlend_TwoAnim.h">
+      <Filter>src\Compute</Filter>
+    </ClInclude>
+    <ClInclude Include="MixerC.h">
+      <Filter>src\Mixer</Filter>
+    </ClInclude>
+    <ClInclude Include="Mixer.h">
+      <Filter>src\Mixer</Filter>
+    </ClInclude>
+    <ClInclude Include="MixerB.h">
+      <Filter>src\Mixer</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldComputeA.h">
+      <Filter>src\Compute</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldComputeC.h">
+      <Filter>src\Compute</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldConstant.h">
+      <Filter>src\Compute</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderObject_WorldC.h">
+      <Filter>src\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderObject_WorldA.h">
+      <Filter>src\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shaders\Compiled\WorldA.Cx.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shaders\Compiled\WorldC.Cx.h">
+      <Filter>Shaders\Compiled</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -731,13 +782,7 @@
     <ClCompile Include="GameObjectAnimSkin.cpp">
       <Filter>src\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjectAnimSkeleton.cpp">
-      <Filter>src\GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="TimerController.cpp">
-      <Filter>src\Anim</Filter>
-    </ClCompile>
-    <ClCompile Include="Mixer.cpp">
       <Filter>src\Anim</Filter>
     </ClCompile>
     <ClCompile Include="Bone.cpp">
@@ -929,17 +974,8 @@
     <ClCompile Include="BufferComputeShader_cs.cpp">
       <Filter>src\Buffers\cs - Compute Shader</Filter>
     </ClCompile>
-    <ClCompile Include="ShaderObject_BasicCompute.cpp">
-      <Filter>src\Shader</Filter>
-    </ClCompile>
     <ClCompile Include="BufferCBV_cs.cpp">
       <Filter>src\Buffers\cs - Compute Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="ShaderObject_Mixer.cpp">
-      <Filter>src\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="ShaderObject_World.cpp">
-      <Filter>src\Shader</Filter>
     </ClCompile>
     <ClCompile Include="HierarchyTableCompareStrategyEnumName.cpp">
       <Filter>src\Hierarchy</Filter>
@@ -953,8 +989,53 @@
     <ClCompile Include="HierarchyTable.cpp">
       <Filter>src\Hierarchy</Filter>
     </ClCompile>
-    <ClCompile Include="WorldCompute.cpp">
+    <ClCompile Include="ComputeBlend.cpp">
+      <Filter>src\Compute</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputeBlend_OneAnim.cpp">
+      <Filter>src\Compute</Filter>
+    </ClCompile>
+    <ClCompile Include="MixerA.cpp">
+      <Filter>src\Mixer</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderObject_MixerA.cpp">
+      <Filter>src\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderObject_MixerC.cpp">
+      <Filter>src\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderObject_MixerB.cpp">
+      <Filter>src\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimController_TwoAnim.cpp">
       <Filter>src\Anim</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimController_OneAnim.cpp">
+      <Filter>src\Anim</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputeBlend_TwoAnim.cpp">
+      <Filter>src\Compute</Filter>
+    </ClCompile>
+    <ClCompile Include="Mixer.cpp">
+      <Filter>src\Mixer</Filter>
+    </ClCompile>
+    <ClCompile Include="MixerB.cpp">
+      <Filter>src\Mixer</Filter>
+    </ClCompile>
+    <ClCompile Include="MixerC.cpp">
+      <Filter>src\Mixer</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldComputeA.cpp">
+      <Filter>src\Compute</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldComputeC.cpp">
+      <Filter>src\Compute</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderObject_WorldA.cpp">
+      <Filter>src\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderObject_WorldC.cpp">
+      <Filter>src\Shader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1032,13 +1113,19 @@
     <FxCompile Include="..\shaders\original\SkinLightTexture.Vx.hlsl">
       <Filter>Shaders\Original</Filter>
     </FxCompile>
-    <FxCompile Include="..\shaders\original\BasicCompute.Cx.hlsl">
+    <FxCompile Include="..\shaders\original\MixerA.Cx.hlsl">
       <Filter>Shaders\Original</Filter>
     </FxCompile>
-    <FxCompile Include="..\shaders\original\Mixer.Cx.hlsl">
+    <FxCompile Include="..\shaders\original\MixerB.Cx.hlsl">
       <Filter>Shaders\Original</Filter>
     </FxCompile>
-    <FxCompile Include="..\shaders\original\World.Cx.hlsl">
+    <FxCompile Include="..\shaders\original\MixerC.Cx.hlsl">
+      <Filter>Shaders\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="..\shaders\original\WorldA.Cx.hlsl">
+      <Filter>Shaders\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="..\shaders\original\WorldC.Cx.hlsl">
       <Filter>Shaders\Original</Filter>
     </FxCompile>
   </ItemGroup>
