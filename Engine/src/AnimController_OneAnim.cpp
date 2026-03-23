@@ -32,6 +32,9 @@ namespace Azul
 
 	AnimController_OneAnim::~AnimController_OneAnim()
 	{
+		delete this->pBlend;
+		this->pBlend = nullptr;
+
 		delete this->poAnimA;
 		this->poAnimA = nullptr;
 		delete this->poTimerControlA;

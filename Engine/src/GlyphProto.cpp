@@ -67,7 +67,7 @@ namespace Azul
 		{
 			FontEntry *pFontEntry = &mB.poFontEntry[i];
 
-			Rect tmpRect(pFontEntry->x, pFontEntry->y, pFontEntry->width, pFontEntry->height);
+			Rect tmpRect(pFontEntry->x, pFontEntry->y + 1.0f, pFontEntry->width, pFontEntry->height - 1.0f);
 			GlyphMan::Add(Glyph::Name::Arial36pt, pFontEntry->key, texName, tmpRect);
 
 		}

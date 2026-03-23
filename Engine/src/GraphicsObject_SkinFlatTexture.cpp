@@ -34,7 +34,6 @@ namespace Azul
 
 	GraphicsObject_SkinFlatTexture::~GraphicsObject_SkinFlatTexture()
 	{
-		delete this->poComputeBlend;
 		this->poComputeBlend = nullptr;
 	}
 

@@ -46,7 +46,6 @@ namespace Azul
 	{
 		delete poLightColor;
 		delete poLightPos;
-		delete this->poComputeBlend;
 		this->poComputeBlend = nullptr;
 	}
 

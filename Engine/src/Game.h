@@ -13,6 +13,8 @@
 
 namespace Azul
 {
+	class GameSceneContext;
+
 	class Game : public Engine
 	{
 	public:
@@ -34,9 +36,11 @@ namespace Azul
 		float GetAspectRatio() const;
 		void SetDefaultTargetMode();
 
-	// Nice and Clean
-	AnimTimer	intervalTimer;
-	AnimTimer	globalTimer;
+		AnimTimer	intervalTimer;
+		AnimTimer	globalTimer;
+
+	private:
+		GameSceneContext* pSceneContext;
 	};
 }
 

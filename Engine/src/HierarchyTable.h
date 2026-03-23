@@ -17,7 +17,13 @@ namespace Azul
 			ChickenBot,
 			DogBot,
 			SpiderBot,
+			Ward,
 			Mousey,
+			Halo,
+			Maw,
+			Pirate,
+			Drax,
+			Crownboi,
 			Not_Initialized
 		};
 

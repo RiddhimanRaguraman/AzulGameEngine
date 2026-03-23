@@ -56,7 +56,63 @@ namespace Azul
 		//  Fill: Joint Data
 		// --------------------------------------------------
 
-		size_t jointAccessorIndex = (size_t)gltfModel.meshes[0].primitives[0].attributes.find("JOINTS_0")->second;
+		int skinIndex = -1;
+		int meshIndex = -1;
+		int primitiveIndex = -1;
+		{
+			bool found = false;
+			for (size_t i = 0; i < gltfModel.nodes.size(); i++)
+			{
+				const auto& node = gltfModel.nodes[i];
+				if (node.skin >= 0 && node.mesh >= 0)
+				{
+					skinIndex = node.skin;
+					meshIndex = node.mesh;
+					found = true;
+					break;
+				}
+			}
+
+			if (!found)
+			{
+				for (size_t i = 0; i < gltfModel.nodes.size(); i++)
+				{
+					const auto& node = gltfModel.nodes[i];
+					if (node.skin >= 0)
+					{
+						skinIndex = node.skin;
+						meshIndex = node.mesh;
+						found = true;
+						break;
+					}
+				}
+			}
+
+			assert(found);
+			assert(skinIndex >= 0);
+			assert((size_t)skinIndex < gltfModel.skins.size());
+			assert(meshIndex >= 0);
+			assert((size_t)meshIndex < gltfModel.meshes.size());
+		}
+
+		{
+			bool found = false;
+			for (size_t i = 0; i < gltfModel.meshes[(size_t)meshIndex].primitives.size(); i++)
+			{
+				const auto& prim = gltfModel.meshes[(size_t)meshIndex].primitives[i];
+				const auto& attrs = prim.attributes;
+				if (attrs.find("JOINTS_0") != attrs.end())
+				{
+					primitiveIndex = (int)i;
+					found = true;
+					break;
+				}
+			}
+			assert(found);
+			assert(primitiveIndex >= 0);
+		}
+
+		size_t jointAccessorIndex = (size_t)gltfModel.meshes[(size_t)meshIndex].primitives[(size_t)primitiveIndex].attributes.find("JOINTS_0")->second;
 
 		//unsigned char *pBuff = (unsigned char *)&gltfModel.buffers[0].data[0];
 
@@ -72,7 +128,7 @@ namespace Azul
 		//  Joint table
 		// -------------------------------------------------
 
-		auto data = gltfModel.skins[0].joints;
+		auto data = gltfModel.skins[(size_t)skinIndex].joints;
 
 		JointData mA((unsigned int)data.size(), (unsigned int*)&data[0]);
 

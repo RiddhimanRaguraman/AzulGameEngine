@@ -95,7 +95,7 @@ namespace Azul
 
 	void PCSNode::SetPrevSibling(PCSNode * const pIn)
 	{
-		this->pPrevSibling = pIn;
+		this->pPrevSibling = pIn; //
 	}
 
 	void PCSNode::SetForward(PCSNode* const pIn)
@@ -105,7 +105,7 @@ namespace Azul
 
 	void PCSNode::SetReverse(PCSNode* const pIn)
 	{
-		this->pReverse = pIn;
+		this->pReverse = pIn; //
 	}
 
 

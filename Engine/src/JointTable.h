@@ -16,6 +16,12 @@ namespace Azul
 		{
 			ChickenBot,
 			Mousey,
+			Halo,
+			Ward,
+			Crownboi,
+			Maw,
+			Pirate,
+			Drax,
 			Not_Initialized
 		};
 

@@ -18,8 +18,8 @@
 #include "Prefab_Pivot.h"
 #include "ComputeBlend_OneAnim.h"
 #include "ComputeBlend_TwoAnim.h"
+#include "PCSNode.h"
 
-#include <Windows.h>
 
 namespace Azul
 {
@@ -28,7 +28,7 @@ namespace Azul
     CompareStrategyBase *AnimMan::posEnumNameCompare = nullptr;
 
     AnimMan::AnimNode::AnimNode()
-        : DLink(), mName(Name::Uninitialized), pClip(nullptr), pController(nullptr), pGameSkin(nullptr)
+        : DLink(), mName(Name::Uninitialized), pClip(nullptr), pController(nullptr), pGameSkins{ nullptr }, numGameSkins(0)
     {
         this->privClear();
     }
@@ -46,7 +46,11 @@ namespace Azul
         }
         pController = nullptr;
         pClip = nullptr;
-		pGameSkin = nullptr;
+		for (unsigned int i = 0; i < AnimNode::MAX_GAME_SKINS; i++)
+		{
+			this->pGameSkins[i] = nullptr;
+		}
+		this->numGameSkins = 0;
         mName = Name::Uninitialized;
     }
 
@@ -56,17 +60,49 @@ namespace Azul
         this->mName = inName;
         this->pClip = clip;
         this->pController = controller;
-		this->pGameSkin = gameSkin;
+		if (gameSkin != nullptr)
+		{
+			this->pGameSkins[0] = gameSkin;
+			this->numGameSkins = 1;
+		}
     }
+
+	void AnimMan::AnimNode::Set(Name inName, Clip *clip, AnimController *controller, GameObjectAnimSkin *const *pSkins, unsigned int numSkins)
+	{
+		this->privClear();
+		this->mName = inName;
+		this->pClip = clip;
+		this->pController = controller;
+
+		assert(pSkins != nullptr);
+		assert(numSkins <= AnimNode::MAX_GAME_SKINS);
+
+		unsigned int outCount = 0;
+		for (unsigned int i = 0; i < numSkins; i++)
+		{
+			if (pSkins[i] != nullptr)
+			{
+				this->pGameSkins[outCount] = pSkins[i];
+				outCount++;
+			}
+		}
+		this->numGameSkins = outCount;
+	}
 
     AnimController *AnimMan::AnimNode::GetController()
     {
         return this->pController;
     }
 
-	GameObjectAnimSkin *AnimMan::AnimNode::GetGameSkin()
+	unsigned int AnimMan::AnimNode::GetNumGameSkins() const
 	{
-		return this->pGameSkin;
+		return this->numGameSkins;
+	}
+
+	GameObjectAnimSkin *AnimMan::AnimNode::GetGameSkin(unsigned int index) const
+	{
+		assert(index < this->numGameSkins);
+		return this->pGameSkins[index];
 	}
 
     char *AnimMan::AnimNode::GetName()
@@ -90,7 +126,8 @@ namespace Azul
 
     AnimMan::AnimMan(int reserveNum, int reserveGrow)
         : ManBase(new DLinkMan(), new DLinkMan(), reserveNum, reserveGrow),
-        poBlendTwoAnimController(nullptr)
+        poBlendTwoAnimController(nullptr),
+		mBlendTs(0.0f)
     {
         this->proFillReservedPool(reserveNum);
         this->poNodeCompare = new AnimNode();
@@ -206,6 +243,66 @@ namespace Azul
                 return Clip::Name::Not_Initialized;
             }
         }
+        else if (skelName == Skel::Name::Halo)
+        {
+            switch (name)
+            {
+            case AnimMan::Name::Shuffle:
+                return Clip::Name::Halo_Shuffle;
+            default:
+                return Clip::Name::Not_Initialized;
+            }
+        }
+        else if (skelName == Skel::Name::Crownboi)
+        {
+            switch (name)
+            {
+            case AnimMan::Name::Rumba:
+                return Clip::Name::Crownboi_Rumba;
+            default:
+                return Clip::Name::Not_Initialized;
+            }
+        }
+        else if (skelName == Skel::Name::Drax)
+        {
+            switch (name)
+            {
+            case AnimMan::Name::Swing:
+                return Clip::Name::Drax_Swing;
+            default:
+                return Clip::Name::Not_Initialized;
+            }
+        }
+        else if (skelName == Skel::Name::Maw)
+        {
+            switch (name)
+            {
+            case AnimMan::Name::Breakdance:
+                return Clip::Name::Maw_Breakdance;
+            default:
+                return Clip::Name::Not_Initialized;
+            }
+        }
+        else if (skelName == Skel::Name::Pirate)
+        {
+            switch (name)
+            {
+            case AnimMan::Name::Salsa:
+                return Clip::Name::Pirate_Salsa;
+            default:
+                return Clip::Name::Not_Initialized;
+            }
+        }
+        else if (skelName == Skel::Name::Ward)
+        {
+            switch (name)
+            {
+            case AnimMan::Name::Wave:
+                return Clip::Name::Ward_Wave;
+            default:
+                return Clip::Name::Not_Initialized;
+            }
+            }
         return Clip::Name::Not_Initialized;
     }
 
@@ -302,6 +399,18 @@ namespace Azul
             return HierarchyTable::Name::SpiderBot;
         case Skel::Name::Mousey:
             return HierarchyTable::Name::Mousey;
+        case Skel::Name::Halo:
+            return HierarchyTable::Name::Halo;
+        case Skel::Name::Crownboi:
+            return HierarchyTable::Name::Crownboi;
+        case Skel::Name::Drax:
+            return HierarchyTable::Name::Drax;
+        case Skel::Name::Maw:
+            return HierarchyTable::Name::Maw;
+        case Skel::Name::Pirate:
+            return HierarchyTable::Name::Pirate;
+        case Skel::Name::Ward:
+            return HierarchyTable::Name::Ward;
         default:
             return HierarchyTable::Name::Not_Initialized;
 
@@ -316,8 +425,6 @@ namespace Azul
 
         Clip::Name clipName = privMapToClipName(name, skelName);
         HierarchyTable::Name Hname = privMapToHierarchyName(skelName);
-
-        //HierarchyTable* pHtable = HierarchyTableMan::Find(Hname);
 
         ClipMan::Add(clipName, clipFileName, skelName, Hname);
 
@@ -349,6 +456,69 @@ namespace Azul
         pNode->Set(name, pClip, pController, pGameSkin);
         return pNode;
     }
+
+	DLink *AnimMan::Add(Name name,
+						const char *clipFileName,
+						Skel::Name skelName,
+						TextureObject::Name texName,
+						const Mesh::Name *pMeshNames,
+						unsigned int numMeshes,
+						Vec3 &_pLightColor,
+						Vec3 &_pLightPos)
+	{
+		assert(pMeshNames != nullptr);
+		assert(numMeshes > 0);
+		assert(numMeshes <= AnimNode::MAX_GAME_SKINS);
+
+		AnimMan *pMan = AnimMan::privGetInstance();
+		assert(pMan != nullptr);
+
+		Clip::Name clipName = privMapToClipName(name, skelName);
+		HierarchyTable::Name Hname = privMapToHierarchyName(skelName);
+
+		ClipMan::Add(clipName, clipFileName, skelName, Hname);
+
+		Anim *ptAnim = new Anim(clipName);
+		assert(ptAnim);
+		ComputeBlend_OneAnim *pBlend = new ComputeBlend_OneAnim(ptAnim);
+
+		AnimController *pController = new AnimController_OneAnim(ptAnim, pBlend, 1.0f);
+		assert(pController);
+
+		GameObjectAnimSkin *pSkins[AnimNode::MAX_GAME_SKINS]{ nullptr };
+
+		for (unsigned int i = 0; i < numMeshes; i++)
+		{
+			GraphicsObject_SkinLightTexture *pGraphicsSkin = new GraphicsObject_SkinLightTexture(pMeshNames[i],
+																								 ShaderObject::Name::SkinLightTexture,
+																								 texName,
+																								 pBlend,
+																								 _pLightColor,
+																								 _pLightPos);
+			assert(pGraphicsSkin);
+
+			GameObjectAnimSkin *pGameSkin = new GameObjectAnimSkin(pGraphicsSkin, pBlend);
+			assert(pGameSkin);
+
+			char goName[PCSNode::NAME_SIZE]{ 0 };
+			strcpy_s(goName, PCSNode::NAME_SIZE, StringMe(name));
+			char suffix[12]{ 0 };
+			sprintf_s(suffix, sizeof(suffix), "_%u", i);
+			strcat_s(goName, PCSNode::NAME_SIZE, suffix);
+			pGameSkin->SetName(goName);
+
+			GameObjectMan::Add(pGameSkin, GameObjectMan::GetRoot());
+			pSkins[i] = pGameSkin;
+		}
+
+		Clip *pClip = ClipMan::Find(clipName);
+		assert(pClip);
+
+		AnimNode *pNode = (AnimNode *)pMan->baseAddToFront();
+		assert(pNode);
+		pNode->Set(name, pClip, pController, pSkins, numMeshes);
+		return pNode;
+	}
 
     DLink* AnimMan::Add(Name name, const char* clipFileName1, const char* clipFileName2, Skel::Name skelName, TextureObject::Name texName, Mesh::Name meshName, Vec3& _pLightColor, Vec3& _pLightPos)
     {
@@ -445,10 +615,10 @@ namespace Azul
             sElapsedSec = 0.0f;
         }
 
-        const float dtSec = tDelta / AnimTime(AnimTime::Duration::ONE_SECOND);
+        const float dtSec = tDelta / AnimTime( AnimTime::Duration::ONE_SECOND );
         sElapsedSec += dtSec;
 
-        float t = sElapsedSec / 1.0f;
+        float t = sElapsedSec / 3.0f;
         if (t < 0.0f)
         {
             t = 0.0f;
@@ -472,11 +642,20 @@ namespace Azul
         AnimMan *pMan = AnimMan::privGetInstance();
         assert(pMan != nullptr);
 
+		pMan->mBlendTs = sBlendTs;
+
         if (pMan->poBlendTwoAnimController)
         {
             pMan->poBlendTwoAnimController->SetBlendTs(sBlendTs);
         }
     }
+
+	float AnimMan::GetBlendTs()
+	{
+		AnimMan* pMan = AnimMan::privGetInstance();
+		assert(pMan != nullptr);
+		return pMan->mBlendTs;
+	}
 
     void AnimMan::Remove(DLink *pNode)
     {
@@ -501,9 +680,16 @@ namespace Azul
 
 		pMan->poNodeCompare->mName = name;
 		AnimNode *pNode = (AnimNode *)pMan->baseFind(pMan->poNodeCompare);
-		if (pNode && pNode->pGameSkin)
+		if (pNode)
 		{
-			pNode->pGameSkin->SetScale(sx, sy, sz);
+			for (unsigned int i = 0; i < pNode->GetNumGameSkins(); i++)
+			{
+				GameObjectAnimSkin *pSkin = pNode->GetGameSkin(i);
+				if (pSkin)
+				{
+					pSkin->SetScale(sx, sy, sz);
+				}
+			}
 		}
     }
 
@@ -515,9 +701,16 @@ namespace Azul
 
 		pMan->poNodeCompare->mName = name;
 		AnimNode *pNode = (AnimNode *)pMan->baseFind(pMan->poNodeCompare);
-		if (pNode && pNode->pGameSkin)
+		if (pNode)
 		{
-			pNode->pGameSkin->SetScale(s, s, s);
+			for (unsigned int i = 0; i < pNode->GetNumGameSkins(); i++)
+			{
+				GameObjectAnimSkin *pSkin = pNode->GetGameSkin(i);
+				if (pSkin)
+				{
+					pSkin->SetScale(s, s, s);
+				}
+			}
 		}
     }
 
@@ -529,9 +722,16 @@ namespace Azul
 
 		pMan->poNodeCompare->mName = name;
 		AnimNode *pNode = (AnimNode *)pMan->baseFind(pMan->poNodeCompare);
-		if (pNode && pNode->pGameSkin)
+		if (pNode)
 		{
-			pNode->pGameSkin->SetTrans(x, y, z);
+			for (unsigned int i = 0; i < pNode->GetNumGameSkins(); i++)
+			{
+				GameObjectAnimSkin *pSkin = pNode->GetGameSkin(i);
+				if (pSkin)
+				{
+					pSkin->SetTrans(x, y, z);
+				}
+			}
 		}
     }
 
@@ -543,9 +743,16 @@ namespace Azul
 
 		pMan->poNodeCompare->mName = name;
 		AnimNode *pNode = (AnimNode *)pMan->baseFind(pMan->poNodeCompare);
-		if (pNode && pNode->pGameSkin)
+		if (pNode)
 		{
-			pNode->pGameSkin->SetPrefab(new Prefab_Pivot());
+			for (unsigned int i = 0; i < pNode->GetNumGameSkins(); i++)
+			{
+				GameObjectAnimSkin *pSkin = pNode->GetGameSkin(i);
+				if (pSkin)
+				{
+					pSkin->SetPrefab(new Prefab_Pivot());
+				}
+			}
 		}
 	}
 
@@ -559,11 +766,12 @@ namespace Azul
         AnimNode* pNode = (AnimNode*)pMan->baseFind(pMan->poNodeCompare);
         if (pNode && pNode->pController)
         {
-            AnimController_TwoAnim* pTwo = dynamic_cast<AnimController_TwoAnim*>(pNode->pController);
-            if (pTwo)
-            {
-                pTwo->SetBlendTs(ts);
-            }
+			if (pMan->poBlendTwoAnimController != nullptr &&
+				pNode->pController == pMan->poBlendTwoAnimController)
+			{
+				AnimController_TwoAnim *pTwo = (AnimController_TwoAnim *)pNode->pController;
+				pTwo->SetBlendTs(ts);
+			}
         }
     }
 
@@ -575,9 +783,16 @@ namespace Azul
 
 		pMan->poNodeCompare->mName = name;
 		AnimNode *pNode = (AnimNode *)pMan->baseFind(pMan->poNodeCompare);
-		if (pNode && pNode->pGameSkin)
+		if (pNode)
 		{
-			pNode->pGameSkin->cur_rot_x = angle;
+			for (unsigned int i = 0; i < pNode->GetNumGameSkins(); i++)
+			{
+				GameObjectAnimSkin *pSkin = pNode->GetGameSkin(i);
+				if (pSkin)
+				{
+					pSkin->cur_rot_x = angle;
+				}
+			}
 		}
     }
 
@@ -589,9 +804,16 @@ namespace Azul
 
 		pMan->poNodeCompare->mName = name;
 		AnimNode *pNode = (AnimNode *)pMan->baseFind(pMan->poNodeCompare);
-		if (pNode && pNode->pGameSkin)
+		if (pNode)
 		{
-			pNode->pGameSkin->cur_rot_y = angle;
+			for (unsigned int i = 0; i < pNode->GetNumGameSkins(); i++)
+			{
+				GameObjectAnimSkin *pSkin = pNode->GetGameSkin(i);
+				if (pSkin)
+				{
+					pSkin->cur_rot_y = angle;
+				}
+			}
 		}
     }
 
@@ -603,9 +825,16 @@ namespace Azul
 
 		pMan->poNodeCompare->mName = name;
 		AnimNode *pNode = (AnimNode *)pMan->baseFind(pMan->poNodeCompare);
-		if (pNode && pNode->pGameSkin)
+		if (pNode)
 		{
-			pNode->pGameSkin->cur_rot_z = angle;
+			for (unsigned int i = 0; i < pNode->GetNumGameSkins(); i++)
+			{
+				GameObjectAnimSkin *pSkin = pNode->GetGameSkin(i);
+				if (pSkin)
+				{
+					pSkin->cur_rot_z = angle;
+				}
+			}
 		}
     }
 
@@ -617,13 +846,20 @@ namespace Azul
 
 		pMan->poNodeCompare->mName = name;
 		AnimNode *pNode = (AnimNode *)pMan->baseFind(pMan->poNodeCompare);
-		if (pNode && pNode->pGameSkin)
+		if (pNode)
 		{
 			Quat q(mode, x, y, z);
-			pNode->pGameSkin->SetQuat(q);
-			pNode->pGameSkin->cur_rot_x = 0.0f;
-			pNode->pGameSkin->cur_rot_y = 0.0f;
-			pNode->pGameSkin->cur_rot_z = 0.0f;
+			for (unsigned int i = 0; i < pNode->GetNumGameSkins(); i++)
+			{
+				GameObjectAnimSkin *pSkin = pNode->GetGameSkin(i);
+				if (pSkin)
+				{
+					pSkin->SetQuat(q);
+					pSkin->cur_rot_x = 0.0f;
+					pSkin->cur_rot_y = 0.0f;
+					pSkin->cur_rot_z = 0.0f;
+				}
+			}
 		}
     }
 

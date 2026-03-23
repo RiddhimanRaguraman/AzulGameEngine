@@ -155,6 +155,50 @@ namespace Azul
 				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(Mesh::PYRAMID));
 				break;
 
+			case Mesh::Name::CRATE:
+				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(Mesh::CRATE));
+				break;
+
+			case Mesh::Name::SPHERE:
+				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(Mesh::SPHERE));
+				break;
+
+			case Mesh::Name::SPRITE:
+				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(Mesh::SPRITE));
+				break;
+
+			case Mesh::Name::SPACE_FRIGATE:
+				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(Mesh::SPACE_FRIGATE));
+				break;
+
+			case Mesh::Name::R2D2:
+				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(Mesh::R2D2));
+				break;
+
+			case Mesh::Name::BONE_A:
+				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(Mesh::BONE_A));
+				break;
+
+			case Mesh::Name::BONE_B:
+				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(Mesh::BONE_B));
+				break;
+
+			case Mesh::Name::ChickenBot:
+				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(Mesh::ChickenBot));
+				break;
+
+			case Mesh::Name::Mousey:
+				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(Mesh::Mousey));
+				break;
+
+			case Mesh::Name::Halo0:
+				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(Mesh::Halo0));
+				break;
+
+			case Mesh::Name::Halo1:
+				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(Mesh::Halo1));
+				break;
+
 			case Mesh::Name::NOT_INITIALIZED:
 				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(Mesh::NOT_INITIALIZED));
 				break;
@@ -292,6 +336,27 @@ namespace Azul
 			break;
 		case AnimMan::Name::Dance:
 			strcpy_s(this->buffer, BUFFER_SIZE, "Dance");
+			break;
+		case AnimMan::Name::Rumba:
+			strcpy_s(this->buffer, BUFFER_SIZE, "Rumba");
+			break;
+		case AnimMan::Name::Shuffle:
+			strcpy_s(this->buffer, BUFFER_SIZE, "Shuffle");
+			break;
+		case AnimMan::Name::Swing:
+			strcpy_s(this->buffer, BUFFER_SIZE, "Swing");
+			break;
+		case AnimMan::Name::Salsa:
+			strcpy_s(this->buffer, BUFFER_SIZE, "Salsa");
+			break;
+		case AnimMan::Name::Blend:
+			strcpy_s(this->buffer, BUFFER_SIZE, "Blend");
+			break;
+		case AnimMan::Name::Breakdance:
+			strcpy_s(this->buffer, BUFFER_SIZE, "Breakdance");
+			break;
+		case AnimMan::Name::Wave:
+			strcpy_s(this->buffer, BUFFER_SIZE, "Wave");
 			break;
 		case AnimMan::Name::Idle:
 			strcpy_s(this->buffer, BUFFER_SIZE, "Idle");

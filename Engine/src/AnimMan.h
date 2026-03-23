@@ -31,9 +31,16 @@ namespace Azul
             Walk,
             Run,
             HitBack,
+            Wave,
             Shotup,
             Dance,
             Gangnam,
+            Blend,
+            Breakdance,
+            Salsa,
+            Swing,
+            Rumba,
+            Shuffle,
             Idle
         };
         
@@ -47,6 +54,14 @@ namespace Azul
                             Mesh::Name meshName, 
                             Vec3 &_pLightColor, 
                             Vec3 &_pLightPos);
+		static DLink* Add(Name name,
+						  const char* clipFileName,
+						  Skel::Name skelName,
+						  TextureObject::Name texName,
+						  const Mesh::Name* pMeshNames,
+						  unsigned int numMeshes,
+						  Vec3& _pLightColor,
+						  Vec3& _pLightPos);
         static DLink* Add(Name name,
                           const char* clipFileName1,
                           const char* clipFileName2,
@@ -58,6 +73,7 @@ namespace Azul
         static AnimController *Find(Name name);
         static void Update(AnimTime tCurr);
         static void BlendAnimation(AnimTime tDelta);
+		static float GetBlendTs();
 
         static void SetScale(Name name, float sx, float sy, float sz);
         static void SetUniformScale(Name name, float s);
@@ -96,8 +112,10 @@ namespace Azul
             virtual ~AnimNode();
 
             void Set(Name inName, Clip *pClip, AnimController *pController, GameObjectAnimSkin *pGameSkin);
+			void Set(Name inName, Clip *pClip, AnimController *pController, GameObjectAnimSkin *const *pGameSkins, unsigned int numGameSkins);
             AnimController *GetController();
-			GameObjectAnimSkin *GetGameSkin();
+			unsigned int GetNumGameSkins() const;
+			GameObjectAnimSkin *GetGameSkin(unsigned int index) const;
 
             char *GetName() override;
             void Wash() override;
@@ -110,12 +128,15 @@ namespace Azul
             Name mName;
             Clip *pClip;
             AnimController *pController;
-			GameObjectAnimSkin *pGameSkin;
+			static const unsigned int MAX_GAME_SKINS = 32;
+			GameObjectAnimSkin *pGameSkins[MAX_GAME_SKINS];
+			unsigned int numGameSkins;
         };
 
     private:
         AnimNode *poNodeCompare;
         AnimController_TwoAnim *poBlendTwoAnimController;
+		float mBlendTs;
         static AnimMan *posInstance;
         static CompareStrategyBase *posEnumNameCompare;
     };

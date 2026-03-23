@@ -43,6 +43,9 @@ namespace Azul
 
 	AnimController_TwoAnim::~AnimController_TwoAnim()
 	{
+		delete this->pBlend;
+		this->pBlend = nullptr;
+
 		delete poAnimA;
 		delete poAnimB;
 		delete poTimerControlA;

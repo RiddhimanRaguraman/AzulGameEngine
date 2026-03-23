@@ -173,6 +173,25 @@ namespace Azul
 	{
 		assert(pTargetName);
 
+		int skinIndex = -1;
+		{
+			bool found = false;
+			for (size_t i = 0; i < model.nodes.size(); i++)
+			{
+				const auto& node = model.nodes[i];
+				if (node.skin >= 0)
+				{
+					skinIndex = node.skin;
+					found = true;
+					break;
+				}
+			}
+
+			assert(found);
+			assert(skinIndex >= 0);
+			assert((size_t)skinIndex < model.skins.size());
+		}
+
 		// Create a skeleton and Fill it
 		this->skeletonVector.reserve(model.nodes.size());
 		for (size_t i = 0; i < model.nodes.size(); i++)
@@ -300,10 +319,10 @@ namespace Azul
 
 		std::vector<std::vector<int>> CorrectedTableA;
 
-		for (size_t k = 0; k < model.skins[0].joints.size(); k++)
+		for (size_t k = 0; k < model.skins[(size_t)skinIndex].joints.size(); k++)
 		{
 			//Trace::out("%d: %d, \n", k, model.skins[0].joints[k]);
-			size_t i = (unsigned int)model.skins[0].joints[k];
+			size_t i = (unsigned int)model.skins[(size_t)skinIndex].joints[k];
 			CorrectedTableA.push_back(TableA[i]);
 		}
 

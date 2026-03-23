@@ -12,8 +12,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPWSTR cmdLine,
 
 	// Game is inside a singleton
 	int status = Azul::GameMan::Create("Azul Game Engine",
-									   2 * 400, // width
-									   2 * 300, // height
+									   3 * 400, // width
+									   3 * 300, // height
 									   hInstance,
 									   prevInstance,
 									   cmdLine,

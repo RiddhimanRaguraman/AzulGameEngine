@@ -48,9 +48,29 @@ namespace Azul
 
 	void GameObjectMan::Create()
 	{
-		GameObjectMan *pGOM;
-		pGOM = GameObjectMan::privGetInstance();
+		GameObjectMan *pGOM = GameObjectMan::privGetInstance();
 		assert(pGOM);
+
+		if (pGOM->poRootTree == nullptr)
+		{
+			MeshNull *pMesh = new MeshNull();
+			assert(pMesh);
+
+			MeshNodeMan::Add(Mesh::Name::NULL_MESH, pMesh);
+
+			ShaderObject *pShader = new ShaderObject_Null(ShaderObject::Name::NullShader);
+			assert(pShader);
+			ShaderObjectNodeMan::Add(pShader);
+
+			GraphicsObject_Null *pGraphicsObject = new GraphicsObject_Null(Mesh::Name::NULL_MESH, ShaderObject::Name::NullShader);
+			GameObjectRigidBody *pGameRoot = new GameObjectRigidBody(pGraphicsObject);
+			pGameRoot->SetName("GameObject_Root");
+
+			pGOM->poRootTree = new PCSTree();
+			assert(pGOM->poRootTree);
+
+			pGOM->poRootTree->Insert(pGameRoot, pGOM->poRootTree->GetRoot());
+		}
 	}
 
 	void GameObjectMan::Destroy()
@@ -60,6 +80,10 @@ namespace Azul
 		assert(pGOM);
 
 		PCSTree *pTree = pGOM->poRootTree;
+		if (pTree == nullptr)
+		{
+			return;
+		}
 		PCSNode *pNode = nullptr;
 
 		PCSTreeForwardIterator pForIter(pTree->GetRoot());
@@ -74,6 +98,9 @@ namespace Azul
 			pNode = pForIter.Next();
 			delete pTmp;
 		}
+
+		delete pGOM->poRootTree;
+		pGOM->poRootTree = nullptr;
 	}
 
 	void GameObjectMan::Update(AnimTime currentTime)
@@ -123,27 +150,8 @@ namespace Azul
 	}
 
 	GameObjectMan::GameObjectMan()
+		: poRootTree(nullptr)
 	{
-		// Create the root node (null object)
-		MeshNull *pMesh = new MeshNull();
-		assert(pMesh);
-
-		MeshNodeMan::Add(Mesh::Name::NULL_MESH, pMesh);
-
-		ShaderObject *pShader = new ShaderObject_Null(ShaderObject::Name::NullShader);
-		assert(pShader);
-		ShaderObjectNodeMan::Add(pShader);
-
-		GraphicsObject_Null *pGraphicsObject = new GraphicsObject_Null(Mesh::Name::NULL_MESH, ShaderObject::Name::NullShader);
-		GameObjectRigidBody *pGameRoot = new GameObjectRigidBody(pGraphicsObject);
-		pGameRoot->SetName("GameObject_Root");
-
-		// Create the tree
-		this->poRootTree = new PCSTree();
-		assert(this->poRootTree);
-
-		// Attach the root node
-		this->poRootTree->Insert(pGameRoot, this->poRootTree->GetRoot());
 	}
 
 	GameObjectMan::~GameObjectMan()

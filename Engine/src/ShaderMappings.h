@@ -18,8 +18,6 @@ namespace Azul
 		Joints      // 5  Skin
 	};
 
-	static const unsigned int BONE_COUNT_MAX = 46;
-
 	// in shaders these are CBV slot "bx"
 	enum class ConstantVSBufferSlot : uint32_t
 	{

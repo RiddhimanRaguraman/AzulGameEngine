@@ -4,29 +4,12 @@
 
 #include "Game.h"
 
-#include "ShaderObjectNodeMan.h"
-#include "MeshNodeMan.h"
+#include "GameSceneContext.h"
 #include "GameObjectMan.h"
-#include "CameraNodeMan.h"
-#include "TexNodeMan.h"
-#include "AnimTimer.h"
-#include "ImageMan.h"
-#include "JointTableMan.h"
-#include "Prefab_Pivot.h"
-#include "GlyphMan.h"
-#include "FontSprite.h"
-#include "SkelMan.h"
-#include "ClipMan.h"
-#include "Anim.h"
-#include "TimerController.h"
-#include "AnimController.h"
-#include "AnimMan.h"
-#include "HierarchyTableMan.h"
+
  
 namespace Azul
 {
-	FontSprite* pFontSprite1;
-
 	//-----------------------------------------------------------------------------
 	//  Game::Game()
 	//		Game Engine Constructor
@@ -34,6 +17,7 @@ namespace Azul
 
 	Game::Game(const char *const pName, int width, int height)
 		: Engine(pName, width, height)
+		, pSceneContext(nullptr)
 	{
 		this->globalTimer.Tic();
 		this->intervalTimer.Tic();
@@ -55,211 +39,9 @@ namespace Azul
 	//-----------------------------------------------------------------------------
 	bool Game::LoadContent()
 	{
-		
-		CameraNodeMan::Create();
-		MeshNodeMan::Create();
-		TexNodeMan::Create();
-		ShaderObjectNodeMan::Create();
-		GameObjectMan::Create();
-		ImageMan::Create();
-		GlyphMan::Create();
-		SkelMan::Create();
-		ClipMan::Create();
-        AnimMan::Create();
-		JointTableMan::Create(); 
-		HierarchyTableMan::Create();
-
-		// --------------------------------- 
-		//  Camera - Setup 
-		// --------------------------------- 
-
-		//---------------------------------------------------------------------------------------------------------
-		// Setup the current 3D perspective Camera
-		//---------------------------------------------------------------------------------------------------------
-		
-		Camera* pCam3D = new Camera(Camera::Type::PERSPECTIVE_3D);
-		
-		pCam3D->setViewport(0, 0, this->mWindowWidth, this->mWindowHeight);
-		pCam3D->setPerspective(35.0f,
-			float(pCam3D->getScreenWidth()) / float(pCam3D->getScreenHeight()),
-			1.0f,
-			100000.0f);
-
-		Vec3 pos(-1, 12, 0);
-		Vec3 tar(-1, 0, 0);
-		Vec3 up = pos + Vec3(1, 0, 0);
-		pCam3D->SetHelper(up, tar, pos);
-
-		pCam3D->updateCamera();
-		CameraNodeMan::Add(Camera::Name::CAMERA_0, pCam3D);
-		CameraNodeMan::SetCurrent(Camera::Name::CAMERA_0, Camera::Type::PERSPECTIVE_3D);
-
-		//---------------------------------------------------------------------------------------------------------
-		// Setup the current 2D orthographic Camera
-		//---------------------------------------------------------------------------------------------------------
-		Camera* pCam2D = new Camera(Camera::Type::ORTHOGRAPHIC_2D);
-
-		pCam2D->setViewport(0, 0, this->mWindowWidth, this->mWindowHeight);
-		pCam2D->setOrthographic((float)-pCam2D->getScreenWidth() / 2.0f,
-			(float)pCam2D->getScreenWidth() / 2.0f,
-			(float)-pCam2D->getScreenHeight() / 2.0f,
-			(float)pCam2D->getScreenHeight() / 2.0f,
-			1.0f,
-			1000.0f);
-		pCam2D->setOrientAndPosition(Vec3(0.0f, 1.0f, 0.0f),
-			Vec3(0.0f, 0.0f, -1.0f),
-			Vec3(0.0f, 0.0f, 2.0f));
-		pCam2D->updateCamera();
-		CameraNodeMan::Add(Camera::Name::CAMERA_1, pCam2D);
-		CameraNodeMan::SetCurrent(Camera::Name::CAMERA_1, Camera::Type::ORTHOGRAPHIC_2D);
-		
-		// --------------------------------
-		//  Mesh
-		// --------------------------------
-
-		Mesh* poSpriteMesh = new MeshProto("SpriteMesh.m.proto.azul");
-		MeshNodeMan::Add(Mesh::Name::SPRITE, poSpriteMesh);
-
-		Mesh* pChickenBotMesh = new MeshProto("ChickenBot.m.proto.azul");
-		MeshNodeMan::Add(Mesh::Name::ChickenBot, pChickenBotMesh);
-
-		Mesh* pMouseyMesh = new MeshProto("Mousey.m.proto.azul");
-		MeshNodeMan::Add(Mesh::Name::Mousey, pMouseyMesh);
-
-		Mesh* pMeshR2D2 = new MeshProto("R2D2.m.proto.azul");
-		MeshNodeMan::Add(Mesh::Name::R2D2, pMeshR2D2);
-
-		TextureObject* pTexR2D2_BASE = new TextureObject("R2D2_Base.t.proto.azul");
-		TexNodeMan::Add(TextureObject::Name::R2D2_BASE, pTexR2D2_BASE);
-
-		Mesh* pMeshcrate = new MeshProto("crate.m.proto.azul");
-		MeshNodeMan::Add(Mesh::Name::CRATE, pMeshcrate);
-
-		TextureObject* pTexcrate = new TextureObject("crate.t.proto.azul");
-		TexNodeMan::Add(TextureObject::Name::Crate, pTexcrate);
-
-		Mesh* pMeshfrig = new MeshProto("space_frigate.m.proto.azul");
-		MeshNodeMan::Add(Mesh::Name::SPACE_FRIGATE, pMeshfrig);
-
-		TextureObject* pTexFrig = new TextureObject("space_frigate.t.proto.azul");
-		TexNodeMan::Add(TextureObject::Name::SpaceFrigate, pTexFrig);
-
-		// --------------------------------
-		//   Joint
-		// --------------------------------
-
-		JointTableMan::Add(JointTable::Name::ChickenBot, "ChickenBot.j.proto.azul");
-		JointTableMan::Add(JointTable::Name::Mousey, "Mousey.j.proto.azul");
-
-		// --------------------------------
-		//   Hierarchy
-		// --------------------------------
-
-		HierarchyTableMan::Add(HierarchyTable::Name::ChickenBot, "ChickenBot.h.proto.azul");
-		HierarchyTableMan::Add(HierarchyTable::Name::Mousey, "Mousey.h.proto.azul");
-
-		// --------------------------------
-		//  Shader
-		// --------------------------------
-
-		ShaderObjectNodeMan::Add(ShaderObject::Name::Sprite);
-		ShaderObjectNodeMan::Add(ShaderObject::Name::FlatTexture);
-		ShaderObjectNodeMan::Add(ShaderObject::Name::LightTexture);
-		ShaderObjectNodeMan::Add(ShaderObject::Name::SkinFlatTexture);
-		ShaderObjectNodeMan::Add(ShaderObject::Name::SkinLightTexture);
-		ShaderObjectNodeMan::Add(ShaderObject::Name::MixerACompute);
-		ShaderObjectNodeMan::Add(ShaderObject::Name::MixerBCompute);
-		ShaderObjectNodeMan::Add(ShaderObject::Name::MixerCCompute);
-		ShaderObjectNodeMan::Add(ShaderObject::Name::WorldComputeA);
-		ShaderObjectNodeMan::Add(ShaderObject::Name::WorldComputeC);
-
-		// --------------------------------
-		//  Texture
-		// --------------------------------
-
-		TexNodeMan::Add(TextureObject::Name::Test0, "TEST_PNG_RGB.t.proto.azul");
-		TexNodeMan::Add(TextureObject::Name::Test1, "TEST_PNG_RGBA.t.proto.azul");
-		TexNodeMan::Add(TextureObject::Name::Test2, "TEST_TGA_BGR.t.proto.azul");
-		TexNodeMan::Add(TextureObject::Name::Test3, "TEST_TGA_BGRA.t.proto.azul");
-		TexNodeMan::Add(TextureObject::Name::ChickenBot, "ChickenBot.t.proto.azul");
-		TexNodeMan::Add(TextureObject::Name::Mousey, "Mousey.t.proto.azul");
-
-	/*	TextureObject* pTexDogBot = new TextureObject("DogBot.t.proto.azul");
-		TexNodeMan::Add(TextureObject::Name::DogBot, pTexDogBot);
-
-		TextureObject* pTexSpiderBot = new TextureObject("SpiderBot.t.proto.azul");
-		TexNodeMan::Add(TextureObject::Name::SpiderBot, pTexSpiderBot);*/
-		// -----------------------------------
-		//  Image
-		// -----------------------------------
-
-		ImageMan::Add(Image::Name::WhiteBird,
-			TextureObject::Name::Test1,
-			Rect(139.0f, 131.0f, 84.0f, 97.0f));
-		ImageMan::Add(Image::Name::ALLBirds,
-			TextureObject::Name::Test1,
-			Rect(0.0f, 0.0f, 377.0f, 234.0f));
-		ImageMan::Add(Image::Name::GreenBird,
-			TextureObject::Name::Test1,
-			Rect(244.0f, 134.0f, 102.0f, 75.0f));
-
-		// ---------------------------------------------
-		//  Font - load xml
-		// ---------------------------------------------
-		TexNodeMan::Add(TextureObject::Name::FontAriel36,"FontArial36.t.proto.azul");
-		GlyphMan::Add(TextureObject::Name::FontAriel36,"MetricsArial36.xml.proto.azul");
-
-
-		// ---------------------------------------------
-		// Font print
-		// ---------------------------------------------
-		GraphicsObject* pGraphicsObject(nullptr);
-		Color color2(0.0f, 0, 1.0f, 1.0f);
-		FontSprite* pFontSprite(nullptr);
-
-		pGraphicsObject = new GraphicsObject_Sprite(Mesh::Name::SPRITE,
-													ShaderObject::Name::Sprite,
-													Image::GreenBird,  //anything
-													Rect(100, 100, 100, 100));
-		pFontSprite = new FontSprite(pGraphicsObject);
-		GameObjectMan::Add(pFontSprite, GameObjectMan::GetRoot());
-
-		pFontSprite->Set(FontSprite::Name::TestMessage, "Press Spacebar to blend animation ", Glyph::Name::Arial36pt, 20, 550, color2);
-
-		pGraphicsObject = new GraphicsObject_Sprite(Mesh::Name::SPRITE,
-			ShaderObject::Name::Sprite,
-			Image::GreenBird,  //anything
-			Rect(100, 100, 100, 100));
-		pFontSprite = new FontSprite(pGraphicsObject);
-		GameObjectMan::Add(pFontSprite, GameObjectMan::GetRoot());
-
-		pFontSprite->Set(FontSprite::Name::TestMessage, "Press 1 to switch scene ", Glyph::Name::Arial36pt, 20, 40, color2);
-
-		// ---------------------------------
-		// Create Animation
-		// ---------------------------------
-
-		// load skeleton
-		SkelMan::Add(Skel::Name::ChickenBot, "ChickenBot.s.proto.azul");
-		SkelMan::Add(Skel::Name::Mousey, "Mousey.s.proto.azul");
-
-		AnimTime delta = 0.5f * AnimTime(AnimTime::Duration::FILM_24_FRAME);
-
-		Vec3 AnimLightColor(2.5f, 2.5f, 2.5f);
-		Vec3 AnimLightPos(0.0f, 6.0f, 6.0f);
-	
-		AnimMan::Add(AnimMan::Name::Gangnam, "Mousey_Gangnam.a.proto.azul","Mousey_SillyDancing.a.proto.azul", Skel::Name::Mousey, TextureObject::Name::Mousey, Mesh::Name::Mousey, AnimLightColor, AnimLightPos);
-		AnimMan::SetPos(AnimMan::Name::Gangnam, -3.5f, 0.0f, 0.0f);
-		AnimMan::SetUniformScale(AnimMan::Name::Gangnam, 3.5f);
-		AnimMan::SetPivotTotalRot(AnimMan::Name::Gangnam, Rot3::ZYX, -MATH_PI / 2, 0.0f, -MATH_PI / 2);
-		//AnimMan::SetPrefabPivot(AnimMan::Name::Gangnam);
-
-		//AnimMan::Add(AnimMan::Name::Run, "Mousey_Run.a.proto.azul", Skel::Name::Mousey, TextureObject::Name::Mousey, Mesh::Name::Mousey, AnimLightColor, AnimLightPos);
-		//AnimMan::SetPos(AnimMan::Name::Run, -1.2f, 0.0f, 1.2f);
-		//AnimMan::SetUniformScale(AnimMan::Name::Run, 2.5f);
-		//AnimMan::SetPivotTotalRot(AnimMan::Name::Run, Rot3::ZYX, -MATH_PI / 2, 0.0f, -MATH_PI / 2);
-		//AnimMan::SetPrefabPivot(AnimMan::Name::Run);
-		return true;
+		assert(this->pSceneContext == nullptr);
+		this->pSceneContext = new GameSceneContext();
+		return this->pSceneContext->SetState(*this, GameSceneContext::Scene::Scene1);
 	}
 
 	//-----------------------------------------------------------------------------
@@ -278,71 +60,26 @@ namespace Azul
 		// capture time
 		AnimTime tCurr = this->globalTimer.Toc();
 
-		CameraNodeMan::Update();
-
-		// ------------------------------------
-		// Animate Me
-		// ------------------------------------
-	
-		/*static bool useHitBackShotUp = false;
-		
-		short tState = GetAsyncKeyState('T');
-		short rState = GetAsyncKeyState('R');
-		
-		
-		if (tState & 0x8000)
+		if (this->pSceneContext)
 		{
-			if (!useHitBackShotUp)
+			const SHORT oneState = GetAsyncKeyState('1');
+			if (oneState & 0x0001)
 			{
-				useHitBackShotUp = true;
+				this->pSceneContext->SetState(*this, GameSceneContext::Scene::Scene1);
+			}
 
-				AnimController* pWalkCtrl = AnimMan::Find(AnimMan::Name::Walk);
-				if (pWalkCtrl)
-				{
-					pWalkCtrl->SetClip(Clip::Name::HitBack_ChickenBot);
-				}
+			const SHORT twoState = GetAsyncKeyState('2');
+			if (twoState & 0x0001)
+			{
+				this->pSceneContext->SetState(*this, GameSceneContext::Scene::Scene2);
+			}
 
-				AnimController* pRunCtrl = AnimMan::Find(AnimMan::Name::Run);
-				if (pRunCtrl)
-				{
-					pRunCtrl->SetClip(Clip::Name::ShotUp_ChickenBot);
-				}
+			GameSceneState* pState = this->pSceneContext->GetState();
+			if (pState)
+			{
+				pState->Update(*this, tCurr, tDelta);
 			}
 		}
-		else if (rState & 0x8000)
-		{
-			if (useHitBackShotUp)
-			{
-				useHitBackShotUp = false;
-
-				AnimController* pWalkCtrl = AnimMan::Find(AnimMan::Name::Walk);
-				if (pWalkCtrl)
-				{
-					pWalkCtrl->SetClip(Clip::Name::Walk_ChickenBot);
-				}
-
-				AnimController* pRunCtrl = AnimMan::Find(AnimMan::Name::Run);
-				if (pRunCtrl)
-				{
-					pRunCtrl->SetClip(Clip::Name::Run_ChickenBot);
-				}
-			}
-		}*/
-
-		AnimMan::BlendAnimation(tDelta);
-        AnimMan::Update(tDelta);
-
-		//static int count = 0;
-		//count++;
-		//char buff[20];
-		//memset(buff, 0x0, 20);
-		//sprintf_s(buff, 20, "Test: %d", count);
-		//pFontSprite1->UpdateMessage(buff);
-
-		// ------------------------------------
-		// Update GameObjects
-		// ------------------------------------
-		GameObjectMan::Update(tCurr);
 
 	}
 
@@ -367,18 +104,12 @@ namespace Azul
 	//-----------------------------------------------------------------------------
 	void Game::UnloadContent()
 	{
-		HierarchyTableMan::Destroy();
-		JointTableMan::Destroy();
-		AnimMan::Destroy();
-		ClipMan::Destroy();
-		SkelMan::Destroy();
-		GlyphMan::Destroy();
-		ImageMan::Destroy();
-		GameObjectMan::Destroy();
-		ShaderObjectNodeMan::Destroy();
-		TexNodeMan::Destroy();
-		MeshNodeMan::Destroy();
-		CameraNodeMan::Destroy();
+		if (this->pSceneContext)
+		{
+			this->pSceneContext->Shutdown(*this);
+			delete this->pSceneContext;
+			this->pSceneContext = nullptr;
+		}
 
 	}
 
