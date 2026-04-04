@@ -216,6 +216,7 @@
     <ClInclude Include="GameObjectControlled.h" />
     <ClInclude Include="GameObjectAnimSkin.h" />
     <ClInclude Include="GameObjectRigidBody.h" />
+    <ClInclude Include="GameObjectTerrain.h" />
     <ClInclude Include="GameObjectSprite.h" />
     <ClInclude Include="GameSceneContext.h" />
     <ClInclude Include="GameSceneState.h" />
@@ -262,6 +263,7 @@
     <ClInclude Include="GraphicsObject_LightTexture.h" />
     <ClInclude Include="scene1.h" />
     <ClInclude Include="scene2.h" />
+    <ClInclude Include="scene3.h" />
     <ClInclude Include="ShaderObjectNodeCompareStrategyEnumName.h" />
     <ClInclude Include="ShaderObject_ConstColor.h" />
     <ClInclude Include="ShaderObject_ConstColorLight.h" />
@@ -377,6 +379,7 @@
     <ClCompile Include="GameObjectControlled.cpp" />
     <ClCompile Include="GameObjectAnimSkin.cpp" />
     <ClCompile Include="GameObjectRigidBody.cpp" />
+    <ClCompile Include="GameObjectTerrain.cpp" />
     <ClCompile Include="GameObjectSprite.cpp" />
     <ClCompile Include="Glyph.cpp" />
     <ClCompile Include="GlyphCompareStrategyEnumName.cpp" />
@@ -476,6 +479,7 @@
     <ClCompile Include="StringThis.cpp" />
     <ClCompile Include="scene1.cpp" />
     <ClCompile Include="scene2.cpp" />
+    <ClCompile Include="scene3.cpp" />
     <ClCompile Include="TexNode.cpp" />
     <ClCompile Include="TexNodeCompareStrategyEnumName.cpp" />
     <ClCompile Include="TexNodeMan.cpp" />

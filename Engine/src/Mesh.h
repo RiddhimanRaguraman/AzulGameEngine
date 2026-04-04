@@ -268,6 +268,8 @@ namespace Azul
 		Crownboi21,
 		Crownboi22,
 		Crownboi23,
+		Terrain,
+		SkyBox,
 		NOT_INITIALIZED
 		};
 

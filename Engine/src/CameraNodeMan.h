@@ -32,6 +32,7 @@ namespace Azul
 
 		static void         SetCurrent(Camera::Name name, Camera::Type type);
 		static Camera*		GetCurrent(Camera::Type type);
+		static void			SetMoveSpeed(float speed);
 
 	private:            // only singleton can create/destroy itself
 		CameraNodeMan(int reserveNum, int reserveGrow);
@@ -51,6 +52,9 @@ namespace Azul
 
 		Camera* pCamOrthographic;
 		Camera* pCamPerspective;
+
+		float moveSpeed;
+		float zoomSpeed;
 	};
 }
 

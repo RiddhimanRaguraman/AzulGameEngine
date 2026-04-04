@@ -19,7 +19,9 @@ namespace Azul
         : ManBase(new DLinkMan(), new DLinkMan(), reserveNum, reserveGrow),
         poNodeCompare(nullptr),
         pCamOrthographic(nullptr),
-        pCamPerspective(nullptr)
+        pCamPerspective(nullptr),
+        moveSpeed(0.1f),
+        zoomSpeed(0.05f)
     {
         // Pre?fill reserve pool so we dont new()/delete() at runtime
         this->proFillReservedPool(reserveNum);
@@ -195,6 +197,13 @@ namespace Azul
         }
     }
 
+    void CameraNodeMan::SetMoveSpeed(float speed)
+    {
+        CameraNodeMan* pMan = CameraNodeMan::privGetInstance();
+        assert(pMan);
+        pMan->moveSpeed = speed;
+    }
+
     Camera* CameraNodeMan::GetCurrent(Camera::Type type)
     {
         Camera* pCam = nullptr;
@@ -235,8 +244,8 @@ namespace Azul
         Vec3  upNorm, forwardNorm, rightNorm;
         pCam->GetHelper(up, tar, pos, upNorm, forwardNorm, rightNorm);
 
-        const float moveSpeed = 0.1f;
-        const float zoomSpeed = 0.05f;    // adjust to taste
+        const float _moveSpeed = this->moveSpeed;
+        const float _zoomSpeed = this->zoomSpeed;
         bool    moved = false;
 
         // Mouse input: separate control per button
@@ -345,7 +354,7 @@ namespace Azul
         // Keyboard input for camera translation (existing code)
         if (GetKeyState('W') & 0x8000)
         {
-            Vec3 delta = forwardNorm * moveSpeed;
+            Vec3 delta = forwardNorm * _moveSpeed;
             pos = pos + delta;
             tar = tar + delta;
             up  = up  + delta;
@@ -354,7 +363,7 @@ namespace Azul
 
         if (GetKeyState('S') & 0x8000)
         {
-            Vec3 delta = forwardNorm * moveSpeed;
+            Vec3 delta = forwardNorm * _moveSpeed;
             pos = pos - delta;
             tar = tar - delta;
             up  = up  - delta;
@@ -363,7 +372,7 @@ namespace Azul
 
         if (GetKeyState('A') & 0x8000)
         {
-            Vec3 delta = rightNorm * moveSpeed;
+            Vec3 delta = rightNorm * _moveSpeed;
             pos = pos - delta;
             tar = tar - delta;
             up  = up  - delta;
@@ -372,7 +381,7 @@ namespace Azul
 
         if (GetKeyState('D') & 0x8000)
         {
-            Vec3 delta = rightNorm * moveSpeed;
+            Vec3 delta = rightNorm * _moveSpeed;
             pos = pos + delta;
             tar = tar + delta;
             up  = up  + delta;
@@ -381,7 +390,7 @@ namespace Azul
 
         if (GetKeyState('E') & 0x8000)
         {
-            Vec3 delta = upNorm * moveSpeed;
+            Vec3 delta = upNorm * _moveSpeed;
             pos = pos + delta;
             tar = tar + delta;
             up  = up  + delta;
@@ -390,7 +399,7 @@ namespace Azul
 
         if (GetKeyState('Q') & 0x8000)
         {
-            Vec3 delta = upNorm * moveSpeed;
+            Vec3 delta = upNorm * _moveSpeed;
             pos = pos - delta;
             tar = tar - delta;
             up  = up  - delta;
@@ -400,12 +409,12 @@ namespace Azul
         if (GetKeyState('C') & 0x8000)
         {
             float fov = pCam->GetFovY();
-            pCam->SetFovY(fov - zoomSpeed);
+            pCam->SetFovY(fov - _zoomSpeed);
         }
         if (GetKeyState('Z') & 0x8000)
         {
             float fov = pCam->GetFovY();
-            pCam->SetFovY(fov + zoomSpeed);
+            pCam->SetFovY(fov + _zoomSpeed);
         }
 
         // if anything changed, push it back into the camera

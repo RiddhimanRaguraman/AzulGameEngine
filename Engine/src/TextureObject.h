@@ -35,6 +35,8 @@ namespace Azul
 			Drax,
 			SpiderBot,
 			Halo,
+			Terrain,
+			SkyBox,
 			Test0,
 			Test1,
 			Test2,

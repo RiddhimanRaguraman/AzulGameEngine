@@ -5,6 +5,7 @@
 // Enable data
 #define SAMPLER_sA
 #define SRV_tMainTexture
+#define CBV_psUVMatrix
 
 #include "ShaderMappings.hlsli"
 
@@ -27,7 +28,14 @@ struct VertexShaderOutput
 // --------------------------------------------------------
 float4 main(VertexShaderOutput inData) : SV_TARGET
 {
-    return tMainTexture.Sample(sSamplerA, inData.tex);
+    float4 uv_vec;
+    uv_vec.xy = inData.tex.xy;
+    uv_vec.z = 0.0f;
+    uv_vec.w = 1.0f;
+
+    float4 uv_corrected = mul(uv_vec, psUVMatrix);
+
+    return tMainTexture.Sample(sSamplerA, uv_corrected.xy);
 }
 
 

@@ -21,10 +21,17 @@ namespace Azul
 		ShaderObject::Name shaderName,
 		TextureObject::Name textName)
 		: GraphicsObject(meshName, shaderName),
-		pTex(nullptr)
+		pTex(nullptr),
+		uvMatrix(Identity)
 	{
 		this->pTex = TexNodeMan::Find(textName);
 		assert(pTex);
+	}
+
+	void GraphicsObject_FlatTexture::SetUVRepeat(float uRepeat, float vRepeat)
+	{
+		Scale s(uRepeat, vRepeat, 1.0f);
+		this->uvMatrix = s;
 	}
 
 
@@ -45,6 +52,7 @@ namespace Azul
 		pShaderObj->ActivateShader();
 		pShaderObj->ActivateCBV();
 		pShaderObj->TransferWorldViewProj(CameraNodeMan::GetCurrent(Camera::Type::PERSPECTIVE_3D), this->poWorld);
+		pShaderObj->TransferUVMatrix(&this->uvMatrix);
 		
 	}
 

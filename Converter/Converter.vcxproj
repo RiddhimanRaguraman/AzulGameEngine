@@ -163,6 +163,7 @@
     <ClInclude Include="GLTF_Helper.h" />
     <ClInclude Include="meshDataConverter.h" />
     <ClInclude Include="PyramidMesh.h" />
+    <ClInclude Include="ProceduralMeshes.h" />
     <ClInclude Include="Skeleton.h" />
     <ClInclude Include="SphereMesh.h" />
     <ClInclude Include="SpriteMesh.h" />
@@ -186,6 +187,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="meshDataConverter.cpp" />
     <ClCompile Include="PyramidMesh.cpp" />
+    <ClCompile Include="ProceduralMeshes.cpp" />
     <ClCompile Include="Skeleton.cpp" />
     <ClCompile Include="SphereMesh.cpp" />
     <ClCompile Include="SpriteMesh.cpp" />

@@ -288,6 +288,9 @@
     <ClInclude Include="GameObjectRigidBody.h">
       <Filter>src\GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="GameObjectTerrain.h">
+      <Filter>src\GameObject</Filter>
+    </ClInclude>
     <ClInclude Include="GameObjectControlled.h">
       <Filter>src\GameObject</Filter>
     </ClInclude>
@@ -621,6 +624,9 @@
     <ClInclude Include="scene1.h">
       <Filter>src\Scenes</Filter>
     </ClInclude>
+    <ClInclude Include="scene3.h">
+      <Filter>src\Scenes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -789,6 +795,9 @@
       <Filter>src\Anim</Filter>
     </ClCompile>
     <ClCompile Include="GameObjectRigidBody.cpp">
+      <Filter>src\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectTerrain.cpp">
       <Filter>src\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="GameObjectControlled.cpp">
@@ -1053,6 +1062,9 @@
       <Filter>src\Shader</Filter>
     </ClCompile>
     <ClCompile Include="scene2.cpp">
+      <Filter>src\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="scene3.cpp">
       <Filter>src\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="scene1.cpp">

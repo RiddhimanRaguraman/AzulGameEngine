@@ -7,6 +7,7 @@
 
 #include "ShaderObject.h"
 #include "BufferCBV_vs.h"
+#include "BufferCBV_ps.h"
 #include "BufferVertexShader_vs.h"
 #include "BufferPixelShader_ps.h"
 #include "BufferInputLayout_ia.h"
@@ -26,6 +27,7 @@ namespace Azul
 		virtual void ActivateShader() override;
 		virtual void ActivateCBV() override;
 		virtual void TransferWorldViewProj(Camera *pCam, Mat4 *pWorld) override;
+		virtual void TransferUVMatrix(Mat4* pMat) override;
 
 		// ---------------------------------------------
 		// 	   Data:
@@ -34,6 +36,7 @@ namespace Azul
 		BufferCBV_vs ConstantBuff_Projection;
 		BufferCBV_vs ConstantBuff_World;
 		BufferCBV_vs ConstantBuff_View;
+		BufferCBV_ps ConstantBuff_UVMatrix;
 
 		BufferVertexShader_vs VertexShader;
 		BufferPixelShader_ps  PixelShader;

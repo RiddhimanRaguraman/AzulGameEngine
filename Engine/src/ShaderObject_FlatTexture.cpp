@@ -28,6 +28,7 @@ namespace Azul
 		ConstantBuff_Projection { sizeof(Mat4) },
 		ConstantBuff_World { sizeof(Mat4) },
 		ConstantBuff_View { sizeof(Mat4) },
+		ConstantBuff_UVMatrix { sizeof(Mat4) },
 		VertexShader { sizeof(g_FlatTexture_VxShader), (void *) g_FlatTexture_VxShader },
 		PixelShader { sizeof(g_FlatTexture_PxShader),(void *) g_FlatTexture_PxShader },
 		InputLayout { sizeof(g_FlatTexture_VxShader),(void *) g_FlatTexture_VxShader,ShaderObject_FlatTextureDesc,sizeof(ShaderObject_FlatTextureDesc) }
@@ -47,6 +48,7 @@ namespace Azul
 		this->ConstantBuff_World.SetActive(ConstantVSBufferSlot::vsWorld);
 		this->ConstantBuff_View.SetActive(ConstantVSBufferSlot::vsView);
 		this->ConstantBuff_Projection.SetActive(ConstantVSBufferSlot::vsProjection);
+		this->ConstantBuff_UVMatrix.SetActive(ConstantPSBufferSlot::psSpriteUVMatrix);
 	}
 
 	void ShaderObject_FlatTexture::TransferWorldViewProj(Camera *pCam, Mat4 *pWorld)
@@ -58,6 +60,12 @@ namespace Azul
 		this->ConstantBuff_View.Transfer(&pCam->getViewMatrix());
 		this->ConstantBuff_Projection.Transfer(&pCam->getProjMatrix());
 
+	}
+
+	void ShaderObject_FlatTexture::TransferUVMatrix(Mat4* pMat)
+	{
+		assert(pMat);
+		this->ConstantBuff_UVMatrix.Transfer(pMat);
 	}
 
 }

@@ -22,6 +22,7 @@ namespace Azul
 		GraphicsObject_FlatTexture &operator = (const GraphicsObject_FlatTexture &) = delete;
 		virtual ~GraphicsObject_FlatTexture() = default;
 
+		void SetUVRepeat(float uRepeat, float vRepeat);
 
 		// Rendermaterial contract
 		virtual void SetState() override;
@@ -34,6 +35,7 @@ namespace Azul
 		// ---------------------
 
 		TextureObject *pTex;
+		Mat4 uvMatrix;
 
 	};
 

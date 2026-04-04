@@ -17,6 +17,7 @@
 #include "ConvertJoint.h"
 #include "ConvertHierarchy.h"
 #include "ConvertSkin.h"
+#include "ProceduralMeshes.h"
 
 int main()
 {
@@ -31,6 +32,11 @@ int main()
 
 	Azul::CreateCubeMesh();  
 	Azul::CreateSpriteMesh();  
+	Azul::CreateFlatPlane("FlatPlane", 50.0f, 1.0f, 1.0f);
+	Azul::CreateSkyBox("SkyBox", 500.0f, 1.0f, 1.0f);
+	Azul::CreateTextureTGA("DayLight.tga", "SkyBox");
+	Azul::CreateTerrain("HeightMap.tga", "Terrain", 200.0f, 20.0f, 0.0f, 1, 1);
+	Azul::CreateTextureTGA("Grass_New.tga", "Terrain");
 
 	Azul::CreateTexturePNG("Header.png", "Header");  
 	Azul::ConvertXML("HeaderMetrics.xml", "HeaderMetrics");  

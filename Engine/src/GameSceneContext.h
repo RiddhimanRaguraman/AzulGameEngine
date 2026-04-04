@@ -8,6 +8,7 @@ namespace Azul
 	class Game;
 	class Scene1;
 	class Scene2;
+	class Scene3;
 
 	class GameSceneContext
 	{
@@ -15,7 +16,8 @@ namespace Azul
 		enum class Scene
 		{
 			Scene1,
-			Scene2
+			Scene2,
+			Scene3
 		};
 
 	public:
@@ -33,6 +35,7 @@ namespace Azul
 		GameSceneState* pState;
 		Scene1* pScene1;
 		Scene2* pScene2;
+		Scene3* pScene3;
 		Scene activeScene;
 		bool isLoaded;
 	};
