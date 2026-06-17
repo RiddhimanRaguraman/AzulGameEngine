@@ -4,7 +4,7 @@ REM If you find a way to enhance, please return updates to
 REM ekeenan2@cdm.depaul.edu
 REM
 
-REM cleanup root director
+REM cleanup project directory
 
     if exist ..\Azul rmdir /S /Q ..\Azul
     if exist *.user del /F /s *.user
@@ -15,24 +15,24 @@ REM cleanup root director
     if exist x64 rmdir /S /Q x64
     if exist ipch rmdir /S /Q ipch
     if exist .vs rmdir /S /Q .vs
-    if exist Temp12 rmdir /S /Q Temp12
-    if exist Temp13 rmdir /S /Q Temp13
+    if exist *.vcxproj del /F /S *.vcxproj
+    if exist *.vcxproj.filters del /F /S *.vcxproj.filters
+
+    if exist shaders\compiled rmdir /S /Q shaders\compiled
 
     if exist *.suo del /F /S /A:H *.suo
     if exist *.sdf del /F /S *.sdf
     if exist *.suo del /F /S *.suo
     if exist *.db del /F *.db
-    if exist *.bin del /F *.bin
 
-  
 REM walk through subdirectories delete Release & Debug subs
 
 for /d %%D in (*) do (
-	REM echo %%~fD
-	if exist %%~D\*.bin del /F %%~D\*.bin
-	if exist %%~D\Debug rmdir /S /Q %%~D\Debug
-	if exist %%~D\Release rmdir /S /Q %%~D\Release
-	if exist %%~D\x64 rmdir /S /Q %%~D\x64
-	if exist %%~D\Azul rmdir /S /Q %%~D\Azul
-	if exist %%~D\*.user del /F /s %%~D\*.user
+    REM echo %%~fD
+    if exist %%~D\*.bin del /F %%~D\*.bin
+    if exist %%~D\Debug rmdir /S /Q %%~D\Debug
+    if exist %%~D\Release rmdir /S /Q %%~D\Release
+    if exist %%~D\x64 rmdir /S /Q %%~D\x64
+    if exist %%~D\Azul rmdir /S /Q %%~D\Azul
+    if exist %%~D\*.user del /F /s %%~D\*.user
 )
