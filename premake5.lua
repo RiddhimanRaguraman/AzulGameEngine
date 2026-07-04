@@ -46,6 +46,11 @@ local function applyCommonProject()
     conformancemode       "On"
     forceincludes         { "Framework.h" }
     multiprocessorcompile "On"
+    -- /ZI (Edit-and-Continue) silently disables /MP, so Debug DLLs would
+    -- compile single-threaded. Force plain /Zi (ProgramDatabase) so /MP
+    -- actually parallelizes across cores. Trade-off: no editing code mid
+    -- debug session, but every DLL builds in parallel.
+    editandcontinue       "Off"
     staticruntime         "Off"
     rtti                  "On"
     buildoptions          { "/sdl" }
@@ -302,16 +307,31 @@ if wsName == "engine" then
             targetdir(outDir())
             objdir   ("%{wks.location}/x64/" .. testName .. "/%{cfg.buildcfg}")
 
-            -- The hand-written test projects exclude every individual
-            -- test-case file and only build the *Group / *Test / main
-            -- driver files. Match that pattern.
-            files {
-                "Libs/" .. libName .. "/Test/main.cpp",
-                "Libs/" .. libName .. "/Test/**Group.cpp",
-                "Libs/" .. libName .. "/Test/**Test.cpp",
-                "Libs/" .. libName .. "/Test/**Test.h",
-                "Libs/" .. libName .. "/Test/_UnitTestConfiguration.h"
-            }
+            -- The suites come in two shapes. Math bundles its test-case
+            -- .cpp files into "*_Group.cpp" unity files that #include them;
+            -- File/PugiXml/PCSTree have no groups and each case is its own
+            -- translation unit. A static "*Group/*Test/main" glob breaks
+            -- both: it drops every File/PCSTree case (leaving main.cpp to
+            -- run zero tests), and for Math it compiles Vec*_SampleTest.cpp
+            -- both standalone and via the group that #includes it (LNK2005).
+            --
+            -- So derive the file list: scan the "*_Group.cpp" unity files,
+            -- collect every .cpp they #include, and compile everything else
+            -- -- the groups, main, and any standalone driver (Mat4Test.cpp,
+            -- the numbered File cases, the *_Check.cpp PCSTree cases).
+            local testDir = "Libs/" .. libName .. "/Test/"
+            local included = {}
+            for _, g in ipairs(os.matchfiles(testDir .. "*_Group.cpp")) do
+                for inc in (io.readfile(g) or ""):gmatch('#include%s+"([^"]-%.[cC][pP][pP])"') do
+                    included[inc:match("[^/\\]+$"):lower()] = true
+                end
+            end
+            files { testDir .. "**.h" }
+            for _, f in ipairs(os.matchfiles(testDir .. "**.cpp")) do
+                if not included[f:match("[^/\\]+$"):lower()] then
+                    files { f }
+                end
+            end
             -- Keep on-disk layout (Test/) in Solution Explorer
             vpaths { ["*"] = "Libs/" .. libName }
 
