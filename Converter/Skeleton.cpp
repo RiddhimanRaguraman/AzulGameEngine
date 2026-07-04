@@ -348,7 +348,7 @@ namespace Azul
 
 		HierarchyData hB;
 		hB.Deserialize(hA_proto);
-		hB.Print("hb");
+		//hB.Print("hb");
 
 		// -------------------------------
 		//  Write to file
