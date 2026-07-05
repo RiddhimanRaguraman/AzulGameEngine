@@ -5,7 +5,6 @@
 #include <d3dcompiler.h>
 #include "StateRenderTargetView.h"
 #include "StateDirectXMan.h"
-#include "BufferTexture2D.h"
 
 namespace Azul
 {
@@ -30,8 +29,10 @@ namespace Azul
 		hr = pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID *)&pTexBackBuffer);
 		assert(SUCCEEDED(hr));
 
-		BufferTexture2D backBuffer(pTexBackBuffer);
-		this->privInitialize(backBuffer.GetID3D11Texture2D());
+		// CreateRenderTargetView takes its own reference on the backbuffer,
+		// so release our GetBuffer() reference once the view is made.
+		this->privInitialize(pTexBackBuffer);
+		SafeRelease(pTexBackBuffer);
 	}
 
 	void StateRenderTargetView::Clear(const Vec4 _vRGBAColor)

@@ -4,6 +4,7 @@
 
 #ifndef STATE_RENDER_TARGET_VIEW_H
 #define STATE_RENDER_TARGET_VIEW_H
+#include "EngineDLLInterface.h"
 
 #include <d3d11.h>
 #include "MathEngine.h"
@@ -11,7 +12,7 @@
 
 namespace Azul
 {
-	class StateRenderTargetView
+	class AZUL_ENGINE_LIBRARY_API StateRenderTargetView
 	{
 	public:
 		StateRenderTargetView();

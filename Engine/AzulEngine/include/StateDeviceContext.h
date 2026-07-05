@@ -4,12 +4,13 @@
 
 #ifndef STATE_DEVICE_CONTEXT_H
 #define STATE_DEVICE_CONTEXT_H
+#include "EngineDLLInterface.h"
 
 #include <d3d11.h>
 
 namespace Azul
 {
-	class StateDeviceContext
+	class AZUL_ENGINE_LIBRARY_API StateDeviceContext
 	{
 	public:
 		StateDeviceContext();

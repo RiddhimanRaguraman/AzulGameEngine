@@ -2,23 +2,23 @@
 // Copyright 2025, Ed Keenan, all rights reserved.
 //----------------------------------------------------------------------------
 
-#ifndef STATE_FACTORY_H
-#define STATE_FACTORY_H
+#ifndef STATE_DEBUG_H
+#define STATE_DEBUG_H
+#include "EngineDLLInterface.h"
 
 #include <d3d11.h>
 
 namespace Azul
 {
-	class StateFactory
+	class AZUL_ENGINE_LIBRARY_API StateDebug
 	{
 	public:
-		StateFactory();
-		StateFactory(const StateFactory &) = delete;
-		StateFactory &operator = (const StateFactory &) = delete;
-		virtual ~StateFactory();
+		StateDebug();
+		StateDebug(const StateDebug &) = delete;
+		StateDebug &operator = (const StateDebug &) = delete;
+		virtual ~StateDebug();
 
-
-		IDXGIFactory *poDXGFactory;
+		ID3D11Debug *poD3DDebug;
 	};
 
 }

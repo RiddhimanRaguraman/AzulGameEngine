@@ -3,7 +3,6 @@
 //----------------------------------------------------------------------------
 
 #include "StateDirectXMan.h"
-#include "Engine.h"
 #include "StateAdapter.h"
 #include "StateAdapterOutput.h"
 #include "StateFactory.h"

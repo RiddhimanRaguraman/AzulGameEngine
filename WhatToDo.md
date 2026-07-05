@@ -303,12 +303,35 @@ Because of the DLL/template caveat (Section 5), the ECS core headers are **publi
 >   `src/EngineDLLMain.cpp` (`DllMain`).
 > - Wired the Engine app in premake: `links { "AzulEngine" }`, `defines AZUL_ENGINE_USE_DLL`,
 >   `includedirs "Engine/AzulEngine/include"`. premake generates the app→DLL ProjectReference.
-> - `UberBuildMe.bat` regenerates cleanly; full solution builds with **zero new errors** (only
->   the pre-existing `PugiXmlTest` "cannot open File.h" failures remain — unrelated).
-> - **Next increment:** move the first internals group (`State*` RHI) into the DLL **by editing
->   `premake5.lua`** (move those files into the AzulEngine project's file globs, add its deps —
->   d3d11, Math/Manager — to the AzulEngine project), tag each public class with
->   `AZUL_ENGINE_LIBRARY_API`, regenerate, build-verify. Then `Buffer*`, then loaders/managers.
+> - `UberBuildMe.bat` regenerates cleanly; full solution builds **0 errors** (also fixed the
+>   long-standing `PugiXmlTest` "cannot open File.h" by adding File include/define/link to that
+>   test in premake).
+>
+> **Increment 1 DONE (2026-07-04): `State*` RHI moved into `AzulEngine.dll`.**
+> - Physically `git mv`'d all 30 `State*` files: headers → `Engine/AzulEngine/include/`,
+>   sources → `Engine/AzulEngine/src/` (premake's directory globs handle membership; the app
+>   still resolves `#include "StateXxx.h"` via its `..\AzulEngine\include` path).
+> - Tagged all 15 `State*` classes with `AZUL_ENGINE_LIBRARY_API` (+ `#include
+>   "EngineDLLInterface.h"` in each header).
+> - Removed two cross-dependencies so the DLL doesn't reach back into the app:
+>   (a) deleted an unused `#include "Engine.h"` from `StateDirectXMan.cpp`;
+>   (b) refactored `StateRenderTargetView::Initialize()` to use the backbuffer texture directly
+>   + `SafeRelease` instead of the `BufferTexture2D` wrapper (behaviorally identical).
+> - premake: `AzulEngine` now `links { "Framework_items", "Math", "d3d11", "dxgi",
+>   "d3dcompiler" }`, `includedirs Libs/Math/include`, `defines MATH_USE_DLL`.
+> - Verified: 15 `State*.obj` in the DLL, 0 in the app; `StateDirectXMan::*` exported from
+>   `AzulEngineDebugX64.dll`; full solution builds 0 errors.
+> - **Not yet runtime-tested** (DirectX windowed app — needs a real run to confirm the RTV
+>   refactor visually; the change follows the standard D3D11 ref-count pattern).
+> - **Folder convention (premake `addTreeIncludes`):** the `AzulEngine` project auto-adds every
+>   non-obj subfolder under `Engine/AzulEngine` as an include dir; the Engine app auto-adds only
+>   `Engine/AzulEngine/include/**` (public). So new feature subfolders (e.g. `src/State`,
+>   future `src/Buffer`) need **no premake edit** — just drop files in and regenerate. Keep
+>   public headers under `include/`, implementation under `src/<Feature>/`.
+> - **Next increment:** `Buffer*` group (many use `StateDirectXMan` — already in the DLL — plus
+>   `textureData.h`/`ShaderMappings.h` data headers and Math). Same recipe: move files into
+>   `Engine/AzulEngine/{include,src/Buffer}`, tag classes, add any new deps, regenerate,
+>   build-verify.
 
 **Goal:** carve the monolithic `Engine.exe` into `AzulEngine` (DLL, all internals) + `Game`
 (the app, gameplay only), with a small public facade. No behavior change, no ECS yet.

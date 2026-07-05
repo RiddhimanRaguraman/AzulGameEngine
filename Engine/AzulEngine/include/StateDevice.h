@@ -2,22 +2,24 @@
 // Copyright 2025, Ed Keenan, all rights reserved.
 //----------------------------------------------------------------------------
 
-#ifndef STATE_DEBUG_H
-#define STATE_DEBUG_H
+#ifndef STATE_DEVICE_H
+#define STATE_DEVICE_H
+#include "EngineDLLInterface.h"
 
 #include <d3d11.h>
 
 namespace Azul
 {
-	class StateDebug
+	class AZUL_ENGINE_LIBRARY_API StateDevice
 	{
 	public:
-		StateDebug();
-		StateDebug(const StateDebug &) = delete;
-		StateDebug &operator = (const StateDebug &) = delete;
-		virtual ~StateDebug();
+		StateDevice();
+		StateDevice(const StateDevice &) = delete;
+		StateDevice &operator = (const StateDevice &) = delete;
+		virtual ~StateDevice();
 
-		ID3D11Debug *poD3DDebug;
+
+		ID3D11Device *poD3DDevice;
 	};
 
 }

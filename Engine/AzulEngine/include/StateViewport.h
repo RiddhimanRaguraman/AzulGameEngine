@@ -4,12 +4,13 @@
 
 #ifndef STATE_VIEWPORT_H
 #define STATE_VIEWPORT_H
+#include "EngineDLLInterface.h"
 
 #include <d3d11.h>
 
 namespace Azul
 {
-	class StateViewport
+	class AZUL_ENGINE_LIBRARY_API StateViewport
 	{
 	public:
 		StateViewport();

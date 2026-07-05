@@ -89,6 +89,18 @@ local function applyCommonProject()
     }
 end
 
+-- Auto-add a folder and every subfolder under it as include dirs, so new
+-- feature folders need no premake edit (skips the obj tree). Applies to the
+-- project currently being configured.
+local function addTreeIncludes(root)
+    includedirs { root }
+    for _, dir in ipairs(os.matchdirs(root .. "/**")) do
+        if not dir:find("obj") then
+            includedirs { dir }
+        end
+    end
+end
+
 ------------------------------------------------------------------------
 -- Workspace
 ------------------------------------------------------------------------
@@ -387,18 +399,23 @@ if wsName == "engine" then
         vpaths { ["*"] = "Engine/AzulEngine" }
 
         includedirs {
-            "Engine/AzulEngine/include",
-            "Shared/Framework_items"
+            "Shared/Framework_items",
+            "Libs/Math/include"
         }
+        -- Every subfolder of the engine DLL (include/, src/, src/State, future
+        -- feature folders) becomes an include dir automatically.
+        addTreeIncludes("Engine/AzulEngine")
 
         applyCommonProject()
         applyTargetName()
 
         warnings "Everything"   -- /Wall to match the other DLL libs
 
-        defines { "AZUL_ENGINE_LIBRARY_EXPORTS", "AZUL_ENGINE_USE_DLL" }
+        -- MATH_USE_DLL: State* RHI (e.g. StateRenderTargetView) uses Vec4.
+        defines { "AZUL_ENGINE_LIBRARY_EXPORTS", "AZUL_ENGINE_USE_DLL", "MATH_USE_DLL" }
 
-        links { "Framework_items" }
+        -- Framework + Math DLLs, plus the DirectX libs the RHI wraps.
+        links { "Framework_items", "Math", "d3d11", "dxgi", "d3dcompiler" }
 
     ------------------------------------------------------
     -- Engine application
@@ -437,11 +454,14 @@ if wsName == "engine" then
             "Libs/PCSTree/include",
             "Libs/Manager/include",
             "Libs/PugiXml/include",
-            "Engine/AzulEngine/include",
             "Engine/shaders/Compiled",
             "Engine/src",
             "Engine/DXTex/include"
         }
+        -- The app sees only AzulEngine's PUBLIC headers (include/ and its
+        -- subfolders) -- never src/ internals. New public subfolders are
+        -- picked up automatically.
+        addTreeIncludes("Engine/AzulEngine/include")
 
         applyCommonProject()
 

@@ -4,13 +4,14 @@
 
 #ifndef STATE_DEPTH_STENCIL_VIEW_H
 #define STATE_DEPTH_STENCIL_VIEW_H
+#include "EngineDLLInterface.h"
 
 #include <d3d11.h>
 #include "StateDepthStencilBuffer.h"
 
 namespace Azul
 {
-	class StateDepthStencilView
+	class AZUL_ENGINE_LIBRARY_API StateDepthStencilView
 	{
 	public:
 		StateDepthStencilView();

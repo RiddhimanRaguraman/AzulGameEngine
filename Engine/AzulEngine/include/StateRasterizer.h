@@ -4,12 +4,13 @@
 
 #ifndef STATE_RASTERIZER_H
 #define STATE_RASTERIZER_H
+#include "EngineDLLInterface.h"
 
 #include <d3d11.h>
 
 namespace Azul
 {
-	class StateRasterizer
+	class AZUL_ENGINE_LIBRARY_API StateRasterizer
 	{
 	public:
 		StateRasterizer();

@@ -4,12 +4,13 @@
 
 #ifndef STATE_SWAP_CHAIN_H
 #define STATE_SWAP_CHAIN_H
+#include "EngineDLLInterface.h"
 
 #include <d3d11.h>
 
 namespace Azul
 {
-	class StateSwapChain
+	class AZUL_ENGINE_LIBRARY_API StateSwapChain
 	{
 	public:
 		StateSwapChain();

@@ -3,6 +3,7 @@
 //--------------------------------------------------------------
 #ifndef STATE_DIRECT_X_MAN_H
 #define STATE_DIRECT_X_MAN_H
+#include "EngineDLLInterface.h"
 
 #include <d3d11.h>
 
@@ -14,7 +15,7 @@
 
 namespace Azul
 {
-	class StateDirectXMan
+	class AZUL_ENGINE_LIBRARY_API StateDirectXMan
 	{
 	public:
 
