@@ -423,6 +423,34 @@ Because of the DLL/template caveat (Section 5), the ECS core headers are **publi
 > `Image`/`ImageMan`/`Sprite`) if it's engine (check for `GameObject` back-deps first). Same
 > recipe. **Still no runtime test — run the app to confirm rendering.**
 
+> **Increment 5 DONE (2026-07-05): FULL engine/game split — clean Rebuild 0 errors.**
+> User revised the boundary: **only user-authored files stay in the app** — `Game`, `GameMan`,
+> `GameHelper`, scenes (`GameSceneContext`/`GameSceneState`, `scene1/2/3`), and the Prefab
+> derivatives (`Prefab_Rotate/Pendulum/Pulse/FiboSpiral/RoatateSpin`, `PrefabAnim`). **Everything
+> else is engine → `AzulEngine.dll`.**
+> - Moved into the DLL (folders `GameObject/`, `Graphics/`, `UI/`, `Prefab/`, root):
+>   `GameObject`(+all subclasses)+`GameObjectMan`, `GraphicsObject`(+`_Abstract`+all `_*`),
+>   `AnimMan`(+compare), `Glyph`/`GlyphMan`/`GlyphProto`/`FontSprite`/`Image`/`ImageMan`,
+>   `Prefab`/`Prefab_Abstract`/`Prefab_Pivot`, `CameraNodeMan`, `Engine` base, `Rect`,
+>   `BoundingSphere`, `Ritter`, `WindowColors`.
+> - **Decoupled render states from the app:** `GraphicsObject_*` used
+>   `GameMan::GetGame()->mBlendState*/mStateRasterizer*` (app). Added `Engine::GetInstance()`
+>   (static, set in the `Engine` ctor) and rerouted the 6 `GraphicsObject_*` to it — the states
+>   live on the `Engine` base (now in the DLL), so no app dependency. Removed stale `Game.h`
+>   includes from `GameObject*.cpp`.
+> - **Moved HLSL shader compilation into `AzulEngine`** (premake `addShaderCompilation` helper) —
+>   fixes the build-order deadlock (DLL builds before the app, and the `ShaderObject_*` need the
+>   generated `*.Px.h/*.Cx.h`). Removed the shader `FxCompile` + `.hlsl` globs from the app.
+>   Clean `Rebuild` now regenerates shader headers in the DLL first. **Known follow-up RESOLVED.**
+> - **Fixed a real tagging bug: CRLF line endings** broke the `$` anchor for no-base
+>   class/struct decls (e.g. `GameObjectMan`, `Rect`), so they weren't exported → app LNK2019.
+>   Re-tagged all DLL headers with a CRLF-tolerant, base-optional pattern (also fixed plain
+>   `struct`s). premake: added `PCSTree` (for `GameObject : PCSNode`).
+> - **Result: DLL = 158 objs (the whole engine), app = 14 source files (the game). Clean
+>   Rebuild 0 errors.** DLL 5.4 MB, Engine.exe 1.35 MB.
+> - **STILL NOT RUNTIME-TESTED** — everything compiles/links; run the app to confirm rendering
+>   (esp. the `Engine::GetInstance()` reroute and the earlier `StateRenderTargetView` refactor).
+
 **Goal:** carve the monolithic `Engine.exe` into `AzulEngine` (DLL, all internals) + `Game`
 (the app, gameplay only), with a small public facade. No behavior change, no ECS yet.
 

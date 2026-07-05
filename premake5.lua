@@ -119,7 +119,9 @@ local function addShaderCompilation(shaderDir)
                     shadermodel            "5.0"
                     shadertype             (shaderTypes[suffix])
                     shadervariablename     ("g_" .. stem .. "_" .. suffix .. "Shader")
-                    shaderheaderfileoutput ("../Shaders/Compiled/" .. base .. ".h")
+                    -- Solution-relative so it lands in Engine/shaders/Compiled (the
+                    -- include dir) regardless of where the AzulEngine project lives.
+                    shaderheaderfileoutput ("$(SolutionDir)Engine/shaders/Compiled/" .. base .. ".h")
                 filter { "files:" .. file, "configurations:Debug" }
                     shaderobjectfileoutput ("$(OutDir)" .. base .. "_d.cso")
                 filter { "files:" .. file, "configurations:Release" }
@@ -409,25 +411,25 @@ if wsName == "engine" then
     --   The engine module boundary (WhatToDo.md Phase 0).
     --   Engine internals (RHI, loaders, managers) migrate into this
     --   DLL over the ECS migration; the Engine app links it and only
-    --   sees the public facade headers in Engine/AzulEngine/include.
+    --   sees the public facade headers in Libs/AzulEngine/include.
     ------------------------------------------------------
     project "AzulEngine"
         kind     "SharedLib"
-        location "Engine/AzulEngine"
+        location "Libs/AzulEngine"
         targetdir(outDir())
         objdir   (objOut())
 
         files {
-            "Engine/AzulEngine/src/**.cpp",
-            "Engine/AzulEngine/src/**.h",
-            "Engine/AzulEngine/include/**.h",
+            "Libs/AzulEngine/src/**.cpp",
+            "Libs/AzulEngine/src/**.h",
+            "Libs/AzulEngine/include/**.h",
             "Engine/shaders/original/**.hlsl",
             "Engine/shaders/original/**.hlsli"
         }
-        removefiles { "Engine/AzulEngine/**.vcxproj*" }
+        removefiles { "Libs/AzulEngine/**.vcxproj*" }
 
         -- Mirror the on-disk layout (include/, src/) in Solution Explorer
-        vpaths { ["*"] = "Engine/AzulEngine" }
+        vpaths { ["*"] = "Libs/AzulEngine" }
 
         includedirs {
             "Shared/Framework_items",
@@ -446,7 +448,7 @@ if wsName == "engine" then
         }
         -- Every subfolder of the engine DLL (include/, src/, src/State, future
         -- feature folders) becomes an include dir automatically.
-        addTreeIncludes("Engine/AzulEngine")
+        addTreeIncludes("Libs/AzulEngine")
 
         applyCommonProject()
         applyTargetName()
@@ -523,7 +525,7 @@ if wsName == "engine" then
         -- The app sees only AzulEngine's PUBLIC headers (include/ and its
         -- subfolders) -- never src/ internals. New public subfolders are
         -- picked up automatically.
-        addTreeIncludes("Engine/AzulEngine/include")
+        addTreeIncludes("Libs/AzulEngine/include")
 
         applyCommonProject()
 
