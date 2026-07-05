@@ -2,14 +2,13 @@
 // Copyright 2025, Ed Keenan, all rights reserved.
 //----------------------------------------------------------------------------
 
+#include "Engine.h"
 #include <d3d11.h>
 #include "MathEngine.h"
 #include "Mesh.h"
-#include "GraphicsObject_ConstColor.h"
-#include "Engine.h"
-#include "StateDirectXMan.h"
+#include "GraphicsObject_FlatTexture.h"
 #include "CameraNodeMan.h"
-#include "GameMan.h"
+#include "TexNodeMan.h"
 
 namespace Azul
 {
@@ -18,46 +17,53 @@ namespace Azul
 	//    CPU ---> GPU
 	//    World, View, Projection Matrix
 	// ---------------------------------------------
-	GraphicsObject_ConstColor::GraphicsObject_ConstColor(Mesh::Name meshName,
+	GraphicsObject_FlatTexture::GraphicsObject_FlatTexture(Mesh::Name meshName,
 		ShaderObject::Name shaderName,
-		Vec3& LightColor)
+		TextureObject::Name textName)
 		: GraphicsObject(meshName, shaderName),
-		poLightColor(nullptr)
+		pTex(nullptr),
+		uvMatrix(Identity)
 	{
-		poLightColor = new Vec3(LightColor);
-		assert(poLightColor);
+		this->pTex = TexNodeMan::Find(textName);
+		assert(pTex);
 	}
 
-	GraphicsObject_ConstColor::~GraphicsObject_ConstColor()
+	void GraphicsObject_FlatTexture::SetUVRepeat(float uRepeat, float vRepeat)
 	{
-		delete poLightColor;
+		Scale s(uRepeat, vRepeat, 1.0f);
+		this->uvMatrix = s;
 	}
 
-	void GraphicsObject_ConstColor::SetState()
+
+	void GraphicsObject_FlatTexture::SetState()
 	{
-		GameMan::GetGame()->mStateRasterizerWireCull.Activate();
+		
+		this->pTex->ActivateTexture();
+
+		if (this->pTex->HasAlpha())
+		{ //Alpha is printed only if the Texture has alpha
+			Engine::GetInstance()->mBlendStateAlpha.Activate();
+		}
 	}
 
-	void GraphicsObject_ConstColor::SetDataGPU()
+	void GraphicsObject_FlatTexture::SetDataGPU()
 	{
 		pMesh->ActivateMesh();
 		pShaderObj->ActivateShader();
 		pShaderObj->ActivateCBV();
-
 		pShaderObj->TransferWorldViewProj(CameraNodeMan::GetCurrent(Camera::Type::PERSPECTIVE_3D), this->poWorld);
-		pShaderObj->TransferColor(this->poLightColor);
-
+		pShaderObj->TransferUVMatrix(&this->uvMatrix);
 		
 	}
 
-	void GraphicsObject_ConstColor::Draw()
+	void GraphicsObject_FlatTexture::Draw()
 	{
 		pMesh->RenderIndexBuffer();
 	}
 
-	void GraphicsObject_ConstColor::RestoreState()
+	void GraphicsObject_FlatTexture::RestoreState()
 	{
-		GameMan::GetGame()->mStateRasterizerSolidCull.Activate();
+		Engine::GetInstance()->mBlendStateOff.Activate();
 	}
 
 }

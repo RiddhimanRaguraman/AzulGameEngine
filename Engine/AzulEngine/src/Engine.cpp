@@ -16,6 +16,14 @@ namespace Azul
 {
 	LPCSTR g_WindowClassName = "EngineWindowClass";
 
+	Engine *Engine::posInstance = nullptr;
+
+	Engine *Engine::GetInstance()
+	{
+		assert(posInstance);
+		return posInstance;
+	}
+
 	Engine::Engine(const char *_pName, int _width, int _height)
 		:
 		mWindowHandle(0),
@@ -33,6 +41,7 @@ namespace Azul
 		mWindowWidth(_width),
 		mWindowHeight(_height)
 	{
+		posInstance = this;
 	}
 
 	// --------------------------------------------------------------

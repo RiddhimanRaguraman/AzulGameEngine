@@ -18,11 +18,13 @@
 #include "Skel.h"
 #include "HierarchyTable.h"
 
+#include "EngineDLLInterface.h"
+
 namespace Azul
 {
 	class GameObjectAnimSkin;
 
-    class AnimMan : public ManBase
+    class AZUL_ENGINE_LIBRARY_API AnimMan : public ManBase
     {
     public:
         enum class Name

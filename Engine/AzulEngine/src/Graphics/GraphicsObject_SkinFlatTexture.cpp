@@ -2,12 +2,12 @@
 // Copyright 2026, Ed Keenan, all rights reserved.
 //----------------------------------------------------------------------------
 
+#include "Engine.h"
 #include "MathEngine.h"
 #include "Mesh.h"
 #include "MeshProto.h"
 #include "GraphicsObject_SkinFlatTexture.h"
 #include "CameraNodeMan.h"
-#include "GameMan.h"
 #include "TexNodeMan.h"
 //#include "BufferSRV_cs.h"
 
@@ -42,7 +42,7 @@ namespace Azul
 		// Future - settings to directX
 		// say make it wireframe or change culling mode
 		this->pTex->ActivateTexture();
-		GameMan::GetGame()->mStateRasterizerSolidCull.Activate();
+		Engine::GetInstance()->mStateRasterizerSolidCull.Activate();
 	}
 
 	void GraphicsObject_SkinFlatTexture::SetDataGPU()
@@ -71,7 +71,7 @@ namespace Azul
 
 	void GraphicsObject_SkinFlatTexture::RestoreState()
 	{
-		GameMan::GetGame()->mBlendStateOff.Activate();
+		Engine::GetInstance()->mBlendStateOff.Activate();
 	}
 
 }

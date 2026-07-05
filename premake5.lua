@@ -101,6 +101,35 @@ local function addTreeIncludes(root)
     end
 end
 
+-- HLSL shader compilation (model 5.0). Emits a bytecode header per shader
+-- (g_<Stem>_<Suffix>Shader) plus a _d.cso/.cso. Applies to the project being
+-- configured. Lives with the ShaderObject_* classes (now in AzulEngine) so the
+-- generated headers exist before the DLL compiles -- the app used to own this,
+-- which deadlocked once the shaders moved into the DLL.
+--   ColorByVertex.Px.hlsl -> g_ColorByVertex_PxShader
+local function addShaderCompilation(shaderDir)
+    local shaderTypes = { Px = "Pixel", Vx = "Vertex", Cx = "Compute" }
+    if os.isdir(shaderDir) then
+        for _, file in ipairs(os.matchfiles(shaderDir .. "/*.hlsl")) do
+            local base   = path.getbasename(file)
+            local stem, suffix = base:match("(.+)%.(%w+)$")
+            if stem and shaderTypes[suffix] then
+                filter { "files:" .. file }
+                    buildaction            "FxCompile"
+                    shadermodel            "5.0"
+                    shadertype             (shaderTypes[suffix])
+                    shadervariablename     ("g_" .. stem .. "_" .. suffix .. "Shader")
+                    shaderheaderfileoutput ("../Shaders/Compiled/" .. base .. ".h")
+                filter { "files:" .. file, "configurations:Debug" }
+                    shaderobjectfileoutput ("$(OutDir)" .. base .. "_d.cso")
+                filter { "files:" .. file, "configurations:Release" }
+                    shaderobjectfileoutput ("$(OutDir)" .. base .. ".cso")
+                filter {}
+            end
+        end
+    end
+end
+
 ------------------------------------------------------------------------
 -- Workspace
 ------------------------------------------------------------------------
@@ -391,7 +420,9 @@ if wsName == "engine" then
         files {
             "Engine/AzulEngine/src/**.cpp",
             "Engine/AzulEngine/src/**.h",
-            "Engine/AzulEngine/include/**.h"
+            "Engine/AzulEngine/include/**.h",
+            "Engine/shaders/original/**.hlsl",
+            "Engine/shaders/original/**.hlsli"
         }
         removefiles { "Engine/AzulEngine/**.vcxproj*" }
 
@@ -410,6 +441,7 @@ if wsName == "engine" then
             "Libs/File/include",
             "Libs/Manager/include",
             "Libs/AnimTime/include",
+            "Libs/PCSTree/include",
             "Engine/shaders/Compiled"
         }
         -- Every subfolder of the engine DLL (include/, src/, src/State, future
@@ -434,7 +466,7 @@ if wsName == "engine" then
         -- Framework + engine DLLs (Math/File/Manager/AnimTime/ProtoBuf), the protobuf
         -- shared items + runtime, and the DirectX libs the RHI wraps.
         links {
-            "Framework_items", "Math", "File", "Manager", "AnimTime", "ProtoBuf",
+            "Framework_items", "Math", "File", "Manager", "AnimTime", "PCSTree", "ProtoBuf",
             "ProtoBuf_pb_items", "ProtoBuf_lib_items",
             "d3d11", "dxgi", "d3dcompiler", "winmm"
         }
@@ -446,6 +478,9 @@ if wsName == "engine" then
             libdirs { "Shared/ProtoBuf_lib_items/libs/release" }
             links   { "libprotobuf-lite", "abseil_dll", "libutf8_range", "libutf8_validity" }
         filter {}
+
+        -- Shaders live with their ShaderObject_* classes in the DLL.
+        addShaderCompilation("Engine/shaders/original")
 
     ------------------------------------------------------
     -- Engine application
@@ -460,10 +495,7 @@ if wsName == "engine" then
         files {
             "Engine/src/**.h",
             "Engine/src/**.cpp",
-            "Engine/src/**.cd",
-            "Engine/shaders/original/**.hlsl",
-            "Engine/shaders/original/**.hlsli",
-            "Engine/shaders/Compiled/**.h"
+            "Engine/src/**.cd"
         }
         removefiles { "Engine/src/**.vcxproj*" }
 
@@ -540,38 +572,6 @@ if wsName == "engine" then
             }
 
         filter {}
-
-        ----------------------------------------------------
-        -- HLSL shader compilation: model 5.0, header out,
-        -- _d.cso for debug / .cso for release, named by suffix.
-        --
-        -- The variable name strips the type suffix:
-        --   ColorByVertex.Px.hlsl -> g_ColorByVertex_PxShader
-        ----------------------------------------------------
-        local shaderTypes = { Px = "Pixel", Vx = "Vertex", Cx = "Compute" }
-        local shaderDir = "Engine/shaders/original"
-        if os.isdir(shaderDir) then
-            for _, file in ipairs(os.matchfiles(shaderDir .. "/*.hlsl")) do
-                local base   = path.getbasename(file)             -- e.g. ColorByVertex.Px
-                local stem, suffix = base:match("(.+)%.(%w+)$")   -- ColorByVertex , Px
-                if stem and shaderTypes[suffix] then
-                    filter { "files:" .. file }
-                        buildaction            "FxCompile"
-                        shadermodel            "5.0"
-                        shadertype             (shaderTypes[suffix])
-                        shadervariablename     ("g_" .. stem .. "_" .. suffix .. "Shader")
-                        shaderheaderfileoutput ("../Shaders/Compiled/" .. base .. ".h")
-
-                    filter { "files:" .. file, "configurations:Debug" }
-                        shaderobjectfileoutput ("$(OutDir)" .. base .. "_d.cso")
-
-                    filter { "files:" .. file, "configurations:Release" }
-                        shaderobjectfileoutput ("$(OutDir)" .. base .. ".cso")
-
-                    filter {}
-                end
-            end
-        end
 end
 
 ------------------------------------------------------------------------

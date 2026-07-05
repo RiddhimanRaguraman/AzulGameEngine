@@ -3,54 +3,43 @@
 //----------------------------------------------------------------------------
 
 #include <d3d11.h>
-#include "Game.h"
-#include "Engine.h"
 #include "MathEngine.h"
 #include "Mesh.h"
-#include "GraphicsObject_Wireframe.h"
-#include "ShaderObject.h"
+#include "GraphicsObject_ConstColor.h"
+#include "Engine.h"
 #include "StateDirectXMan.h"
 #include "CameraNodeMan.h"
-#include "GameMan.h"
 
 namespace Azul
 {
-
 	// ---------------------------------------------
 	//  Transfer data to the constant buffer
 	//    CPU ---> GPU
 	//    World, View, Projection Matrix
 	// ---------------------------------------------
-	GraphicsObject_Wireframe::GraphicsObject_Wireframe(Mesh::Name meshName,
+	GraphicsObject_ConstColor::GraphicsObject_ConstColor(Mesh::Name meshName,
 		ShaderObject::Name shaderName,
-		Vec3& rColor)
+		Vec3& LightColor)
 		: GraphicsObject(meshName, shaderName),
 		poLightColor(nullptr)
-
 	{
-		assert(pMesh);
-		assert(pShaderObj);
-		assert(poWorld);
-
-		this->poLightColor = new Vec3(rColor);
+		poLightColor = new Vec3(LightColor);
 		assert(poLightColor);
-
 	}
 
-	GraphicsObject_Wireframe::~GraphicsObject_Wireframe()
+	GraphicsObject_ConstColor::~GraphicsObject_ConstColor()
 	{
-		delete this->poLightColor;
+		delete poLightColor;
 	}
 
-	void GraphicsObject_Wireframe::SetState()
+	void GraphicsObject_ConstColor::SetState()
 	{
-		GameMan::GetGame()->mStateRasterizerWireNoCull.Activate();
+		Engine::GetInstance()->mStateRasterizerWireCull.Activate();
 	}
 
-	void GraphicsObject_Wireframe::SetDataGPU()
+	void GraphicsObject_ConstColor::SetDataGPU()
 	{
 		pMesh->ActivateMesh();
-
 		pShaderObj->ActivateShader();
 		pShaderObj->ActivateCBV();
 
@@ -60,16 +49,16 @@ namespace Azul
 		
 	}
 
-	void GraphicsObject_Wireframe::Draw()
+	void GraphicsObject_ConstColor::Draw()
 	{
 		pMesh->RenderIndexBuffer();
 	}
 
-	void GraphicsObject_Wireframe::RestoreState()
+	void GraphicsObject_ConstColor::RestoreState()
 	{
-		GameMan::GetGame()->mStateRasterizerSolidCull.Activate();
+		Engine::GetInstance()->mStateRasterizerSolidCull.Activate();
 	}
 
 }
 
-// ---  End of File ---
+// --- End of File ---

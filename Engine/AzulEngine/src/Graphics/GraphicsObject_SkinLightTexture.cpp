@@ -2,13 +2,13 @@
 // Copyright 2026, Ed Keenan, all rights reserved.
 //----------------------------------------------------------------------------
 
+#include "Engine.h"
 #include <d3d11.h>
 #include "MathEngine.h"
 #include "Mesh.h"
 #include "MeshProto.h"
 #include "GraphicsObject_SkinLightTexture.h"
 #include "CameraNodeMan.h"
-#include "GameMan.h"
 #include "TexNodeMan.h"
 
 namespace Azul
@@ -54,7 +54,7 @@ namespace Azul
 		// Future - settings to directX
 		// say make it wireframe or change culling mode
 		this->pTex->ActivateTexture();
-		GameMan::GetGame()->mStateRasterizerSolidCull.Activate();
+		Engine::GetInstance()->mStateRasterizerSolidCull.Activate();
 	}
 
 	void GraphicsObject_SkinLightTexture::SetDataGPU()
@@ -82,7 +82,7 @@ namespace Azul
 
 	void GraphicsObject_SkinLightTexture::RestoreState()
 	{
-		GameMan::GetGame()->mBlendStateOff.Activate();
+		Engine::GetInstance()->mBlendStateOff.Activate();
 	}
 
 }

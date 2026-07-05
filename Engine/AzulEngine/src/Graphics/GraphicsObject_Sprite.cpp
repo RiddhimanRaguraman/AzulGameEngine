@@ -2,12 +2,12 @@
 // Copyright 2026, Ed Keenan, all rights reserved.
 //----------------------------------------------------------------------------
 
+#include "Engine.h"
 #include <d3d11.h>
 #include "MathEngine.h"
 #include "Mesh.h"
 #include "GraphicsObject_Sprite.h"
 #include "CameraNodeMan.h"
-#include "GameMan.h"
 #include "ImageMan.h"
 
 namespace Azul
@@ -123,7 +123,7 @@ namespace Azul
 
 		if (this->pTexture->HasAlpha())
 		{
-			GameMan::GetGame()->mBlendStateAlpha.Activate();
+			Engine::GetInstance()->mBlendStateAlpha.Activate();
 		}
 	}
 
@@ -155,7 +155,7 @@ namespace Azul
 
 	void GraphicsObject_Sprite::RestoreState()
 	{
-		GameMan::GetGame()->mBlendStateOff.Activate();
+		Engine::GetInstance()->mBlendStateOff.Activate();
 	}
 }
 

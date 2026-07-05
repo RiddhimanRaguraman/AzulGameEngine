@@ -4,7 +4,6 @@
 
 #include "MathEngine.h"
 #include "GameObject.h"
-#include "Game.h"
 #include "Camera.h"
 
 namespace Azul

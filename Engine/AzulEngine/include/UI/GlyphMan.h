@@ -8,9 +8,11 @@
 #include "ManBase.h"
 #include "Glyph.h"
 
+#include "EngineDLLInterface.h"
+
 namespace Azul
 {
-    class GlyphMan : public ManBase
+    class AZUL_ENGINE_LIBRARY_API GlyphMan : public ManBase
     {
         //----------------------------------------------------------------------
         // Static Methods

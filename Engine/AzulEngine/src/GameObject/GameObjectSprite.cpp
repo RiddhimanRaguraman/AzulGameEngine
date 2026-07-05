@@ -2,7 +2,6 @@
 // Copyright 2026, Ed Keenan, all rights reserved.
 //----------------------------------------------------------------------------
 
-#include "Game.h"
 #include "MathEngine.h"
 #include "GameObjectSprite.h"
 #include "GraphicsObject_Sprite.h"

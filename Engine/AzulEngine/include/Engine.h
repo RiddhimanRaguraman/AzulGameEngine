@@ -4,6 +4,7 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
+#include "EngineDLLInterface.h"
 #include <d3d11.h>
 #include "StateDepthStencil.h"
 #include "StateRasterizer.h"
@@ -15,10 +16,15 @@
 
 namespace Azul
 {
-	class Engine
+	class AZUL_ENGINE_LIBRARY_API Engine
 	{
 	public:
 		static const BOOL ENABLE_VSYNC = true;
+
+		// DLL-side access to the running engine instance (set in the ctor).
+		// Lets engine code in the DLL reach the shared render states without
+		// going through the app-side GameMan/Game.
+		static Engine *GetInstance();
 
 	public:
 		Engine(const char *pName, int width, int height);
@@ -62,6 +68,8 @@ namespace Azul
 		const int  mWindowWidth;
 		const int  mWindowHeight;
 
+	private:
+		static Engine *posInstance;
 	};
 
 }
