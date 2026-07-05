@@ -352,8 +352,53 @@ if wsName == "engine" then
             end
 
             links { libName, "Math", "Framework_items" }
+
+            -- PugiXml's test suite does file I/O through the File DLL wrapper,
+            -- so it needs File's headers, its USE_DLL import switch, and the link.
+            if libName == "PugiXml" then
+                includedirs { "Libs/File/include" }
+                defines     { "FILE_USE_DLL" }
+                links       { "File" }
+            end
     end
     group ""
+
+    ------------------------------------------------------
+    -- AzulEngine core DLL
+    --   The engine module boundary (WhatToDo.md Phase 0).
+    --   Engine internals (RHI, loaders, managers) migrate into this
+    --   DLL over the ECS migration; the Engine app links it and only
+    --   sees the public facade headers in Engine/AzulEngine/include.
+    ------------------------------------------------------
+    project "AzulEngine"
+        kind     "SharedLib"
+        location "Engine/AzulEngine"
+        targetdir(outDir())
+        objdir   (objOut())
+
+        files {
+            "Engine/AzulEngine/src/**.cpp",
+            "Engine/AzulEngine/src/**.h",
+            "Engine/AzulEngine/include/**.h"
+        }
+        removefiles { "Engine/AzulEngine/**.vcxproj*" }
+
+        -- Mirror the on-disk layout (include/, src/) in Solution Explorer
+        vpaths { ["*"] = "Engine/AzulEngine" }
+
+        includedirs {
+            "Engine/AzulEngine/include",
+            "Shared/Framework_items"
+        }
+
+        applyCommonProject()
+        applyTargetName()
+
+        warnings "Everything"   -- /Wall to match the other DLL libs
+
+        defines { "AZUL_ENGINE_LIBRARY_EXPORTS", "AZUL_ENGINE_USE_DLL" }
+
+        links { "Framework_items" }
 
     ------------------------------------------------------
     -- Engine application
@@ -392,6 +437,7 @@ if wsName == "engine" then
             "Libs/PCSTree/include",
             "Libs/Manager/include",
             "Libs/PugiXml/include",
+            "Engine/AzulEngine/include",
             "Engine/shaders/Compiled",
             "Engine/src",
             "Engine/DXTex/include"
@@ -414,6 +460,7 @@ if wsName == "engine" then
             "MATH_USE_DLL",
             "ANIM_TIME_USE_DLL",
             "FILE_USE_DLL",
+            "AZUL_ENGINE_USE_DLL",
             "DIRECTX_TEX_IMPORT",
             "PROTOBUF_USE_DLLS",
             "ABSL_CONSUME_DLL",
@@ -421,6 +468,7 @@ if wsName == "engine" then
         }
 
         links {
+            "AzulEngine",
             "Math", "AnimTime", "File", "Manager", "PCSTree", "PugiXml", "ProtoBuf",
             "Framework_items", "ProtoBuf_pb_items", "ProtoBuf_lib_items",
             "d3d11", "dxgi", "d3dcompiler", "winmm"

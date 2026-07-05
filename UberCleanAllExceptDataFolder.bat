@@ -2,7 +2,7 @@ REM
 REM Keenan's Hack to remove intermediate files
 REM Designed to work for C++ or C# visual studio projects
 REM
-REM If you find a way to enhance, 
+REM If you find a way to enhance,
 REM please return updates to ekeenan2@cdm.depaul.edu
 REM
 
@@ -24,8 +24,12 @@ REM cleanup root directory
     if exist x64 rmdir /S /Q x64
     if exist ipch rmdir /S /Q ipch
     if exist .vs rmdir /S /Q .vs
-    REM del /F /q .\Data\*.azul -- dont delete the azul files
-    del /F /q .\Data\*.json 
+    if exist *.sln del /F /S *.sln
+    if exist *.vcxproj del /F /S *.vcxproj
+    if exist *.vcxproj.filters del /F /S *.vcxproj.filters
+    if exist *.vcxitems del /F /S *.vcxitems
+    if exist *.vcxitems.filters del /F /S *.vcxitems.filters
+    REM del /F /q .\Data\*.azul -- dont delete the azul files    del /F /q .\Data\*.json
     del /F /q .\Data\*.xml
     del /F /q .\Libs\ProtoBuf\src\*.pb.*
 
@@ -79,13 +83,9 @@ cd ..
 
 REM back to Solution Dir
 cd ..
-          
-cd Shared\ProtoBuf_Items
+
+cd Shared\ProtoBuf_pb_items
 if exist *.pb.* del /F *.pb.*
 
 REM back to Solution Dir
 cd .\..\..
-
-
-
-
