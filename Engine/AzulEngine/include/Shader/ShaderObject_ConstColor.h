@@ -1,0 +1,57 @@
+//--------------------------------------------------------------
+// Copyright 2025, Ed Keenan, all rights reserved.
+//--------------------------------------------------------------
+
+#ifndef SHADER_OBJECT_CONST_COLOR_H
+#define SHADER_OBJECT_CONST_COLOR_H
+#include "EngineDLLInterface.h"
+
+#include "ShaderObject.h"
+#include "BufferCBV_vs.h"
+#include "BufferCBV_ps.h"
+#include "BufferVertexShader_vs.h"
+#include "BufferPixelShader_ps.h"
+#include "BufferInputLayout_ia.h"
+
+namespace Azul
+{
+
+	class AZUL_ENGINE_LIBRARY_API ShaderObject_ConstColor : public ShaderObject
+	{
+	public:
+
+	public:
+		ShaderObject_ConstColor() = delete;
+		ShaderObject_ConstColor(const ShaderObject_ConstColor &) = delete;
+		ShaderObject_ConstColor &operator = (const ShaderObject_ConstColor &) = delete;
+		virtual ~ShaderObject_ConstColor();
+
+		ShaderObject_ConstColor(ShaderObject_ConstColor::Name _name);
+
+		virtual void ActivateShader() override;
+		virtual void ActivateCBV() override;
+		virtual void TransferWorldViewProj(Camera *pCam, Mat4 *pWorld) override;
+
+		virtual void TransferColor(Vec3 *pColor) override;
+
+		// ---------------------------------------------
+		// 	   Data:
+		// ---------------------------------------------
+
+		BufferCBV_vs ConstantBuff_Projection;
+		BufferCBV_vs ConstantBuff_World;
+		BufferCBV_vs ConstantBuff_View;
+
+		BufferCBV_ps ConstantBuff_Color;
+
+		BufferVertexShader_vs VertexShader;
+		BufferPixelShader_ps  PixelShader;
+		BufferInputLayout_ia  InputLayout;
+
+	};
+
+}
+
+#endif
+
+// --- End of File ---

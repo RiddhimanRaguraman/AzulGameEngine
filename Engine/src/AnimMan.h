@@ -43,7 +43,11 @@ namespace Azul
             Shuffle,
             Idle
         };
-        
+
+        // AnimMan is gameplay glue and stays in the app, so it owns its own
+        // Name->string conversion (was a StringThis overload before the DLL split).
+        static char *NameToString(Name status);
+
         static void Create(int reserveNum = 0, int reserveGrow = 1);
         static void Destroy();
 

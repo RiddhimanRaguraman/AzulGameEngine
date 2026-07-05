@@ -400,7 +400,17 @@ if wsName == "engine" then
 
         includedirs {
             "Shared/Framework_items",
-            "Libs/Math/include"
+            "Shared/ProtoBuf_pb_items",
+            "Shared/ProtoBuf_lib_items",
+            "Shared/ProtoBuf_lib_items/absl",
+            "Shared/ProtoBuf_lib_items/utf8_range",
+            "Libs/ProtoBuf/include",
+            "Libs/ProtoBuf/src",
+            "Libs/Math/include",
+            "Libs/File/include",
+            "Libs/Manager/include",
+            "Libs/AnimTime/include",
+            "Engine/shaders/Compiled"
         }
         -- Every subfolder of the engine DLL (include/, src/, src/State, future
         -- feature folders) becomes an include dir automatically.
@@ -411,11 +421,31 @@ if wsName == "engine" then
 
         warnings "Everything"   -- /Wall to match the other DLL libs
 
-        -- MATH_USE_DLL: State* RHI (e.g. StateRenderTargetView) uses Vec4.
-        defines { "AZUL_ENGINE_LIBRARY_EXPORTS", "AZUL_ENGINE_USE_DLL", "MATH_USE_DLL" }
+        -- Same import switches as the Engine app. MANAGER_USE_DLL / PCSTREE_USE_DLL /
+        -- PUGI_XML_USE_DLL are intentionally NOT set: Manager-template-derived helper
+        -- classes (TexNodeCompareStrategyEnumName, etc.) compile locally; USE_DLL would
+        -- flip their template base to dllimport and break linking.
+        defines {
+            "AZUL_ENGINE_LIBRARY_EXPORTS", "AZUL_ENGINE_USE_DLL",
+            "MATH_USE_DLL", "FILE_USE_DLL", "ANIM_TIME_USE_DLL",
+            "PROTOBUF_USE_DLLS", "ABSL_CONSUME_DLL", "PROTOBUF_ENGINE_USE_DLLS"
+        }
 
-        -- Framework + Math DLLs, plus the DirectX libs the RHI wraps.
-        links { "Framework_items", "Math", "d3d11", "dxgi", "d3dcompiler" }
+        -- Framework + engine DLLs (Math/File/Manager/AnimTime/ProtoBuf), the protobuf
+        -- shared items + runtime, and the DirectX libs the RHI wraps.
+        links {
+            "Framework_items", "Math", "File", "Manager", "AnimTime", "ProtoBuf",
+            "ProtoBuf_pb_items", "ProtoBuf_lib_items",
+            "d3d11", "dxgi", "d3dcompiler", "winmm"
+        }
+
+        filter "configurations:Debug"
+            libdirs { "Shared/ProtoBuf_lib_items/libs/debug" }
+            links   { "libprotobuf-lited", "abseil_dll", "libutf8_range", "libutf8_validity" }
+        filter "configurations:Release"
+            libdirs { "Shared/ProtoBuf_lib_items/libs/release" }
+            links   { "libprotobuf-lite", "abseil_dll", "libutf8_range", "libutf8_validity" }
+        filter {}
 
     ------------------------------------------------------
     -- Engine application

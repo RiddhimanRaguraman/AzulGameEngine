@@ -328,10 +328,100 @@ Because of the DLL/template caveat (Section 5), the ECS core headers are **publi
 >   `Engine/AzulEngine/include/**` (public). So new feature subfolders (e.g. `src/State`,
 >   future `src/Buffer`) need **no premake edit** — just drop files in and regenerate. Keep
 >   public headers under `include/`, implementation under `src/<Feature>/`.
-> - **Next increment:** `Buffer*` group (many use `StateDirectXMan` — already in the DLL — plus
->   `textureData.h`/`ShaderMappings.h` data headers and Math). Same recipe: move files into
->   `Engine/AzulEngine/{include,src/Buffer}`, tag classes, add any new deps, regenerate,
->   build-verify.
+> **Increment 2 DONE (2026-07-04): `SafeRelease` de-macroed, headers foldered, 18 `Buffer*`
+> moved into the DLL.**
+> - `SafeRelease` macro replaced by an inline template `Azul::SafeRelease<T>(T*&)` in
+>   `include/SafeRelease.h` (the sanctioned generic-template exception; `StateDirectXMan.h`
+>   includes it, so no call-site changes across the 40 uses).
+> - Header folders now mirror `src/`: `include/State/` (15 State headers), `include/Buffer/`
+>   (18 buffer headers), `include/ShaderMappings.h` (shared enum header, was in the app),
+>   core headers (`EngineDLLInterface.h`, `EngineInfo.h`, `SafeRelease.h`) at `include/` root.
+> - Moved **18 of 21** buffers into `include/Buffer/` + `src/Buffer/`, tagged with
+>   `AZUL_ENGINE_LIBRARY_API`. Removed cross-deps: deleted misplaced
+>   `assert(... == ShaderObject::GetLatestProfile_*())` debug asserts (+ the `ShaderObject.h`
+>   includes) from 5 shader buffers, dropped unused `ShaderObject.h` from the 2 InputLayout
+>   buffers and an unused `Mesh.h` from `BufferUAV_cs.h`.
+> - **Deferred (3):** the texture cluster `BufferTexture2D`, `BufferSRV_ps`,
+>   `BufferTextureSRV_ps` stay in the app for now — they pull `Libs/ProtoBuf/include/textureData.h`,
+>   which drags the whole protobuf/abseil dependency. Move them **with `TextureObject`** in a
+>   later increment that brings protobuf into the DLL.
+> - Verified by clean `Rebuild`: 18 buffer objs in the DLL, 3 (texture cluster) in the app,
+>   208 State+Buffer symbols exported, **0 errors**.
+> **Increment 3 PARTIAL (2026-07-04): protobuf enabled in the DLL + texture buffers moved.**
+> - `AzulEngine` now links the full protobuf stack + `File` + `Manager` (premake: ProtoBuf
+>   includes/libs, `FILE_USE_DLL`, `PROTOBUF_USE_DLLS`/`ABSL_CONSUME_DLL`/
+>   `PROTOBUF_ENGINE_USE_DLLS`; **`MANAGER_USE_DLL` intentionally NOT set**, same as the app).
+> - Moved the deferred texture-buffer cluster (`BufferTexture2D`, `BufferSRV_ps`,
+>   `BufferTextureSRV_ps`) into `include/Buffer` + `src/Buffer`. **All 21 buffers now in the DLL.**
+>   Proved protobuf-in-DLL works (proto enum crosses the boundary fine). Build 0 errors.
+>
+> **BLOCKER found — the render/anim subsystems are one coupled cluster, not separable piecemeal:**
+> - `Engine/src/StringThis.h` is a hub enum→string utility that `#include`s `Mesh.h`,
+>   `ShaderObject.h`, `TextureObject.h`, `Camera.h`, `AnimMan.h`, `JointTable.h`,
+>   `HierarchyTable.h`. It's used by 17 files (incl. `TexNodeMan`/`TextureObject::GetName`).
+>   It can only compile inside the DLL once ALL those subsystems are in the DLL.
+> - Also `ShaderObject` calls `Camera`, so shaders drag `Camera` in.
+> - Attempted `TextureObject`/`TexNode`/`TexNodeMan` move → blocked on `StringThis` (needs the
+>   not-yet-moved Mesh/Shader/Camera/Anim headers). Reverted that subsystem to stay green;
+>   kept the texture buffers + protobuf enablement.
+>
+> **Decision needed before proceeding (Mesh/Shader/Texture/Camera/Anim):**
+>   - **Option A — one big cluster move:** Mesh + ShaderObject(+`_*`) + Texture(+managers) +
+>     Camera + Anim/Clip/Skeleton/Mixer/ComputeBlend + `StringThis` all at once. Resolves the
+>     hub (everything in the DLL together) but ~80–100 files, high risk, long broken window,
+>     and `GraphicsObject_*`/`GameObject`/`Glyph` (staying in app) will import a lot.
+>   - **Option B — de-hub `StringThis` first:** give each subsystem its own enum→string so
+>     `StringThis` stops including everything; then move subsystems incrementally like State/
+>     Buffer. Cleaner + lower per-step risk, but an upfront refactor of `StringThis` + its
+>     overloads and 17 consumers.
+> - **Still no runtime test of any increment — run the app to confirm rendering.**
+>
+> **Increment 4 IN PROGRESS (2026-07-04): big cluster move — prep done, green.** Chosen approach
+> = move Mesh + Shader + Texture + Camera + Anim(+Clip/Skeleton/Mixer/ComputeBlend/tables) +
+> `StringThis` into the DLL together (they mutually reference via `StringThis`, so it's atomic
+> at the header level). Decisions/prep completed and build-verified green:
+> - **`AnimMan` stays in the app** — it's gameplay glue (creates `GameObjectAnimSkin`,
+>   `GraphicsObject_SkinLightTexture`, `Prefab_Pivot`, calls `GameObjectMan::Add`). The pure
+>   resources it uses (`Anim`/`Clip`/`ComputeBlend`/`Skeleton`) move to the DLL; `AnimMan`
+>   imports them. `AnimManCompareStrategyEnumName` stays with it.
+> - **De-hubbed `StringThis`**: removed `#include "AnimMan.h"` + the `StringThis(AnimMan::Name)`
+>   overload; added explicit `Clip.h`/`Skel.h` includes (were transitive via AnimMan.h). The
+>   `AnimMan::Name`→string map now lives in `AnimMan::NameToString` (app-side); `AnimMan.cpp`'s
+>   5 call sites updated. `StringThis` now only depends on subsystems that are moving.
+> - Removed unused back-deps: `Engine.h` from `Mesh.cpp`/`MeshProto.cpp`/`ShaderObject.cpp`,
+>   `Prefab_Pivot.h` from `Skeleton.cpp`.
+> **Boundary decided (user):** DLL = engine (rendering, anim, managers, Camera, Engine base);
+> APP keeps the object model it authors with — `GameObject`(+subclasses), `GameObjectMan`,
+> `GraphicsObject`(+`_*` variants), `Prefab*`, `AnimMan`, plus the game files (`main`, `Game`,
+> `GameMan`, `GameHelper`, `GameSceneContext`, `GameSceneState`).
+>
+> **Increment 4 DONE (2026-07-04): render/anim cluster moved into the DLL — clean build 0 errors.**
+> - Moved ~140 files / 66 tagged classes into `AzulEngine`: `Mesh` (include/src `Mesh/`),
+>   `ShaderObject`(+all `_*`) (`Shader/`), `Texture`+`TexNode` (`Texture/`), `Camera`(+Man/
+>   Node/Utility) (`Camera/`), and the whole anim primitive set (`Anim/`): `Anim`,
+>   `AnimController(+One/Two)`, `Clip`(+Man/Proto), `Skeleton`/`Skel`(+Man/Proto), `Bone`,
+>   `Mixer(A/B/C)`, `ComputeBlend(+One/Two)`, `WorldComputeA/C`+`WorldConstant`, `JointTable`
+>   /`HierarchyTable`(+Man/Proto), `FrameBucket`, `TimerController`/`AnimTimer`, + all their
+>   `*CompareStrategyEnumName`. `StringThis`, `Color`/`Colors` at `include/` root.
+> - premake: added `AnimTime` (+`ANIM_TIME_USE_DLL`) and `Engine/shaders/Compiled` to the DLL.
+> - **Validated: `Manager`-derived managers export across the DLL boundary fine** (no
+>   MANAGER_USE_DLL, compiled locally in the DLL, app imports the static API). This was the
+>   main unknown — it works.
+> - Fixed a tagging bug: headers with **mixed-case include guards** (e.g.
+>   `Tex_NODE_Compare_Strategy_Enum_Name_H`) missed the `EngineDLLInterface.h` insert; added it.
+> - Result: DLL = 123 objs (State+Buffer+render/anim), app = 63 objs. Clean `Rebuild` 0 errors.
+>
+> **KNOWN FOLLOW-UP (robustness):** the HLSL shader compilation (`FxCompile`, model 5.0,
+> `->Compiled/*.h`) is still configured on the **Engine app** project, but the `ShaderObject_*`
+> that include those generated headers now live in the DLL. It builds today only because
+> `Engine/shaders/Compiled/*.h` already exist on disk. On a **fresh checkout** the DLL would
+> fail (headers not generated yet, and the DLL builds before the app). **Move the shader
+> `FxCompile` build step to the `AzulEngine` project in premake.**
+>
+> **Remaining for the full option-B boundary:** move `GraphicsObject`(+`_*` material variants)
+> and the `Engine` base class into the DLL, and the 2D set (`Glyph`/`GlyphMan`/`FontSprite`/
+> `Image`/`ImageMan`/`Sprite`) if it's engine (check for `GameObject` back-deps first). Same
+> recipe. **Still no runtime test — run the app to confirm rendering.**
 
 **Goal:** carve the monolithic `Engine.exe` into `AzulEngine` (DLL, all internals) + `Game`
 (the app, gameplay only), with a small public facade. No behavior change, no ECS yet.

@@ -105,10 +105,36 @@ namespace Azul
 		return this->pGameSkins[index];
 	}
 
+    char *AnimMan::NameToString(AnimMan::Name status)
+    {
+        static char buffer[64];
+        switch (status)
+        {
+        case AnimMan::Name::Gangnam:       strcpy_s(buffer, 64, "Gangnam");       break;
+        case AnimMan::Name::Walk:          strcpy_s(buffer, 64, "Walk");          break;
+        case AnimMan::Name::Run:           strcpy_s(buffer, 64, "Run");           break;
+        case AnimMan::Name::HitBack:       strcpy_s(buffer, 64, "HitBack");       break;
+        case AnimMan::Name::Shotup:        strcpy_s(buffer, 64, "Shotup");        break;
+        case AnimMan::Name::Dance:         strcpy_s(buffer, 64, "Dance");         break;
+        case AnimMan::Name::Rumba:         strcpy_s(buffer, 64, "Rumba");         break;
+        case AnimMan::Name::Shuffle:       strcpy_s(buffer, 64, "Shuffle");       break;
+        case AnimMan::Name::Swing:         strcpy_s(buffer, 64, "Swing");         break;
+        case AnimMan::Name::Salsa:         strcpy_s(buffer, 64, "Salsa");         break;
+        case AnimMan::Name::Blend:         strcpy_s(buffer, 64, "Blend");         break;
+        case AnimMan::Name::Breakdance:    strcpy_s(buffer, 64, "Breakdance");    break;
+        case AnimMan::Name::Wave:          strcpy_s(buffer, 64, "Wave");          break;
+        case AnimMan::Name::Idle:          strcpy_s(buffer, 64, "Idle");          break;
+        case AnimMan::Name::Uninitialized: strcpy_s(buffer, 64, "Uninitialized"); break;
+        default:
+            assert(false);
+        }
+        return buffer;
+    }
+
     char *AnimMan::AnimNode::GetName()
     {
         static char pTmp[128];
-        strcpy_s(pTmp, 128, StringMe(this->mName));
+        strcpy_s(pTmp, 128, AnimMan::NameToString(this->mName));
         return pTmp;
     }
 
@@ -120,7 +146,7 @@ namespace Azul
     void AnimMan::AnimNode::Dump()
     {
         Trace::out("      AnimNode(%p)\n", this);
-        Trace::out("      Name: %s \n", StringMe(this->mName));
+        Trace::out("      Name: %s \n", AnimMan::NameToString(this->mName));
         DLink::Dump();
     }
 
@@ -445,7 +471,7 @@ namespace Azul
 
 		GameObjectAnimSkin *pGameSkin = new GameObjectAnimSkin(pGraphicsSkin, pBlend);
 		assert(pGameSkin);
-		pGameSkin->SetName(StringMe(name));
+		pGameSkin->SetName(AnimMan::NameToString(name));
 		GameObjectMan::Add(pGameSkin, GameObjectMan::GetRoot());
 
         Clip *pClip = ClipMan::Find(clipName);
@@ -501,7 +527,7 @@ namespace Azul
 			assert(pGameSkin);
 
 			char goName[PCSNode::NAME_SIZE]{ 0 };
-			strcpy_s(goName, PCSNode::NAME_SIZE, StringMe(name));
+			strcpy_s(goName, PCSNode::NAME_SIZE, AnimMan::NameToString(name));
 			char suffix[12]{ 0 };
 			sprintf_s(suffix, sizeof(suffix), "_%u", i);
 			strcat_s(goName, PCSNode::NAME_SIZE, suffix);
@@ -556,7 +582,7 @@ namespace Azul
 
         GameObjectAnimSkin* pGameSkin = new GameObjectAnimSkin(pGraphicsSkin, pBlend);
         assert(pGameSkin);
-        pGameSkin->SetName(StringMe(name));
+        pGameSkin->SetName(AnimMan::NameToString(name));
         GameObjectMan::Add(pGameSkin, GameObjectMan::GetRoot());
 
         Clip* pClip = ClipMan::Find(clipName1);

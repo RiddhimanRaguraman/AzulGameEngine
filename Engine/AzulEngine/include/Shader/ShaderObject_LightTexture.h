@@ -1,0 +1,53 @@
+//--------------------------------------------------------------
+// Copyright 2025, Ed Keenan, all rights reserved.
+//--------------------------------------------------------------
+
+#ifndef SHADER_OBJECT_LIGHT_TEXTURE_H
+#define SHADER_OBJECT_LIGHT_TEXTURE_H
+#include "EngineDLLInterface.h"
+
+#include "ShaderObject.h"
+#include "BufferCBV_vs.h"
+#include "BufferVertexShader_vs.h"
+#include "BufferPixelShader_ps.h"
+#include "BufferInputLayout_ia.h"
+
+namespace Azul
+{
+	class AZUL_ENGINE_LIBRARY_API ShaderObject_LightTexture : public ShaderObject
+	{
+	public:
+		ShaderObject_LightTexture() = delete;
+		ShaderObject_LightTexture(const ShaderObject_LightTexture &) = delete;
+		ShaderObject_LightTexture &operator = (const ShaderObject_LightTexture &) = delete;
+		virtual ~ShaderObject_LightTexture() = default;
+
+		ShaderObject_LightTexture(ShaderObject_LightTexture::Name _name);
+
+		virtual void ActivateShader() override;
+		virtual void ActivateCBV() override;
+		virtual void TransferWorldViewProj(Camera *pCam, Mat4 *pWorld) override;
+		virtual void TransferPos(Vec3 *pLightPos) override;
+		virtual void TransferColor(Vec3 *pColor) override;
+
+
+		// ---------------------------------------------
+		// 	   Data:
+		// ---------------------------------------------
+
+		BufferCBV_vs ConstantBuff_Projection;
+		BufferCBV_vs ConstantBuff_World;
+		BufferCBV_vs ConstantBuff_View;
+
+		BufferCBV_vs ConstantBuff_LightColor;
+		BufferCBV_vs ConstantBuff_LightPos;
+
+		BufferVertexShader_vs VertexShader;
+		BufferPixelShader_ps  PixelShader;
+		BufferInputLayout_ia  InputLayout;
+	};
+
+}
+#endif
+
+// --- End of File ---

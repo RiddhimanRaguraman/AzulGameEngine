@@ -1,0 +1,44 @@
+//--------------------------------------------------------------
+// Copyright 2025, Ed Keenan, all rights reserved.
+//--------------------------------------------------------------
+
+#ifndef SHADER_OBJECT_NULL_H
+#define SHADER_OBJECT_NULL_H
+#include "EngineDLLInterface.h"
+
+#include "ShaderObject.h"
+#include "BufferVertexShader_vs.h"
+#include "BufferPixelShader_ps.h"
+#include "BufferInputLayout_ia.h"
+
+namespace Azul
+{
+	class AZUL_ENGINE_LIBRARY_API ShaderObject_Null : public ShaderObject
+	{
+	public:
+
+	public:
+		ShaderObject_Null() = delete;
+		ShaderObject_Null(const ShaderObject_Null &) = delete;
+		ShaderObject_Null &operator = (const ShaderObject_Null &) = delete;
+		virtual ~ShaderObject_Null();
+
+		ShaderObject_Null(ShaderObject_Null::Name _name);
+
+		virtual void ActivateShader() override;
+		virtual void ActivateCBV() override;
+		virtual void TransferWorldViewProj(Camera *pCam, Mat4 *pWorld) override;
+
+		// ---------------------------------------------
+		// 	   Data:
+		// ---------------------------------------------
+
+		BufferVertexShader_vs VertexShader;
+		BufferPixelShader_ps  PixelShader;
+		BufferInputLayout_ia  InputLayout;
+	};
+}
+
+#endif
+
+// --- End of File ---

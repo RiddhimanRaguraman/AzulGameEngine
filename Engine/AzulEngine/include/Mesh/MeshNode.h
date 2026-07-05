@@ -1,0 +1,44 @@
+//----------------------------------------------------------------------------
+// Copyright 2025, Ed Keenan, all rights reserved.
+//----------------------------------------------------------------------------
+
+#ifndef MESH_NODE_H
+#define MESH_NODE_H
+#include "EngineDLLInterface.h"
+
+#include "DLink.h"
+#include "Mesh.h"
+
+namespace Azul
+{
+
+	class AZUL_ENGINE_LIBRARY_API MeshNode : public DLink
+	{
+	public:
+		MeshNode();
+		MeshNode(const Mesh &) = delete;
+		MeshNode &operator = (const Mesh &) = delete;
+		virtual ~MeshNode();
+
+		void Set(Mesh::Name name, Mesh *pMesh);
+		Mesh *GetMesh();
+
+		virtual char *GetName() override;
+		virtual void Wash() override;
+
+		virtual void Dump() override;
+
+	private:
+		void privClear();
+
+		//--------------------------------------------------
+		// Data
+		//--------------------------------------------------
+		Mesh *poMesh;
+	};
+
+}
+
+#endif
+
+// --- End of File ---
