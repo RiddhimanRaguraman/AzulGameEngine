@@ -56,7 +56,7 @@ namespace Azul
 		{
 			this->poPrefab->SetData(*this);
 			poPrefab->Update();
-			poPrefab->ReturnWorld(*this->poWorld);
+			poPrefab->ReturnWorld(*this->GetWorld());
 		}
 		else
 		{
@@ -65,7 +65,7 @@ namespace Azul
 		}
 
 		// update the bounding volume based on world matrix
-		this->poGraphicsObject->SetWorld(*this->poWorld);
+		this->poGraphicsObject->SetWorld(*this->GetWorld());
 
 		// do the compute shaders
 		this->pBlend->Execute();
@@ -88,7 +88,7 @@ namespace Azul
 		Rot Rz(Rot1::Z, cur_rot_z);
 
 		// world matrix
-		*this->poWorld = S * Q * Rx * Ry * Rz * T;
+		*this->GetWorld() = S * Q * Rx * Ry * Rz * T;
 	}
 
 	void GameObjectAnimSkin::SetQuat(float qx, float qy, float qz, float qw)

@@ -19,6 +19,7 @@
 #include "GraphicsObject_Null.h"
 #include "GraphicsObject_Sprite.h"
 #include "AnimTime.h"
+#include "Entity.h"
 
 #include "EngineDLLInterface.h"
 
@@ -47,7 +48,9 @@ namespace Azul
 		void DrawDisable();
 
 	protected:
-		Mat4 *poWorld;
+		// Bridge: the world transform now lives in a TransformComponent keyed
+		// by this entity (GetWorld/SetWorld forward to it). poWorld is gone.
+		Entity mEntity;
 		GraphicsObject *poGraphicsObject;
 		bool mDrawEnable;
 

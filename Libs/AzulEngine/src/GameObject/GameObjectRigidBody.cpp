@@ -33,7 +33,7 @@ namespace Azul
 		{
 			this->poPrefab->SetData(*this);
 			poPrefab->Update();
-			poPrefab->ReturnWorld(*this->poWorld);
+			poPrefab->ReturnWorld(*this->GetWorld());
 		}
 		else
 		{
@@ -41,11 +41,11 @@ namespace Azul
 			Rot RotA(*poQuat);
 			Trans TransA(poTrans->x(), poTrans->y(), poTrans->z());
 
-			*this->poWorld = ScaleA * RotA * TransA;
+			*this->GetWorld() = ScaleA * RotA * TransA;
 			setorupdate = true;
 		}
 
-		this->poGraphicsObject->SetWorld(*this->poWorld);
+		this->poGraphicsObject->SetWorld(*this->GetWorld());
 	}
 
 	void GameObjectRigidBody::SetPos(Vec3 v)

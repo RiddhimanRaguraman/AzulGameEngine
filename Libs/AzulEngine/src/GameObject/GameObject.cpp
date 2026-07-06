@@ -5,28 +5,37 @@
 #include "MathEngine.h"
 #include "GameObject.h"
 #include "Camera.h"
+#include "WorldMan.h"
+#include "World.h"
+#include "TransformComponent.h"
 
 namespace Azul
 {
 
 	GameObject::GameObject(GraphicsObject *pGraphicsObject)
-		: poWorld{new Mat4(Identity)},
-		poGraphicsObject{pGraphicsObject},
+		: poGraphicsObject{pGraphicsObject},
 		mDrawEnable{true}
 	{
-		assert(poWorld);
 		assert(pGraphicsObject);
+
+		// Bridge: allocate an entity and back the world transform with a
+		// TransformComponent (initialised to Identity, as poWorld was).
+		this->mEntity = WorldMan::GetWorld().Create();
+		TransformComponent &t = WorldMan::GetWorld().Add<TransformComponent>(this->mEntity);
+		t.world = Mat4(Identity);
 	}
 
 	GameObject::~GameObject()
 	{
-		delete this->poWorld;
+		WorldMan::GetWorld().Destroy(this->mEntity);
 		delete this->poGraphicsObject;
 	}
 
 	Mat4 *GameObject::GetWorld()
 	{
-		return this->poWorld;
+		TransformComponent *pT = WorldMan::GetWorld().TryGet<TransformComponent>(this->mEntity);
+		assert(pT);
+		return &pT->world;
 	}
 
 	GraphicsObject *GameObject::GetGraphicsObject()
@@ -37,7 +46,9 @@ namespace Azul
 	void GameObject::SetWorld(Mat4 *pWorld)
 	{
 		assert(pWorld);
-		*this->poWorld = *pWorld;
+		TransformComponent *pT = WorldMan::GetWorld().TryGet<TransformComponent>(this->mEntity);
+		assert(pT);
+		pT->world = *pWorld;
 	}
 
 	void GameObject::DrawEnable()

@@ -323,11 +323,13 @@ Because of the DLL/template caveat (Section 5), the ECS core headers are **publi
 >   `AzulEngineDebugX64.dll`; full solution builds 0 errors.
 > - **Not yet runtime-tested** (DirectX windowed app — needs a real run to confirm the RTV
 >   refactor visually; the change follows the standard D3D11 ref-count pattern).
-> - **Folder convention (premake `addTreeIncludes`):** the `AzulEngine` project auto-adds every
->   non-obj subfolder under `Engine/AzulEngine` as an include dir; the Engine app auto-adds only
->   `Engine/AzulEngine/include/**` (public). So new feature subfolders (e.g. `src/State`,
->   future `src/Buffer`) need **no premake edit** — just drop files in and regenerate. Keep
->   public headers under `include/`, implementation under `src/<Feature>/`.
+> - **Folder convention (premake `addTreeIncludes`):** `AzulEngine` lives at `Libs/AzulEngine`.
+>   Headers sit **next to their `.cpp`** under `Libs/AzulEngine/src/<Feature>/` — there is **no
+>   `include/` tree** (flattened 2026-07-06 for h-near-cpp navigation). `addTreeIncludes` auto-
+>   adds every non-obj subfolder of `src/` as an include dir for BOTH the DLL and the app, so new
+>   feature folders need **no premake edit** — drop files in and regenerate. The engine/game
+>   boundary is enforced by **linking** (app imports the DLL's exported symbols), not by
+>   include-path privacy.
 > **Increment 2 DONE (2026-07-04): `SafeRelease` de-macroed, headers foldered, 18 `Buffer*`
 > moved into the DLL.**
 > - `SafeRelease` macro replaced by an inline template `Azul::SafeRelease<T>(T*&)` in
@@ -485,6 +487,21 @@ building after each group; start with `State*`/`Buffer*` (zero gameplay coupling
 
 ### Phase 1 — Stand up the ECS core (groundwork, zero gameplay change)
 
+> **DONE (2026-07-06): ECS core built + runtime-verified.** Files in `Libs/AzulEngine/
+> {include,src}/ECS/`: `Entity.h` (index+generation handle), `IComponentPool.h/.cpp`
+> (type-erased base), `ComponentPool.h` (template sparse-set: dense data + sparse index +
+> swap-remove, hand-managed `new[]` arrays, no STL), `World.h/.cpp` (entity create/destroy
+> with generation recycling + free list; templated `Add/TryGet/Has/Pool<C>`), `System.h/.cpp`
+> (base with `Update(World&, AnimTime)`), `EcsSmokeTest.h/.cpp` (exported `ECS_SmokeTest()`).
+> - **Component ids are explicit** (`struct C { static const unsigned int kTypeId; }`), NOT a
+>   runtime/template counter — a counter's function-local static would differ between the DLL
+>   and app modules and corrupt pool lookup. A compile-time constant is identical everywhere.
+> - Template exception (per 0a) used only for `ComponentPool<C>`/`World::Pool<C>`; commented.
+> - Builds into the DLL 0 errors. **Runtime-verified** via a standalone harness (compiled the
+>   ECS `.cpp` + a test main with cl): all asserts pass incl. generation recycling + a
+>   1000-entity add/remove stress. `ECS_SmokeTest()` is also callable from the running app.
+> - **Next: Phase 2** — start the `GameObject` bridge (Transform component first).
+
 **Goal:** a working registry (shared public headers) that coexists with the current engine,
 proven by a throwaway test, touching no existing game logic.
 
@@ -506,6 +523,23 @@ included by both modules.
 ---
 
 ### Phase 2 — Move data into components (the bridge)
+
+> **IN PROGRESS (2026-07-06): Transform bridge landed — builds 0 errors.**
+> - New: `Component/ComponentId.h` (central id enum, `COMPONENT_TRANSFORM=0`),
+>   `Component/TransformComponent.h` (`Vec3 pos; Quat rot; Vec3 scale; Mat4 world`; only
+>   `world` wired so far), `ECS/WorldMan.h/.cpp` (engine-wide `World` singleton, lazy).
+> - `GameObject`: replaced `Mat4 *poWorld` with an `Entity mEntity`. Ctor does
+>   `mEntity = WorldMan::GetWorld().Create()` + `Add<TransformComponent>` (world=Identity);
+>   dtor `Destroy(mEntity)`. `GetWorld()/SetWorld()` now read/write the component (same
+>   `Mat4*` contract). Subclasses (`RigidBody`/`AnimSkin`/`Sprite`/`FontSprite`) switched from
+>   the removed protected `poWorld` to `GetWorld()`.
+> - Bridge is entirely engine-internal (GameObject is in the DLL); the app is untouched.
+> - Verified: DLL builds 0 errors; standalone runtime check confirms the pool keeps 16-byte
+>   alignment through swap-remove (so SIMD `Vec3`/`Mat4` components are safe). **Full in-app
+>   render test still needed** (run `Engine.exe`).
+> - **Next in Phase 2:** migrate `GameObjectRigidBody`/`AnimSkin` `poTrans`/`poQuat`/`poScale`
+>   into `TransformComponent.pos/rot/scale`; then `RenderComponent` (from `poGraphicsObject`),
+>   `HierarchyComponent` (from the PCS tree), `LightComponent` (from `_LightTexture`).
 
 **Goal:** relocate object *data* into components while keeping `GameObject` as a thin
 forwarding shim so nothing downstream breaks.

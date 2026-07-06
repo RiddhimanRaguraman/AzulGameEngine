@@ -50,7 +50,7 @@ namespace Azul
 		Rot R(Rot1::Z, this->angle);
 		Trans T(this->posX, this->posY, 0.0f);
 
-		*this->poWorld = S * R * T;
+		*this->GetWorld() = S * R * T;
 	}
 
 	void GameObjectSprite::Update(AnimTime currentTime)
@@ -59,7 +59,7 @@ namespace Azul
 		this->privUpdate(currentTime);
 
 		// update the bounding volume based on world matrix
-		this->poGraphicsObject->SetWorld(*this->poWorld);
+		this->poGraphicsObject->SetWorld(*this->GetWorld());
 	}
 
 

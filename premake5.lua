@@ -119,9 +119,9 @@ local function addShaderCompilation(shaderDir)
                     shadermodel            "5.0"
                     shadertype             (shaderTypes[suffix])
                     shadervariablename     ("g_" .. stem .. "_" .. suffix .. "Shader")
-                    -- Solution-relative so it lands in Engine/shaders/Compiled (the
-                    -- include dir) regardless of where the AzulEngine project lives.
-                    shaderheaderfileoutput ("$(SolutionDir)Engine/shaders/Compiled/" .. base .. ".h")
+                    -- Solution-relative so it lands in the include dir regardless
+                    -- of where the AzulEngine project lives.
+                    shaderheaderfileoutput ("$(SolutionDir)Libs/AzulEngine/shaders/Compiled/" .. base .. ".h")
                 filter { "files:" .. file, "configurations:Debug" }
                     shaderobjectfileoutput ("$(OutDir)" .. base .. "_d.cso")
                 filter { "files:" .. file, "configurations:Release" }
@@ -411,7 +411,8 @@ if wsName == "engine" then
     --   The engine module boundary (WhatToDo.md Phase 0).
     --   Engine internals (RHI, loaders, managers) migrate into this
     --   DLL over the ECS migration; the Engine app links it and only
-    --   sees the public facade headers in Libs/AzulEngine/include.
+    --   links it and imports its exported symbols. Headers sit next to their
+    --   .cpp under Libs/AzulEngine/src (no separate include/ tree).
     ------------------------------------------------------
     project "AzulEngine"
         kind     "SharedLib"
@@ -422,9 +423,8 @@ if wsName == "engine" then
         files {
             "Libs/AzulEngine/src/**.cpp",
             "Libs/AzulEngine/src/**.h",
-            "Libs/AzulEngine/include/**.h",
-            "Engine/shaders/original/**.hlsl",
-            "Engine/shaders/original/**.hlsli"
+            "Libs/AzulEngine/shaders/original/**.hlsl",
+            "Libs/AzulEngine/shaders/original/**.hlsli"
         }
         removefiles { "Libs/AzulEngine/**.vcxproj*" }
 
@@ -444,11 +444,11 @@ if wsName == "engine" then
             "Libs/Manager/include",
             "Libs/AnimTime/include",
             "Libs/PCSTree/include",
-            "Engine/shaders/Compiled"
+            "Libs/AzulEngine/shaders/Compiled"
         }
-        -- Every subfolder of the engine DLL (include/, src/, src/State, future
-        -- feature folders) becomes an include dir automatically.
-        addTreeIncludes("Libs/AzulEngine")
+        -- Headers live next to their .cpp under src/. Every feature subfolder
+        -- becomes an include dir automatically, so new folders need no edit.
+        addTreeIncludes("Libs/AzulEngine/src")
 
         applyCommonProject()
         applyTargetName()
@@ -482,7 +482,7 @@ if wsName == "engine" then
         filter {}
 
         -- Shaders live with their ShaderObject_* classes in the DLL.
-        addShaderCompilation("Engine/shaders/original")
+        addShaderCompilation("Libs/AzulEngine/shaders/original")
 
     ------------------------------------------------------
     -- Engine application
@@ -518,14 +518,14 @@ if wsName == "engine" then
             "Libs/PCSTree/include",
             "Libs/Manager/include",
             "Libs/PugiXml/include",
-            "Engine/shaders/Compiled",
             "Engine/src",
             "Engine/DXTex/include"
         }
-        -- The app sees only AzulEngine's PUBLIC headers (include/ and its
-        -- subfolders) -- never src/ internals. New public subfolders are
-        -- picked up automatically.
-        addTreeIncludes("Libs/AzulEngine/include")
+        -- AzulEngine keeps headers next to their .cpp under src/, so the app
+        -- gets that whole tree on its include path. The engine/game boundary is
+        -- enforced by linking (the app imports the DLL's exported symbols), not
+        -- by include-path privacy.
+        addTreeIncludes("Libs/AzulEngine/src")
 
         applyCommonProject()
 
