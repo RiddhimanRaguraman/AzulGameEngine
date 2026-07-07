@@ -7,6 +7,7 @@
 
 #include "GraphicsObject.h"
 #include "TextureObject.h"
+#include "Entity.h"
 
 #include "EngineDLLInterface.h"
 
@@ -43,8 +44,12 @@ namespace Azul
 		// data:  place uniform instancing here
 
 		TextureObject *pTex;
-		Vec3 *poLightColor;
-		Vec3 *poLightPos;
+
+	private:
+		// The light (color + pos) now lives in a LightComponent keyed by this
+		// entity, which the material owns.
+		void privInitLight(Vec3 &color, Vec3 &pos);
+		Entity mLightEntity;
 	};
 
 }

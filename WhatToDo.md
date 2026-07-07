@@ -571,9 +571,26 @@ included by both modules.
 >   just records the parent. Phase 5 makes it authoritative + adds `TransformPropagationSystem`.
 > - `GameObject` now carries 3 components (Transform, Render, Hierarchy); its only member is
 >   still `Entity mEntity`.
-> - **Next in Phase 2:** `LightComponent` (lift the hard-coded `poLightColor`/`poLightPos` out
->   of `GraphicsObject_LightTexture`). Then Phase 2 is done → Phase 3 (Update()→systems).
->   **Run the app to confirm transforms + rendering + clean leak report.**
+> **LightComponent DONE (2026-07-07): builds 0 errors. → PHASE 2 COMPLETE.**
+> - `LightComponent { Vec3 color; Vec3 pos }` (id `COMPONENT_LIGHT`).
+> - `GraphicsObject_LightTexture`: removed heap `poLightColor`/`poLightPos`; added an
+>   `Entity mLightEntity` it owns. Both ctors call `privInitLight` (create light entity +
+>   `Add<LightComponent>`); `SetDataGPU` reads the component and `TransferPos/Color(&light.*)`;
+>   dtor `Destroy`s the light entity (which is deleted with its owning GameObject during scene
+>   unload, before `WorldMan::Destroy` — no leak).
+> - **Note:** `GraphicsObject_SkinLightTexture` / `_ConstColorLight` still hold their own light
+>   fields — same pattern applies; migrate them when convenient (or fold into Phase 4's
+>   RenderSystem).
+>
+> **PHASE 2 SUMMARY:** GameObject data is fully componentized — `TransformComponent` (pos/rot/
+> scale/world), `RenderComponent` (GraphicsObject + drawEnable), `HierarchyComponent` (parent),
+> and `LightComponent` (on light-textured materials). `GameObject` is a thin shim over
+> `Entity mEntity`. All bridges keep the old OOP behavior; PCSTree still drives traversal.
+> **Next: Phase 3 — turn `Update()`/`Prefab_*` into systems over the component pools.**
+>
+> **Build note:** the generated `Engine.sln` keeps disappearing between builds (it's a
+> gitignored artifact) — regenerate with `premake5 --ws=engine vs2022` (or `UberBuildMe.bat`)
+> before building if msbuild reports `MSB1009: Project file does not exist`.
 
 **Goal:** relocate object *data* into components while keeping `GameObject` as a thin
 forwarding shim so nothing downstream breaks.

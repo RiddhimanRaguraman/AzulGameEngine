@@ -8,6 +8,9 @@
 #include "GraphicsObject_LightTexture.h"
 #include "CameraNodeMan.h"
 #include "TexNodeMan.h"
+#include "WorldMan.h"
+#include "World.h"
+#include "LightComponent.h"
 
 namespace Azul
 {
@@ -22,17 +25,10 @@ namespace Azul
 		Vec3& LightColor,
 		Vec3& LightPos)
 		: GraphicsObject(meshName, shaderName),
-		pTex(TexNodeMan::Find(texName)),
-		poLightColor(nullptr),
-		poLightPos(nullptr)
+		pTex(TexNodeMan::Find(texName))
 	{
 		assert(pTex);
-
-		poLightColor = new Vec3(LightColor);
-		poLightPos = new Vec3(LightPos);
-
-		assert(poLightColor);
-		assert(poLightPos);
+		this->privInitLight(LightColor, LightPos);
 	}
 
 	GraphicsObject_LightTexture::GraphicsObject_LightTexture(Mesh* pMesh,
@@ -41,24 +37,24 @@ namespace Azul
 		Vec3& LightColor,
 		Vec3& LightPos)
 		: GraphicsObject(pMesh->name, shaderName),
-		pTex(TexNodeMan::Find(texName)),
-		poLightColor(nullptr),
-		poLightPos(nullptr)
+		pTex(TexNodeMan::Find(texName))
 	{
 		assert(pTex);
 		assert(pMesh);
+		this->privInitLight(LightColor, LightPos);
+	}
 
-		poLightColor = new Vec3(LightColor);
-		poLightPos = new Vec3(LightPos);
-
-		assert(poLightColor);
-		assert(poLightPos);
+	void GraphicsObject_LightTexture::privInitLight(Vec3& color, Vec3& pos)
+	{
+		this->mLightEntity = WorldMan::GetWorld().Create();
+		LightComponent& light = WorldMan::GetWorld().Add<LightComponent>(this->mLightEntity);
+		light.color = color;
+		light.pos = pos;
 	}
 
 	GraphicsObject_LightTexture::~GraphicsObject_LightTexture()
 	{
-		delete poLightColor;
-		delete poLightPos;
+		WorldMan::GetWorld().Destroy(this->mLightEntity);
 	}
 
 	void GraphicsObject_LightTexture::SetState()
@@ -76,8 +72,11 @@ namespace Azul
 		pShaderObj->ActivateCBV();
 
 		pShaderObj->TransferWorldViewProj(CameraNodeMan::GetCurrent(Camera::Type::PERSPECTIVE_3D), this->poWorld);
-		pShaderObj->TransferPos(this->poLightPos);
-		pShaderObj->TransferColor(this->poLightColor);
+
+		LightComponent *pLight = WorldMan::GetWorld().TryGet<LightComponent>(this->mLightEntity);
+		assert(pLight);
+		pShaderObj->TransferPos(&pLight->pos);
+		pShaderObj->TransferColor(&pLight->color);
 
 		
 
