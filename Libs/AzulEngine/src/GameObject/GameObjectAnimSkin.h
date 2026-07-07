@@ -40,11 +40,8 @@ namespace Azul
 
 
 	public:
-		
-
-		Vec3 *poScale;
-		Quat *poQuat;
-		Vec3 *poTrans;
+		// pos/rot/scale now live in the entity's TransformComponent
+		// (see GameObject::GetTransform).
 
 		float delta_x;
 		float delta_y;

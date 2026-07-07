@@ -11,9 +11,10 @@ namespace Azul
 {
 	class World;
 
-	// Single engine-wide ECS World. Phase 2 bridge: GameObject creates its
-	// entity here in its constructor and destroys it in its destructor, so the
-	// object model and the ECS stay in lock-step during the migration.
+	// Single engine-wide ECS World. Created lazily on first use (GameObject
+	// makes its entity here in its constructor) and torn down explicitly by
+	// Destroy() in the scene unload sequence -- BEFORE the framework's leak
+	// check runs, so the World's pools/arrays are not reported as leaks.
 	class AZUL_ENGINE_LIBRARY_API WorldMan
 	{
 	public:
@@ -22,6 +23,10 @@ namespace Azul
 		WorldMan &operator=(const WorldMan &) = delete;
 
 		static World &GetWorld();
+		static void Destroy();
+
+	private:
+		static World *posWorld;
 	};
 }
 

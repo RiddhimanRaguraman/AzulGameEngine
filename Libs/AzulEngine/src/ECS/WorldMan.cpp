@@ -7,12 +7,25 @@
 
 namespace Azul
 {
+	World *WorldMan::posWorld = nullptr;
+
 	World &WorldMan::GetWorld()
 	{
-		// One World for the whole engine, created on first use. Explicit
-		// Create/Destroy can replace this later if lifetime control is needed.
-		static World world;
-		return world;
+		// Lazy: created on first use (e.g. the first GameObject), so callers
+		// don't need an explicit Create(). Destroy() frees it during teardown.
+		if (posWorld == nullptr)
+		{
+			posWorld = new World();
+		}
+		return *posWorld;
+	}
+
+	void WorldMan::Destroy()
+	{
+		// ~World frees every pool (and each pool's arrays) plus the generation
+		// and free-list arrays. Runs during scene unload, before the leak check.
+		delete posWorld;
+		posWorld = nullptr;
 	}
 }
 

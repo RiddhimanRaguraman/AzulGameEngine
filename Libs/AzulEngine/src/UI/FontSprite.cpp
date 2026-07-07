@@ -108,7 +108,7 @@ namespace Azul
 	{
 
 		// update the bounding volume based on world matrix
-		this->poGraphicsObject->SetWorld(*this->GetWorld());
+		this->GetGraphicsObject()->SetWorld(*this->GetWorld());
 	}
 
 }

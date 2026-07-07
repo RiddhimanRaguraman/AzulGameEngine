@@ -21,7 +21,7 @@ namespace Azul
 	{
 		assert(pGraphicsObject);
 
-		this->pGraphicsObjectSprite = (GraphicsObject_Sprite *)poGraphicsObject;
+		this->pGraphicsObjectSprite = (GraphicsObject_Sprite *)this->GetGraphicsObject();
 
 		this->angle = 0.0f;
 		this->posX = pGraphicsObjectSprite->origPosX;
@@ -59,7 +59,7 @@ namespace Azul
 		this->privUpdate(currentTime);
 
 		// update the bounding volume based on world matrix
-		this->poGraphicsObject->SetWorld(*this->GetWorld());
+		this->GetGraphicsObject()->SetWorld(*this->GetWorld());
 	}
 
 

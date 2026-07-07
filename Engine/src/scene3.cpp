@@ -5,6 +5,7 @@
 #include "ShaderObjectNodeMan.h"
 #include "MeshNodeMan.h"
 #include "GameObjectMan.h"
+#include "WorldMan.h"
 #include "CameraNodeMan.h"
 #include "TexNodeMan.h"
 
@@ -118,6 +119,7 @@ namespace Azul
 		CameraNodeMan::SetMoveSpeed(0.1f);
 
 		GameObjectMan::Destroy();
+		WorldMan::Destroy();
 		ShaderObjectNodeMan::Destroy();
 		TexNodeMan::Destroy();
 		MeshNodeMan::Destroy();

@@ -20,9 +20,6 @@ namespace Azul
 
 	GameObjectAnimSkin::GameObjectAnimSkin(GraphicsObject *pGraphicsObject, ComputeBlend* _pBlend)
 		: GameObjectControlled(pGraphicsObject),
-		poScale{ new Vec3(1.0f, 1.0f, 1.0f) },
-		poQuat{ new Quat(0.0f, 0.0f, 0.0f, 1.0f) },
-		poTrans{ new Vec3(0.0f, 0.0f, 0.0f) },
 		delta_x{ 0.0f },
 		delta_y{ 0.0f },
 		delta_z{ 0.0f },
@@ -34,20 +31,18 @@ namespace Azul
 		poPrefab(nullptr)
 	{
 		assert(pGraphicsObject);
-
-		assert(this->poTrans);
-		assert(this->poScale);
-		assert(this->poQuat);
-
 		assert(this->pBlend);
+
+		// Seed the transform (was poScale/poQuat/poTrans defaults).
+		TransformComponent& t = this->GetTransform();
+		t.pos.set(0.0f, 0.0f, 0.0f);
+		t.scale.set(1.0f, 1.0f, 1.0f);
+		t.rot.set(0.0f, 0.0f, 0.0f, 1.0f);
 	}
 
 	GameObjectAnimSkin::~GameObjectAnimSkin()
 	{
 		delete this->poPrefab;
-		delete this->poTrans;
-		delete this->poScale;
-		delete this->poQuat;
 	}
 
 	void GameObjectAnimSkin::Update(AnimTime currentTime)
@@ -65,7 +60,7 @@ namespace Azul
 		}
 
 		// update the bounding volume based on world matrix
-		this->poGraphicsObject->SetWorld(*this->GetWorld());
+		this->GetGraphicsObject()->SetWorld(*this->GetWorld());
 
 		// do the compute shaders
 		this->pBlend->Execute();
@@ -75,9 +70,10 @@ namespace Azul
 	{
 		AZUL_UNUSED_VAR(currentTime);
 
-		Trans T(*this->poTrans);
-		Scale S(*this->poScale);
-		Quat  Q(*this->poQuat);
+		TransformComponent& t = this->GetTransform();
+		Trans T(t.pos);
+		Scale S(t.scale);
+		Quat  Q(t.rot);
 
 		cur_rot_x += delta_x;
 		cur_rot_y += delta_y;
@@ -88,22 +84,22 @@ namespace Azul
 		Rot Rz(Rot1::Z, cur_rot_z);
 
 		// world matrix
-		*this->GetWorld() = S * Q * Rx * Ry * Rz * T;
+		t.world = S * Q * Rx * Ry * Rz * T;
 	}
 
 	void GameObjectAnimSkin::SetQuat(float qx, float qy, float qz, float qw)
 	{
-		this->poQuat->set(qx, qy, qz, qw);
+		this->GetTransform().rot.set(qx, qy, qz, qw);
 	}
 
 	void GameObjectAnimSkin::SetScale(float sx, float sy, float sz)
 	{
-		this->poScale->set(sx, sy, sz);
+		this->GetTransform().scale.set(sx, sy, sz);
 	}
 
 	void GameObjectAnimSkin::SetTrans(float x, float y, float z)
 	{
-		this->poTrans->set(x, y, z);
+		this->GetTransform().pos.set(x, y, z);
 	}
 
 	void GameObjectAnimSkin::SetPrefab(Prefab* _poPrefab)
@@ -113,17 +109,17 @@ namespace Azul
 
 	void GameObjectAnimSkin::SetScale(Vec3 &r)
 	{
-		*this->poScale = r;
+		this->GetTransform().scale = r;
 	}
 
 	void GameObjectAnimSkin::SetQuat(Quat &r)
 	{
-		*this->poQuat = r;
+		this->GetTransform().rot = r;
 	}
 
 	void GameObjectAnimSkin::SetTrans(Vec3 &r)
 	{
-		*this->poTrans = r;
+		this->GetTransform().pos = r;
 	}
 }
 

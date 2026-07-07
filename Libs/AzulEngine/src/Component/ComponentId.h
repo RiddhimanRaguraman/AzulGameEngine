@@ -14,6 +14,7 @@ namespace Azul
 	enum ComponentId : unsigned int
 	{
 		COMPONENT_TRANSFORM = 0,
+		COMPONENT_RENDER,
 
 		COMPONENT_COUNT
 	};

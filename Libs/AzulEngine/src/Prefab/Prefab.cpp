@@ -1,6 +1,7 @@
 #include "Prefab.h"
 #include "GameObjectRigidBody.h"
 #include "GameObjectAnimSkin.h"
+#include "TransformComponent.h"
 
 namespace Azul {
 	Prefab::Prefab()
@@ -17,9 +18,9 @@ namespace Azul {
 	}
 
 	Prefab::Prefab(GameObjectRigidBody* pGom)
-		: poScale(new Vec3(*pGom->poScale)),
-		poQuat(new Quat(*pGom->poQuat)),
-		poTrans(new Vec3(*pGom->poTrans))
+		: poScale(new Vec3(pGom->GetTransform().scale)),
+		poQuat(new Quat(pGom->GetTransform().rot)),
+		poTrans(new Vec3(pGom->GetTransform().pos))
 	{
 		assert(poScale);
 		assert(poQuat);
@@ -49,16 +50,18 @@ namespace Azul {
 
 	void Prefab::SetData(GameObjectRigidBody& pGom)
 	{
-		this->poScale->set(*pGom.poScale);
-		*this->poQuat = *pGom.poQuat;
-		this->poTrans->set(*pGom.poTrans);
+		TransformComponent& t = pGom.GetTransform();
+		this->poScale->set(t.scale);
+		*this->poQuat = t.rot;
+		this->poTrans->set(t.pos);
 	}
 
 	void Prefab::SetData(GameObjectAnimSkin& pGom)
 	{
-		this->poScale->set(*pGom.poScale);
-		*this->poQuat = *pGom.poQuat;
-		this->poTrans->set(*pGom.poTrans);
+		TransformComponent& t = pGom.GetTransform();
+		this->poScale->set(t.scale);
+		*this->poQuat = t.rot;
+		this->poTrans->set(t.pos);
 	}
 
 	void Prefab::Update()

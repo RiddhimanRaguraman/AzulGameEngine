@@ -32,11 +32,10 @@ namespace Azul
 		void SetPrefab(Prefab* _poPrefab);
 
 	private:
-		Vec3* poScale;
-		Quat* poQuat;
-		Vec3* poTrans;
+		// pos/rot/scale now live in the entity's TransformComponent
+		// (see GameObject::GetTransform).
 		bool setorupdate;
-		char pad[3];
+		char pad[7];
 		Prefab* poPrefab;
 	};
 }

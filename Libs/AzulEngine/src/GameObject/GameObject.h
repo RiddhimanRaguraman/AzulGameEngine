@@ -20,6 +20,8 @@
 #include "GraphicsObject_Sprite.h"
 #include "AnimTime.h"
 #include "Entity.h"
+#include "TransformComponent.h"
+#include "RenderComponent.h"
 
 #include "EngineDLLInterface.h"
 
@@ -44,15 +46,19 @@ namespace Azul
 		Mat4 *GetWorld();
 		void SetWorld(Mat4 *pWorld);
 
+		// The entity's transform (pos/rot/scale/world). Subclasses and Prefab
+		// read/write pos/rot/scale here instead of owning Vec3*/Quat* members.
+		TransformComponent &GetTransform();
+
 		void DrawEnable();
 		void DrawDisable();
 
 	protected:
-		// Bridge: the world transform now lives in a TransformComponent keyed
-		// by this entity (GetWorld/SetWorld forward to it). poWorld is gone.
+		RenderComponent &GetRender();
+
+		// Bridge: the transform and render data now live in ECS components keyed
+		// by this entity. The GameObject is a thin shim holding only the id.
 		Entity mEntity;
-		GraphicsObject *poGraphicsObject;
-		bool mDrawEnable;
 
 	};
 

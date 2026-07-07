@@ -5,6 +5,7 @@
 #include "ShaderObjectNodeMan.h"
 #include "MeshNodeMan.h"
 #include "GameObjectMan.h"
+#include "WorldMan.h"
 #include "CameraNodeMan.h"
 #include "TexNodeMan.h"
 #include "ImageMan.h"
@@ -293,6 +294,7 @@ namespace Azul
 		GlyphMan::Destroy();
 		ImageMan::Destroy();
 		GameObjectMan::Destroy();
+		WorldMan::Destroy();
 		ShaderObjectNodeMan::Destroy();
 		TexNodeMan::Destroy();
 		MeshNodeMan::Destroy();

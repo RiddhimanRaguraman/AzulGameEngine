@@ -537,9 +537,33 @@ included by both modules.
 > - Verified: DLL builds 0 errors; standalone runtime check confirms the pool keeps 16-byte
 >   alignment through swap-remove (so SIMD `Vec3`/`Mat4` components are safe). **Full in-app
 >   render test still needed** (run `Engine.exe`).
-> - **Next in Phase 2:** migrate `GameObjectRigidBody`/`AnimSkin` `poTrans`/`poQuat`/`poScale`
->   into `TransformComponent.pos/rot/scale`; then `RenderComponent` (from `poGraphicsObject`),
->   `HierarchyComponent` (from the PCS tree), `LightComponent` (from `_LightTexture`).
+> **pos/rot/scale migration DONE (2026-07-06): builds 0 errors.**
+> - Added public `GameObject::GetTransform()` → the entity's `TransformComponent&`;
+>   `GetWorld`/`SetWorld` now route through it.
+> - `GameObjectRigidBody` + `GameObjectAnimSkin`: removed the heap `poScale`/`poQuat`/`poTrans`
+>   (`Vec3*`/`Quat*`) members. Ctors seed `TransformComponent.pos/scale/rot`; `Set*` methods and
+>   `Update`/`privUpdate` read/write `GetTransform().pos/rot/scale`; dtors no longer delete them.
+>   (Bonus: 3 fewer heap allocations per object, and they're off the leak surface.)
+> - `Prefab::SetData(RigidBody&|AnimSkin&)` and `Prefab(RigidBody*)` now read via
+>   `GetTransform()` instead of the (removed) friend members. `Prefab` keeps its OWN
+>   `poScale/poQuat/poTrans` working copies — those become behavior-component data in Phase 3.
+> - **Fixed leaks:** `WorldMan` is now lazy-create + explicit `Destroy()`, called in each scene's
+>   unload (after `GameObjectMan::Destroy()`), so `~World` frees the pools/arrays BEFORE the
+>   framework leak check. (The reported leaks were the World still alive at check time.)
+> **RenderComponent DONE (2026-07-06): builds 0 errors.**
+> - `RenderComponent { GraphicsObject* pGraphicsObject; bool drawEnable; }` (id
+>   `COMPONENT_RENDER`). Bridge form — still holds the whole `GraphicsObject` bundle; Phase 4
+>   decomposes it into mesh/shader/tex handles + a RenderSystem.
+> - `GameObject`: removed the `poGraphicsObject` and `mDrawEnable` members. Added protected
+>   `GetRender()`; ctor `Add<RenderComponent>`, `GetGraphicsObject`/`Draw`/`DrawEnable`/
+>   `DrawDisable` route through it; dtor deletes the GraphicsObject (still GameObject-owned) then
+>   destroys the entity. Subclasses (`RigidBody`/`AnimSkin`/`Sprite`/`FontSprite`) use
+>   `GetGraphicsObject()` instead of the removed member.
+> - **`GameObject` is now a pure shim: its only data member is `Entity mEntity`** — transform +
+>   render both live in ECS components.
+> - **Next in Phase 2:** `HierarchyComponent` (from the PCS tree parent/child), then
+>   `LightComponent` (lift the hard-coded light out of `GraphicsObject_LightTexture`).
+>   **Run the app to confirm transforms + rendering + clean leak report.**
 
 **Goal:** relocate object *data* into components while keeping `GameObject` as a thin
 forwarding shim so nothing downstream breaks.
