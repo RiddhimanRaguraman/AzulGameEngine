@@ -10,6 +10,10 @@
 #include "PCSTreeForwardIterator.h"
 #include "MeshNodeMan.h"
 #include "ShaderObjectNodeMan.h"
+#include "WorldMan.h"
+#include "World.h"
+#include "SystemMan.h"
+#include "LocalToWorldSystem.h"
 
 namespace Azul
 {
@@ -74,6 +78,11 @@ namespace Azul
 			assert(pGOM->poRootTree);
 
 			pGOM->poRootTree->Insert(pGameRoot, pGOM->poRootTree->GetRoot());
+
+			// Phase 3: engine systems that run over the component pools each
+			// frame (ordered). LocalToWorldSystem computes world = S*R*T.
+			SystemMan::Create();
+			SystemMan::Add(new LocalToWorldSystem());
 		}
 	}
 
@@ -88,6 +97,10 @@ namespace Azul
 		{
 			return;
 		}
+
+		// Free the systems (before WorldMan::Destroy in the scene unload).
+		SystemMan::Destroy();
+
 		PCSNode *pNode = nullptr;
 
 		PCSTreeForwardIterator pForIter(pTree->GetRoot());
@@ -115,6 +128,11 @@ namespace Azul
 
 		GameObjectMan *pGOM = GameObjectMan::privGetInstance();
 		assert(pGOM);
+
+		// Phase 3: systems run first over the component pools (LocalToWorldSystem
+		// fills world = S*R*T), then the tree walk lets behavior objects
+		// (prefab-driven / skinned) overwrite world and do per-object work.
+		SystemMan::Run(WorldMan::GetWorld(), currentTime);
 
 		PCSNode *pRootNode = pGOM->poRootTree->GetRoot();
 		assert(pRootNode);

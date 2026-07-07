@@ -32,10 +32,8 @@ namespace Azul
 		void SetPrefab(Prefab* _poPrefab);
 
 	private:
-		// pos/rot/scale now live in the entity's TransformComponent
-		// (see GameObject::GetTransform).
-		bool setorupdate;
-		char pad[7];
+		// pos/rot/scale live in the entity's TransformComponent; the world
+		// matrix is filled by LocalToWorldSystem (see GameObject::GetTransform).
 		Prefab* poPrefab;
 	};
 }

@@ -5,6 +5,8 @@
 #include "ShaderObjectNodeMan.h"
 #include "MeshNodeMan.h"
 #include "GameObjectMan.h"
+#include "SystemMan.h"
+#include "RotateSystem.h"
 #include "WorldMan.h"
 #include "CameraNodeMan.h"
 #include "TexNodeMan.h"
@@ -35,6 +37,7 @@ namespace Azul
 		TexNodeMan::Create();
 		ShaderObjectNodeMan::Create();
 		GameObjectMan::Create();
+		SystemMan::Add(new RotateSystem());
 		ImageMan::Create();
 		GlyphMan::Create();
 		SkelMan::Create();

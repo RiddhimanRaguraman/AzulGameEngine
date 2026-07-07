@@ -620,6 +620,40 @@ forwarding shim so nothing downstream breaks.
 
 ### Phase 3 — Turn Update() into systems (behaviors + animation)
 
+> **IN PROGRESS (2026-07-07): system infrastructure + LocalToWorldSystem landed. Builds 0 errors.**
+> - `System/SystemMan.h/.cpp` — ordered list of `System*`, `Create/Destroy/Add/Run`. Owns the
+>   systems; `Destroy()` frees them. Created/torn down in `GameObjectMan::Create/Destroy` (so
+>   before `WorldMan::Destroy` in scene unload — leak-safe).
+> - `System/LocalToWorldSystem.h/.cpp` — iterates the `TransformComponent` **dense pool** in one
+>   flat loop (no virtual dispatch, no tree walk) and computes `world = Scale*Rot*Trans`.
+> - `GameObjectMan::Update` now runs `SystemMan::Run(WorldMan::GetWorld(), t)` **before** the PCS
+>   tree walk. Plain objects get their world from the system; behavior objects (prefab-driven,
+>   skinned) still overwrite it in their own `Update`.
+> - `GameObjectRigidBody`: removed the base-world else-branch (system does it) and the
+>   `setorupdate` flag. **Behavior caveat:** prefab objects now run their prefab from frame 1
+>   (was frame-2+); visually negligible. Confirm at runtime.
+> **ID SPLIT SETTLED + RotateSystem (2026-07-07): builds 0 errors.**
+> - `ComponentId.h` now reserves **engine ids `[0, GAME_COMPONENT_BASE=32)`** and **game ids
+>   `[32, 64)`** (World::MAX_COMPONENT_TYPES). `static_assert` guards the engine range. Game
+>   components are defined app-side in `Engine/src/GameComponentId.h` (`COMPONENT_ROTATE=32`) so
+>   the app adds behaviors without editing the engine, and ids never collide.
+> - **App-authored behavior (proves the pattern across the DLL boundary):**
+>   `Engine/src/RotateComponent.h` (`angle`,`speed`) + `RotateSystem.h/.cpp` (subclasses the
+>   engine's exported `System`; `world = Scale*baseRot*spinZ*Trans`). Registered from each scene
+>   via `SystemMan::Add(new RotateSystem())` after `GameObjectMan::Create`. Verified: an
+>   app-defined component (id 32) is stored in the DLL's `World`, and the DLL's `SystemMan`
+>   virtual-dispatches into the app's `RotateSystem`. Works with the shared /MD runtime.
+> - **Reality check:** `Prefab_Rotate` (and `_Pendulum/_Pulse/_FiboSpiral/_RotateSpin`,
+>   `PrefabAnim`) are **DEAD CODE** — never instantiated. Only `Prefab_Pivot` is live (AnimMan on
+>   skinned objects). So `RotateSystem` currently runs over an **empty pool** (no scene object has
+>   a `RotateComponent`); it's the ready go-forward pattern. To see it live, attach a
+>   `RotateComponent` to a plain `GameObjectRigidBody`.
+> - **Next (the LIVE Update logic that's left):** `GameObjectAnimSkin` spin+blend
+>   (`AnimController_*`/`ComputeBlend` → `AnimationSystem`/`BlendSystem`/`SkinningSystem`), the
+>   input path (`GameObjectControlled`/`CameraMan::ProcessInput` → `InputSystem`), and the
+>   `GameObjectSprite`/`FontSprite` world (redundant S*R*T → LocalToWorldSystem). Consider
+>   deleting the dead `Prefab_*` derivatives.
+
 **Goal:** replace per-object virtual `Update()`, `Prefab_*`, and the animation controllers with
 data-driven systems.
 

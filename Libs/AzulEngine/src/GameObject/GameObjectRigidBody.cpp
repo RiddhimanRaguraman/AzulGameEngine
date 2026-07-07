@@ -5,7 +5,6 @@ namespace Azul
 {
 	GameObjectRigidBody::GameObjectRigidBody(GraphicsObject* pGraphicsObject)
 		: GameObject(pGraphicsObject),
-		setorupdate(false),
 		poPrefab(nullptr)
 	{
 		assert(this->GetGraphicsObject());
@@ -28,21 +27,15 @@ namespace Azul
 
 		TransformComponent& t = this->GetTransform();
 
-		if (setorupdate == true && poPrefab != nullptr)
+		if (poPrefab != nullptr)
 		{
+			// prefab drives the world matrix directly
 			this->poPrefab->SetData(*this);
 			poPrefab->Update();
 			poPrefab->ReturnWorld(t.world);
 		}
-		else
-		{
-			Scale ScaleA(t.scale.x(), t.scale.y(), t.scale.z());
-			Rot RotA(t.rot);
-			Trans TransA(t.pos.x(), t.pos.y(), t.pos.z());
-
-			t.world = ScaleA * RotA * TransA;
-			setorupdate = true;
-		}
+		// non-prefab: world = S*R*T is computed by LocalToWorldSystem before
+		// this tree walk (Phase 3).
 
 		this->GetGraphicsObject()->SetWorld(t.world);
 	}

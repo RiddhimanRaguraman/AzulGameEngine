@@ -1,6 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
 
 #ifndef AZUL_LIGHT_COMPONENT_H
 #define AZUL_LIGHT_COMPONENT_H
