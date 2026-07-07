@@ -9,6 +9,7 @@
 #include "World.h"
 #include "TransformComponent.h"
 #include "RenderComponent.h"
+#include "HierarchyComponent.h"
 
 namespace Azul
 {
@@ -17,7 +18,7 @@ namespace Azul
 	{
 		assert(pGraphicsObject);
 
-		// Bridge: one entity, its transform + render data live in components.
+		// Bridge: one entity; its transform + render + hierarchy live in components.
 		this->mEntity = WorldMan::GetWorld().Create();
 
 		TransformComponent &t = WorldMan::GetWorld().Add<TransformComponent>(this->mEntity);
@@ -26,6 +27,9 @@ namespace Azul
 		RenderComponent &r = WorldMan::GetWorld().Add<RenderComponent>(this->mEntity);
 		r.pGraphicsObject = pGraphicsObject;
 		r.drawEnable = true;
+
+		HierarchyComponent &h = WorldMan::GetWorld().Add<HierarchyComponent>(this->mEntity);
+		h.parent = EntityNull();   // set by GameObjectMan::Add when inserted under a parent
 	}
 
 	GameObject::~GameObject()
@@ -48,6 +52,24 @@ namespace Azul
 		RenderComponent *pR = WorldMan::GetWorld().TryGet<RenderComponent>(this->mEntity);
 		assert(pR);
 		return *pR;
+	}
+
+	HierarchyComponent &GameObject::GetHierarchy()
+	{
+		HierarchyComponent *pH = WorldMan::GetWorld().TryGet<HierarchyComponent>(this->mEntity);
+		assert(pH);
+		return *pH;
+	}
+
+	Entity GameObject::GetEntity() const
+	{
+		return this->mEntity;
+	}
+
+	void GameObject::SetParent(GameObject *pParent)
+	{
+		assert(pParent);
+		this->GetHierarchy().parent = pParent->GetEntity();
 	}
 
 	Mat4 *GameObject::GetWorld()

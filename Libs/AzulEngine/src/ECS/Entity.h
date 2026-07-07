@@ -24,6 +24,20 @@ namespace Azul
 	{
 		return (a.index == b.index) && (a.generation == b.generation);
 	}
+
+	// "No entity" sentinel (e.g. a hierarchy root has a null parent).
+	inline Entity EntityNull()
+	{
+		Entity e;
+		e.index = ECS_INVALID_INDEX;
+		e.generation = 0u;
+		return e;
+	}
+
+	inline bool EntityIsNull(const Entity &e)
+	{
+		return e.index == ECS_INVALID_INDEX;
+	}
 }
 
 #endif

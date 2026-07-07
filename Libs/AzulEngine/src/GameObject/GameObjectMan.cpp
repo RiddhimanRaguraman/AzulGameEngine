@@ -23,6 +23,10 @@ namespace Azul
 
 		// insert object to root
 		pGOM->poRootTree->Insert(pObj, pParent);
+
+		// Bridge: mirror the parent into the child's HierarchyComponent (the
+		// PCSTree stays authoritative for traversal until Phase 5).
+		pObj->SetParent(pParent);
 	}
 
 	PCSTree *GameObjectMan::GetPCSTree()

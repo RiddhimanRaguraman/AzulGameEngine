@@ -22,6 +22,7 @@
 #include "Entity.h"
 #include "TransformComponent.h"
 #include "RenderComponent.h"
+#include "HierarchyComponent.h"
 
 #include "EngineDLLInterface.h"
 
@@ -53,8 +54,13 @@ namespace Azul
 		void DrawEnable();
 		void DrawDisable();
 
+		// Entity id + scene-graph parent (mirrored into HierarchyComponent).
+		Entity GetEntity() const;
+		void SetParent(GameObject *pParent);
+
 	protected:
 		RenderComponent &GetRender();
+		HierarchyComponent &GetHierarchy();
 
 		// Bridge: the transform and render data now live in ECS components keyed
 		// by this entity. The GameObject is a thin shim holding only the id.

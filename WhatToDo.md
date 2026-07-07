@@ -561,8 +561,18 @@ included by both modules.
 >   `GetGraphicsObject()` instead of the removed member.
 > - **`GameObject` is now a pure shim: its only data member is `Entity mEntity`** — transform +
 >   render both live in ECS components.
-> - **Next in Phase 2:** `HierarchyComponent` (from the PCS tree parent/child), then
->   `LightComponent` (lift the hard-coded light out of `GraphicsObject_LightTexture`).
+> **HierarchyComponent DONE (2026-07-07): builds 0 errors.**
+> - `HierarchyComponent { Entity parent }` (id `COMPONENT_HIERARCHY`). Added `EntityNull()`/
+>   `EntityIsNull()` helpers to `Entity.h`.
+> - `GameObject` ctor `Add`s it (parent = `EntityNull()`); new public `GetEntity()` +
+>   `SetParent(GameObject*)` and protected `GetHierarchy()`. `GameObjectMan::Add` now calls
+>   `pObj->SetParent(pParent)` after the PCS `Insert`, mirroring the parent into the component.
+> - **Bridge only:** the `PCSTree` stays authoritative for Update/Draw traversal; the component
+>   just records the parent. Phase 5 makes it authoritative + adds `TransformPropagationSystem`.
+> - `GameObject` now carries 3 components (Transform, Render, Hierarchy); its only member is
+>   still `Entity mEntity`.
+> - **Next in Phase 2:** `LightComponent` (lift the hard-coded `poLightColor`/`poLightPos` out
+>   of `GraphicsObject_LightTexture`). Then Phase 2 is done → Phase 3 (Update()→systems).
 >   **Run the app to confirm transforms + rendering + clean leak report.**
 
 **Goal:** relocate object *data* into components while keeping `GameObject` as a thin
