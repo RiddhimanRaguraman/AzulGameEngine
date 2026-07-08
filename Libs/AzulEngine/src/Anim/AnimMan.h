@@ -77,7 +77,6 @@ namespace Azul
                           Vec3& _pLightColor,
                           Vec3& _pLightPos);
         static AnimController *Find(Name name);
-        static void Update(AnimTime tCurr);
         static void BlendAnimation(AnimTime tDelta);
 		static float GetBlendTs();
 

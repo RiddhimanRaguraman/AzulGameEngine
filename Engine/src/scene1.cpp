@@ -353,8 +353,6 @@ namespace Azul
 
 		CameraNodeMan::Update();
 
-		AnimMan::Update(tDelta);
-
 		GameObjectMan::Update(tCurr, tDelta);
 	}
 

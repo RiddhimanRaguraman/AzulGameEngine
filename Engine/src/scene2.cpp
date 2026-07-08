@@ -277,7 +277,6 @@ namespace Azul
 				}
 			}
 		}
-		AnimMan::Update(tDelta);
 
 		GameObjectMan::Update(tCurr, tDelta);
 	}

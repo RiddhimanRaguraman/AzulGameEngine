@@ -738,9 +738,9 @@ forwarding shim so nothing downstream breaks.
 >   (SPACE-key ramp -> `pTwoController->SetBlendTs`); the component only drives per-frame sampling.
 > - `GameObjectMan::Create` order: LocalToWorld -> Rotate -> Animation -> **Blend** -> Skinning
 >   (both anim samplers run before the skinning dispatch).
-> - **`AnimMan::Update` is now an empty no-op** -- all controllers are ECS-system-driven. Scenes still
->   call it (harmless); the empty method + its `AnimMan::Update(tDelta)` scene calls (scene1/scene2)
->   can be deleted as trivial follow-up cleanup once this is runtime-verified.
+> - **`AnimMan::Update` fully DELETED (2026-07-08): builds 0 errors.** Removed the method + its
+>   declaration in `AnimMan.h` + both scene call sites (scene1/scene2). Blend-ratio input still flows
+>   through `AnimMan::BlendAnimation` (unchanged).
 > - **NEEDS RUNTIME TEST: press 2 -- Dance/Gangnam (one-anim) + Blend (two-anim); SPACE must still
 >   ramp the blend between the two clips exactly as before.**
 >
@@ -748,9 +748,14 @@ forwarding shim so nothing downstream breaks.
 > (AnimationSystem), two-anim (BlendSystem), GPU skinning (SkinningSystem), plain world
 > (LocalToWorldSystem) are all data-driven systems over component pools. No `Prefab_*` or
 > `AnimController_*` logic runs from any object `Update()`; `AnimMan::Update` is retired.
-> **Remaining Phase 3 cleanup (optional):** inline the 2-line controller bodies into
-> AnimationSystem/BlendSystem and delete `AnimController`/`_OneAnim`/`_TwoAnim`; delete the empty
-> `AnimMan::Update`. Then Phase 4 (RenderSystem) is the next big phase.
+> **Remaining Phase 3 cleanup (DEFERRED, own increment):** delete `AnimController`/`_OneAnim`/
+> `_TwoAnim` by moving their owned resources (`Anim`/`TimerController`/`ComputeBlend`) into `AnimNode`,
+> carrying the data in `AnimClip`/`AnimBlendComponent`, and inlining the sample logic in the systems.
+> This is NOT a mechanical inline -- the controllers are the RAII owners of those heap objects, so it
+> is a ~10-file ownership refactor with runtime-only leak/lifetime surface. Do it as its OWN increment
+> AFTER B/C are runtime-verified (don't stack it on unverified changes). No app code uses
+> `AnimController` or `AnimMan::Find` (checked), so the blast radius is contained to the DLL anim
+> subsystem. Then Phase 4 (RenderSystem) is the next big phase.
 
 **Goal:** replace per-object virtual `Update()`, `Prefab_*`, and the animation controllers with
 data-driven systems.

@@ -639,16 +639,6 @@ namespace Azul
         return pData ? pData->GetController() : nullptr;
     }
 
-    void AnimMan::Update(AnimTime tCurr)
-    {
-        // Phase 3 RETIRED: all animation controllers are now driven data-first by
-        // the ECS systems over their component pools -- one-anim by AnimationSystem
-        // (AnimClipComponent) and two-anim by BlendSystem (AnimBlendComponent),
-        // both run from GameObjectMan::Update -> SystemMan::Run. Nothing to drive
-        // here anymore. (Blend-ratio input still flows through BlendAnimation.)
-        AZUL_UNUSED_VAR(tCurr);
-    }
-
     void AnimMan::BlendAnimation(AnimTime tDelta)
     {
         static float sBlendTs = 0.0f;
