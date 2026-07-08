@@ -14,6 +14,9 @@
 #include "BufferUAV_cs.h"
 #include "StateDirectXMan.h"
 #include "HierarchyTableMan.h"
+#include "WorldMan.h"
+#include "World.h"
+#include "GpuSkinComponent.h"
 
 namespace Azul
 {
@@ -38,6 +41,12 @@ namespace Azul
 		t.pos.set(0.0f, 0.0f, 0.0f);
 		t.scale.set(1.0f, 1.0f, 1.0f);
 		t.rot.set(0.0f, 0.0f, 0.0f, 1.0f);
+
+		// Phase 3: the GPU compute-skinning dispatch is now data-driven -- the
+		// SkinningSystem calls pBlend->Execute() over this pool each frame
+		// (non-owning handle; the AnimController still owns the ComputeBlend).
+		GpuSkinComponent& skin = WorldMan::GetWorld().Add<GpuSkinComponent>(this->GetEntity());
+		skin.pBlend = this->pBlend;
 	}
 
 	GameObjectAnimSkin::~GameObjectAnimSkin()
@@ -62,8 +71,8 @@ namespace Azul
 		// update the bounding volume based on world matrix
 		this->GetGraphicsObject()->SetWorld(*this->GetWorld());
 
-		// do the compute shaders
-		this->pBlend->Execute();
+		// NOTE: the GPU compute-skinning dispatch (pBlend->Execute) now runs in
+		// the SkinningSystem over the GpuSkinComponent pool -- see GameObjectMan.
 	}
 
 	void GameObjectAnimSkin::privUpdate(AnimTime currentTime)

@@ -23,7 +23,7 @@ namespace Azul
 	public:
 		static void Add(GameObject* pObj, GameObject *pParent);
 		static void Draw();
-		static void Update(AnimTime currentTime);
+		static void Update(AnimTime currentTime, AnimTime tDelta);
 
 		static GameObject *GetRoot(void);
 		static PCSTree *GetPCSTree();

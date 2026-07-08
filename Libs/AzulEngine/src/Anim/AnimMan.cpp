@@ -19,6 +19,9 @@
 #include "ComputeBlend_OneAnim.h"
 #include "ComputeBlend_TwoAnim.h"
 #include "PCSNode.h"
+#include "WorldMan.h"
+#include "World.h"
+#include "AnimClipComponent.h"
 
 
 namespace Azul
@@ -461,6 +464,15 @@ namespace Azul
         AnimController *pController = new AnimController_OneAnim(ptAnim, pBlend, 1.0f);
         assert(pController);
 
+        // Phase 3: the single-clip anim is now sampled by the AnimationSystem.
+        // Park the (AnimMan-owned) controller on a dedicated entity via a
+        // non-owning AnimClipComponent; the system drives it once per frame.
+        {
+            World& w = WorldMan::GetWorld();
+            Entity animEnt = w.Create();
+            w.Add<AnimClipComponent>(animEnt).pController = pController;
+        }
+
         GraphicsObject_SkinLightTexture* pGraphicsSkin = new GraphicsObject_SkinLightTexture(meshName,
                                                                                              ShaderObject::Name::SkinLightTexture,
                                                                                              texName,
@@ -510,6 +522,15 @@ namespace Azul
 
 		AnimController *pController = new AnimController_OneAnim(ptAnim, pBlend, 1.0f);
 		assert(pController);
+
+		// Phase 3: one controller drives every skin mesh below, but it must be
+		// sampled ONCE per frame -- park it on a single dedicated entity via a
+		// non-owning AnimClipComponent that the AnimationSystem drives.
+		{
+			World& w = WorldMan::GetWorld();
+			Entity animEnt = w.Create();
+			w.Add<AnimClipComponent>(animEnt).pController = pController;
+		}
 
 		GameObjectAnimSkin *pSkins[AnimNode::MAX_GAME_SKINS]{ nullptr };
 
@@ -612,15 +633,12 @@ namespace Azul
         AnimMan *pMan = AnimMan::privGetInstance();
         assert(pMan != nullptr);
 
-        Iterator *pIt = pMan->baseGetActiveIterator();
-        for (DLink *p = pIt->First(); !pIt->IsDone(); p = pIt->Next())
+        // Phase 3: single-clip (one-anim) controllers are now driven by the
+        // AnimationSystem over the AnimClipComponent pool. Only the two-anim
+        // blend controller remains OOP-driven here (until the BlendSystem lands).
+        if (pMan->poBlendTwoAnimController)
         {
-            AnimNode *n = (AnimNode *)p;
-            AnimController *c = n->GetController();
-            if (c)
-            {
-                c->Update(tCurr);
-            }
+            pMan->poBlendTwoAnimController->Update(tCurr);
         }
     }
 

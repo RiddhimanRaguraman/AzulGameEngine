@@ -282,7 +282,7 @@ namespace Azul
 		}
 		AnimMan::Update(tDelta);
 
-		GameObjectMan::Update(tCurr);
+		GameObjectMan::Update(tCurr, tDelta);
 	}
 
 	void Scene2::Unload(Game& game)

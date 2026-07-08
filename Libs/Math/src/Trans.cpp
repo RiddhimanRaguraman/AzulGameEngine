@@ -134,17 +134,14 @@ namespace Azul
 	Mat4 Trans::operator*(const Rot& A) const
 	{
 		Mat4 r;
-		const float tx = this->_m12;
-		const float ty = this->_m13;
-		const float tz = this->_m14;
 
 		// r = T * R; copy rotation rows, compute translated bottom row
 		r._m0 = A._m0;   r._m1 = A._m1;   r._m2  = A._m2;   r._m3  = A._m3;
 		r._m4 = A._m4;   r._m5 = A._m5;   r._m6  = A._m6;   r._m7  = A._m7;
 		r._m8 = A._m8;   r._m9 = A._m9;   r._m10 = A._m10;  r._m11 = A._m11;
-		r._m12 = tx * A._m0 + ty * A._m4 + tz * A._m8;
-		r._m13 = tx * A._m1 + ty * A._m5 + tz * A._m9;
-		r._m14 = tx * A._m2 + ty * A._m6 + tz * A._m10;
+		r._m12 = this->_m12 * A._m0 + this->_m13 * A._m4 + this->_m14 * A._m8;
+		r._m13 = this->_m12 * A._m1 + this->_m13 * A._m5 + this->_m14 * A._m9;
+		r._m14 = this->_m12 * A._m2 + this->_m13 * A._m6 + this->_m14 * A._m10;
 		r._m15 = 1.0f;
 
 		// Combine hints

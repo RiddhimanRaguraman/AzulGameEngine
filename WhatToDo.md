@@ -669,6 +669,53 @@ forwarding shim so nothing downstream breaks.
 > - **Next (the one genuinely-live Update piece left): `GameObjectAnimSkin` spin+blend**
 >   (`AnimController_*`/`ComputeBlend` → `AnimationSystem`/`BlendSystem`/`SkinningSystem`) — the big
 >   remaining Phase 3 conversion. Created via `AnimMan` on skinned objects (uses `Prefab_Pivot`).
+>
+> **ANIMATION — full flow mapped (2026-07-08), then Increment A landed.**
+> The live skinned-anim path (scenes 1 & 2 dancers) runs each frame as:
+>   1. `AnimMan::BlendAnimation(tDelta)` — SPACE-key ramps a blend Ts → the two-anim controller.
+>   2. `AnimMan::Update(tDelta)` — walks its DLink list, `AnimController::Update(tCurr)` each:
+>      OneAnim = timer advance + `pBlend->AnimateMixerA(clip,t)` (CPU sample clip → mixer key bufs);
+>      TwoAnim = two timers + two clips + blend ratio.
+>   3. `GameObjectMan::Update(tCurr)` → SystemMan::Run, then tree walk → `GameObjectAnimSkin::Update`:
+>      world matrix (Prefab_Pivot spin or privUpdate S*Q*Rx*Ry*Rz*T) + `SetWorld` + `pBlend->Execute()`
+>      (GPU dispatch: MixerA interpolate → WorldComputeA compose bone-world → copy UAV→SRV).
+>   `AnimMan` owns the AnimControllers (drives them via its own list); `GameObjectAnimSkin` owns the
+>   `ComputeBlend` and called `Execute()`. `ComputeBlend::Execute` composes bones in MODEL space; the
+>   object world matrix is applied later in the vertex shader, so Execute is independent of the
+>   transform systems.
+> **Increment A DONE (2026-07-08): `SkinningSystem` — builds 0 errors.**
+> - New `Component/GpuSkinComponent.h` (`COMPONENT_GPU_SKIN`; non-owning `ComputeBlend* pBlend`),
+>   `System/SkinningSystem.h/.cpp` (iterates the GpuSkin pool, calls `pBlend->Execute()`).
+> - Registered in `GameObjectMan::Create` after `LocalToWorldSystem` (no-op in scenes with no skins).
+> - `GameObjectAnimSkin` ctor now `Add`s a `GpuSkinComponent{pBlend}`; removed the `pBlend->Execute()`
+>   from its `Update`. Ordering preserved: `AnimMan::Update` (sample) still precedes
+>   `GameObjectMan::Update` (where SystemMan::Run now dispatches skinning). Handle is non-owning —
+>   the `AnimController` still deletes the `ComputeBlend`; entity destroy just drops the component.
+> - **NEEDS RUNTIME TEST: press 1 or 2 — the dancers must still animate identically.**
+> **Increment B DONE (2026-07-08): `AnimationSystem` (one-anim path) — builds 0 errors.**
+> - New `Component/AnimClipComponent.h` (`COMPONENT_ANIM_CLIP`; non-owning `AnimController*`),
+>   `System/AnimationSystem.h/.cpp` (iterates the pool, `pController->Update(tDelta)`).
+> - **CRITICAL time-semantics fix:** the controllers' `TimerController::Update` ACCUMULATES
+>   (`tCurr += tDelta`), and scenes drove `AnimMan::Update(tDelta)`. But `SystemMan::Run` was passing
+>   the ABSOLUTE `tCurr`. Fixed by threading the frame **delta** through the system runner:
+>   `GameObjectMan::Update(tCurr, tDelta)` now calls `SystemMan::Run(world, tDelta)` (tree walk still
+>   gets absolute tCurr). No existing system read the arg meaningfully (Rotate uses a fixed increment;
+>   LocalToWorld/Skinning ignore it), so the semantic switch is safe. Updated all 4 scene call sites.
+> - `AnimMan::Add` (both one-anim variants) parks the AnimMan-owned controller on a **dedicated
+>   per-controller entity** via a non-owning `AnimClipComponent` (dedicated, NOT the skin entity, so a
+>   controller driving several skin meshes is still sampled exactly once/frame). Bare entities are
+>   freed wholesale at `WorldMan::Destroy`.
+> - `AnimMan::Update` now drives ONLY `poBlendTwoAnimController` (the one-anim list walk is gone --
+>   the system does it). Ownership unchanged: `AnimNode::privClear` still deletes the controller;
+>   the component just holds a non-owning handle (same shape as Increment A).
+> - System order in `GameObjectMan::Create`: LocalToWorld → **Animation (sample)** → Skinning
+>   (dispatch). Two-anim is still sampled by `AnimMan::Update` before `GameObjectMan::Update`.
+> - **NEEDS RUNTIME TEST: press 1 (one-anim dancers animate) and 2 (Dance/Gangnam one-anim + Blend
+>   two-anim; SPACE still blends). All must look identical to before.**
+> - (Also fixed a stray `this->_m14` prefix that had corrupted line 1 of `scene1.cpp`.)
+> - **Next: Increment C — `BlendSystem`** (`AnimController_TwoAnim` + blend Ts → an
+>   `AnimBlendComponent` + system), retiring the last `AnimMan::Update` OOP driving. After that,
+>   consider inlining the 2-line controller logic into the systems and deleting `AnimController_*`.
 
 **Goal:** replace per-object virtual `Update()`, `Prefab_*`, and the animation controllers with
 data-driven systems.

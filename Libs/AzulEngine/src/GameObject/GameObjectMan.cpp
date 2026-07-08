@@ -14,6 +14,8 @@
 #include "World.h"
 #include "SystemMan.h"
 #include "LocalToWorldSystem.h"
+#include "AnimationSystem.h"
+#include "SkinningSystem.h"
 
 namespace Azul
 {
@@ -80,9 +82,14 @@ namespace Azul
 			pGOM->poRootTree->Insert(pGameRoot, pGOM->poRootTree->GetRoot());
 
 			// Phase 3: engine systems that run over the component pools each
-			// frame (ordered). LocalToWorldSystem computes world = S*R*T.
+			// frame, in order. LocalToWorldSystem computes world = S*R*T;
+			// AnimationSystem samples single-clip anims into the mixer buffers;
+			// SkinningSystem then dispatches GPU compute skinning that consumes
+			// them. Anim/Skinning are no-ops in scenes without those components.
 			SystemMan::Create();
 			SystemMan::Add(new LocalToWorldSystem());
+			SystemMan::Add(new AnimationSystem());
+			SystemMan::Add(new SkinningSystem());
 		}
 	}
 
@@ -120,7 +127,7 @@ namespace Azul
 		pGOM->poRootTree = nullptr;
 	}
 
-	void GameObjectMan::Update(AnimTime currentTime)
+	void GameObjectMan::Update(AnimTime currentTime, AnimTime tDelta)
 	{
 		//Trace::out("\n");
 		//Trace::out("------ GameObjectMan::Update() -----------------\n");
@@ -132,7 +139,9 @@ namespace Azul
 		// Phase 3: systems run first over the component pools (LocalToWorldSystem
 		// fills world = S*R*T), then the tree walk lets behavior objects
 		// (prefab-driven / skinned) overwrite world and do per-object work.
-		SystemMan::Run(WorldMan::GetWorld(), currentTime);
+		// Systems are driven with the frame DELTA (time-based systems -- e.g.
+		// AnimationSystem's timer -- accumulate it); the tree walk keeps absolute.
+		SystemMan::Run(WorldMan::GetWorld(), tDelta);
 
 		PCSNode *pRootNode = pGOM->poRootTree->GetRoot();
 		assert(pRootNode);

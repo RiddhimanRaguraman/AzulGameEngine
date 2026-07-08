@@ -109,10 +109,9 @@ namespace Azul
 	void Scene3::Update(Game& game, AnimTime tCurr, AnimTime tDelta)
 	{
 		AZUL_UNUSED_VAR(game);
-		AZUL_UNUSED_VAR(tDelta);
 
 		CameraNodeMan::Update();
-		GameObjectMan::Update(tCurr);
+		GameObjectMan::Update(tCurr, tDelta);
 	}
 
 	void Scene3::Unload(Game& game)
