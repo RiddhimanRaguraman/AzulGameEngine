@@ -729,9 +729,28 @@ forwarding shim so nothing downstream breaks.
 >   scenes. The app now references NO system/component machinery -- scene4 only `Add`s the
 >   `RotateComponent` *data*. Verified: `RotateSystem.obj` builds into `AzulEngine`, not the app.
 >
-> **Next: Increment C — `BlendSystem`** (`AnimController_TwoAnim` + blend Ts → an
-> `AnimBlendComponent` + system), retiring the last `AnimMan::Update` OOP driving. After that,
-> consider inlining the 2-line controller logic into the systems and deleting `AnimController_*`.
+> **Increment C DONE (2026-07-08): `BlendSystem` (two-anim path) — builds 0 errors.**
+> - New `Component/AnimBlendComponent.h` (`COMPONENT_ANIM_BLEND`; non-owning `AnimController*`),
+>   `System/BlendSystem.h/.cpp` (iterates the pool, `pController->Update(tDelta)`). Same non-owning
+>   handle shape as A/B.
+> - `AnimMan::Add` (two-anim variant) parks the AnimMan-owned two-anim controller on a dedicated
+>   entity via `AnimBlendComponent`. The blend RATIO is still pushed by `AnimMan::BlendAnimation`
+>   (SPACE-key ramp -> `pTwoController->SetBlendTs`); the component only drives per-frame sampling.
+> - `GameObjectMan::Create` order: LocalToWorld -> Rotate -> Animation -> **Blend** -> Skinning
+>   (both anim samplers run before the skinning dispatch).
+> - **`AnimMan::Update` is now an empty no-op** -- all controllers are ECS-system-driven. Scenes still
+>   call it (harmless); the empty method + its `AnimMan::Update(tDelta)` scene calls (scene1/scene2)
+>   can be deleted as trivial follow-up cleanup once this is runtime-verified.
+> - **NEEDS RUNTIME TEST: press 2 -- Dance/Gangnam (one-anim) + Blend (two-anim); SPACE must still
+>   ramp the blend between the two clips exactly as before.**
+>
+> **PHASE 3 essentially COMPLETE for all LIVE update logic:** behavior (RotateSystem), one-anim
+> (AnimationSystem), two-anim (BlendSystem), GPU skinning (SkinningSystem), plain world
+> (LocalToWorldSystem) are all data-driven systems over component pools. No `Prefab_*` or
+> `AnimController_*` logic runs from any object `Update()`; `AnimMan::Update` is retired.
+> **Remaining Phase 3 cleanup (optional):** inline the 2-line controller bodies into
+> AnimationSystem/BlendSystem and delete `AnimController`/`_OneAnim`/`_TwoAnim`; delete the empty
+> `AnimMan::Update`. Then Phase 4 (RenderSystem) is the next big phase.
 
 **Goal:** replace per-object virtual `Update()`, `Prefab_*`, and the animation controllers with
 data-driven systems.

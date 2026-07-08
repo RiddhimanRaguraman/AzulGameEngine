@@ -16,6 +16,7 @@
 #include "LocalToWorldSystem.h"
 #include "RotateSystem.h"
 #include "AnimationSystem.h"
+#include "BlendSystem.h"
 #include "SkinningSystem.h"
 
 namespace Azul
@@ -86,13 +87,15 @@ namespace Azul
 			// frame, in order. LocalToWorldSystem computes world = S*R*T;
 			// RotateSystem spins entities with a RotateComponent (overwrites the
 			// plain world, so it runs after LocalToWorld); AnimationSystem samples
-			// single-clip anims into the mixer buffers; SkinningSystem then
-			// dispatches GPU compute skinning that consumes them. Each is a no-op
-			// in scenes without the matching components.
+			// single-clip anims and BlendSystem samples two-clip blends into the
+			// mixer buffers; SkinningSystem then dispatches GPU compute skinning
+			// that consumes them. Each is a no-op in scenes without the matching
+			// components.
 			SystemMan::Create();
 			SystemMan::Add(new LocalToWorldSystem());
 			SystemMan::Add(new RotateSystem());
 			SystemMan::Add(new AnimationSystem());
+			SystemMan::Add(new BlendSystem());
 			SystemMan::Add(new SkinningSystem());
 		}
 	}

@@ -22,6 +22,7 @@
 #include "WorldMan.h"
 #include "World.h"
 #include "AnimClipComponent.h"
+#include "AnimBlendComponent.h"
 
 
 namespace Azul
@@ -593,6 +594,16 @@ namespace Azul
 
         pMan->poBlendTwoAnimController = pTwoController;
 
+        // Phase 3: the two-clip blend is now sampled by the BlendSystem. Park the
+        // (AnimMan-owned) controller on a dedicated entity via a non-owning
+        // AnimBlendComponent; the system drives it once per frame. The blend Ts is
+        // still pushed via AnimMan::BlendAnimation -> pTwoController->SetBlendTs.
+        {
+            World& w = WorldMan::GetWorld();
+            Entity blendEnt = w.Create();
+            w.Add<AnimBlendComponent>(blendEnt).pController = pController;
+        }
+
         GraphicsObject_SkinLightTexture* pGraphicsSkin = new GraphicsObject_SkinLightTexture(meshName,
             ShaderObject::Name::SkinLightTexture,
             texName,
@@ -630,16 +641,12 @@ namespace Azul
 
     void AnimMan::Update(AnimTime tCurr)
     {
-        AnimMan *pMan = AnimMan::privGetInstance();
-        assert(pMan != nullptr);
-
-        // Phase 3: single-clip (one-anim) controllers are now driven by the
-        // AnimationSystem over the AnimClipComponent pool. Only the two-anim
-        // blend controller remains OOP-driven here (until the BlendSystem lands).
-        if (pMan->poBlendTwoAnimController)
-        {
-            pMan->poBlendTwoAnimController->Update(tCurr);
-        }
+        // Phase 3 RETIRED: all animation controllers are now driven data-first by
+        // the ECS systems over their component pools -- one-anim by AnimationSystem
+        // (AnimClipComponent) and two-anim by BlendSystem (AnimBlendComponent),
+        // both run from GameObjectMan::Update -> SystemMan::Run. Nothing to drive
+        // here anymore. (Blend-ratio input still flows through BlendAnimation.)
+        AZUL_UNUSED_VAR(tCurr);
     }
 
     void AnimMan::BlendAnimation(AnimTime tDelta)
