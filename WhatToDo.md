@@ -713,9 +713,25 @@ forwarding shim so nothing downstream breaks.
 > - **NEEDS RUNTIME TEST: press 1 (one-anim dancers animate) and 2 (Dance/Gangnam one-anim + Blend
 >   two-anim; SPACE still blends). All must look identical to before.**
 > - (Also fixed a stray `this->_m14` prefix that had corrupted line 1 of `scene1.cpp`.)
-> - **Next: Increment C — `BlendSystem`** (`AnimController_TwoAnim` + blend Ts → an
->   `AnimBlendComponent` + system), retiring the last `AnimMan::Update` OOP driving. After that,
->   consider inlining the 2-line controller logic into the systems and deleting `AnimController_*`.
+> **ALL ECS COMPONENTS + SYSTEMS NOW LIVE IN THE DLL (2026-07-08): builds 0 errors.**
+> User directive: every component and system belongs in `AzulEngine.dll`; the app (`Engine/src`)
+> keeps only scenes + game setup. `RotateComponent`/`RotateSystem`/`GameComponentId.h` were the only
+> ECS files still app-side (the earlier "prove a game-defined component crosses the boundary" demo).
+> - `git mv` `RotateComponent.h` → DLL `Component/`, `RotateSystem.h/.cpp` → DLL `System/`.
+> - `RotateComponent` is now an **engine** component: added `COMPONENT_ROTATE` to the engine
+>   `ComponentId.h` enum; deleted app-side `GameComponentId.h` (`GAME_COMPONENT_BASE`/[32,64) stays
+>   reserved as an extension point, currently unused).
+> - `RotateSystem` tagged `AZUL_ENGINE_LIBRARY_API` (+ `EngineDLLInterface.h`) so the exported class
+>   links across the boundary.
+> - **Registration centralized:** `RotateSystem` is now added in `GameObjectMan::Create` after
+>   `LocalToWorldSystem` (order: LocalToWorld → Rotate → Animation → Skinning). Removed the per-scene
+>   `SystemMan::Add(new RotateSystem())` + the `SystemMan.h`/`RotateSystem.h` includes from all 4
+>   scenes. The app now references NO system/component machinery -- scene4 only `Add`s the
+>   `RotateComponent` *data*. Verified: `RotateSystem.obj` builds into `AzulEngine`, not the app.
+>
+> **Next: Increment C — `BlendSystem`** (`AnimController_TwoAnim` + blend Ts → an
+> `AnimBlendComponent` + system), retiring the last `AnimMan::Update` OOP driving. After that,
+> consider inlining the 2-line controller logic into the systems and deleting `AnimController_*`.
 
 **Goal:** replace per-object virtual `Update()`, `Prefab_*`, and the animation controllers with
 data-driven systems.

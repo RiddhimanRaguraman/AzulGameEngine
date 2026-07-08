@@ -5,13 +5,13 @@
 #ifndef ROTATE_COMPONENT_H
 #define ROTATE_COMPONENT_H
 
-#include "GameComponentId.h"
+#include "ComponentId.h"
 
 namespace Azul
 {
-	// Spins an entity about Z. A game (app-authored) behavior component -- the
-	// data-oriented replacement for the old Prefab_Rotate. RotateSystem reads
-	// it + the entity's TransformComponent and rebuilds the world matrix.
+	// Spins an entity about Z. A behavior component -- the data-oriented
+	// replacement for the old Prefab_Rotate. RotateSystem reads it + the
+	// entity's TransformComponent and rebuilds the world matrix.
 	struct RotateComponent
 	{
 		float angle;   // current accumulated angle (radians)

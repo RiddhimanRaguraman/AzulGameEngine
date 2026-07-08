@@ -5,8 +5,6 @@
 #include "ShaderObjectNodeMan.h"
 #include "MeshNodeMan.h"
 #include "GameObjectMan.h"
-#include "SystemMan.h"
-#include "RotateSystem.h"
 #include "RotateComponent.h"
 #include "WorldMan.h"
 #include "World.h"
@@ -25,7 +23,6 @@ namespace Azul
 		TexNodeMan::Create();
 		ShaderObjectNodeMan::Create();
 		GameObjectMan::Create();
-		SystemMan::Add(new RotateSystem());
 
 		CameraNodeMan::SetMoveSpeed(1.0f);
 

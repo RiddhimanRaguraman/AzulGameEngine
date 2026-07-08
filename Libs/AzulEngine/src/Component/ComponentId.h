@@ -14,10 +14,10 @@ namespace Azul
 	//
 	// ID SPLIT (World::MAX_COMPONENT_TYPES == 64 slots total):
 	//   [0, GAME_COMPONENT_BASE)          -> ENGINE components (defined here)
-	//   [GAME_COMPONENT_BASE, 64)         -> GAME/app components (defined
-	//                                        app-side in GameComponentId.h)
-	// So the game can add behavior components without editing the engine, and
-	// engine + game ids never collide.
+	//   [GAME_COMPONENT_BASE, 64)         -> reserved for GAME/app components
+	// All components (incl. behavior components like RotateComponent) now live in
+	// the engine DLL, so every id below is an engine id; the game range stays
+	// reserved as an extension point should the app ever add its own component.
 	enum ComponentId : unsigned int
 	{
 		COMPONENT_TRANSFORM = 0,
@@ -26,6 +26,7 @@ namespace Azul
 		COMPONENT_LIGHT,
 		COMPONENT_GPU_SKIN,
 		COMPONENT_ANIM_CLIP,
+		COMPONENT_ROTATE,
 
 		ENGINE_COMPONENT_COUNT,   // engine ids must stay below GAME_COMPONENT_BASE
 
