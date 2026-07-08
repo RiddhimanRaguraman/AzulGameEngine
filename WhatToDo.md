@@ -645,9 +645,13 @@ forwarding shim so nothing downstream breaks.
 >   virtual-dispatches into the app's `RotateSystem`. Works with the shared /MD runtime.
 > - **Reality check:** `Prefab_Rotate` (and `_Pendulum/_Pulse/_FiboSpiral/_RotateSpin`,
 >   `PrefabAnim`) are **DEAD CODE** — never instantiated. Only `Prefab_Pivot` is live (AnimMan on
->   skinned objects). So `RotateSystem` currently runs over an **empty pool** (no scene object has
->   a `RotateComponent`); it's the ready go-forward pattern. To see it live, attach a
->   `RotateComponent` to a plain `GameObjectRigidBody`.
+>   skinned objects). So `RotateSystem` is the ready go-forward pattern.
+> - **LIVE DEMO — `scene4` (press `4`), builds 0 errors.** `Engine/src/scene4.h/.cpp` +
+>   wired into `GameSceneContext` (enum/ctor/dtor/SetState) and `Game.cpp` (the `4` key). It
+>   loads a plain `GameObjectRigidBody` (SkyBox) with a `RotateComponent` attached
+>   (`WorldMan::GetWorld().Add<RotateComponent>(pSpinner->GetEntity())`) over a static terrain —
+>   its spin comes **purely from the ECS** (RotateComponent data + RotateSystem logic; no Prefab,
+>   no per-object Update). **Run it and press 4 to confirm the skybox spins.**
 > - **Next (the LIVE Update logic that's left):** `GameObjectAnimSkin` spin+blend
 >   (`AnimController_*`/`ComputeBlend` → `AnimationSystem`/`BlendSystem`/`SkinningSystem`), the
 >   input path (`GameObjectControlled`/`CameraMan::ProcessInput` → `InputSystem`), and the

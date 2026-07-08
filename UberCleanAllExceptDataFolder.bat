@@ -61,6 +61,10 @@ cd AnimTime
 call "CleanMe.Bat"
 cd ..
 
+cd AzulEngine
+call "CleanMe.Bat"
+cd ..
+
 cd File
 call "CleanMe.Bat"
 cd ..
