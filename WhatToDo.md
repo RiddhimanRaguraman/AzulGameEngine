@@ -646,17 +646,29 @@ forwarding shim so nothing downstream breaks.
 > - **Reality check:** `Prefab_Rotate` (and `_Pendulum/_Pulse/_FiboSpiral/_RotateSpin`,
 >   `PrefabAnim`) are **DEAD CODE** — never instantiated. Only `Prefab_Pivot` is live (AnimMan on
 >   skinned objects). So `RotateSystem` is the ready go-forward pattern.
-> - **LIVE DEMO — `scene4` (press `4`), builds 0 errors.** `Engine/src/scene4.h/.cpp` +
->   wired into `GameSceneContext` (enum/ctor/dtor/SetState) and `Game.cpp` (the `4` key). It
->   loads a plain `GameObjectRigidBody` (SkyBox) with a `RotateComponent` attached
->   (`WorldMan::GetWorld().Add<RotateComponent>(pSpinner->GetEntity())`) over a static terrain —
->   its spin comes **purely from the ECS** (RotateComponent data + RotateSystem logic; no Prefab,
->   no per-object Update). **Run it and press 4 to confirm the skybox spins.**
-> - **Next (the LIVE Update logic that's left):** `GameObjectAnimSkin` spin+blend
->   (`AnimController_*`/`ComputeBlend` → `AnimationSystem`/`BlendSystem`/`SkinningSystem`), the
->   input path (`GameObjectControlled`/`CameraMan::ProcessInput` → `InputSystem`), and the
->   `GameObjectSprite`/`FontSprite` world (redundant S*R*T → LocalToWorldSystem). Consider
->   deleting the dead `Prefab_*` derivatives.
+> - **LIVE DEMO — `scene4` (press `4`), RUNTIME-VERIFIED (2026-07-08).** `Engine/src/scene4.h/.cpp`
+>   + wired into `GameSceneContext` (enum/ctor/dtor/SetState) and `Game.cpp` (the `4` key). Loads a
+>   single `GameObjectRigidBody` `CUBE` (Ward texture, FlatTexture shader, uniform scale 100) with a
+>   `RotateComponent` attached (`WorldMan::GetWorld().Add<RotateComponent>(pSpinner->GetEntity())`).
+>   Its spin comes **purely from the ECS** (RotateComponent data + RotateSystem logic; no Prefab, no
+>   per-object Update). Confirmed spinning in-app. (Terrain/SkyBox scaffolding removed — cube only.)
+> - **DEAD `Prefab_*` derivatives DELETED (2026-07-08): builds 0 errors.** Removed all 12 files:
+>   `Prefab_Rotate`, `Prefab_RoatateSpin`, `Prefab_Pulse`, `Prefab_Pendulum`, `Prefab_FiboSpiral`,
+>   `PrefabAnim` (.h+.cpp). Confirmed repo-wide none were ever `new`'d (only self-includes). Base
+>   `Prefab`/`Prefab_Abstract`/`Prefab_Pivot` stay — `Prefab_Pivot` is the one live one (AnimMan on
+>   skinned objects). premake regenerates via dir globs (no edit needed).
+> - **Reality check on the remaining "live" pieces (2026-07-08 investigation):**
+>   - **Input path is DEAD:** `GameObjectControlled` is never instantiated (only in class diagrams);
+>     no `InputSystem` conversion needed for it. (`CameraMan::ProcessInput` still drives the camera,
+>     but that's a service, not per-object Update — leave as-is / revisit as a `CameraComponent`.)
+>   - **Sprite path is NOT a clean `LocalToWorldSystem` fit:** plain `GameObjectSprite` is never used
+>     directly — only `FontSprite`. And `FontSprite::Draw()` reuses `GameObjectSprite::privUpdate` to
+>     recompute the world **per-glyph** in a single Draw (one entity, N glyph positions). The
+>     one-world-per-entity system model can't express that, so its S*R*T is not truly redundant.
+>     Leave FontSprite imperative for now (revisit as instanced glyph draw in Phase 4/6).
+> - **Next (the one genuinely-live Update piece left): `GameObjectAnimSkin` spin+blend**
+>   (`AnimController_*`/`ComputeBlend` → `AnimationSystem`/`BlendSystem`/`SkinningSystem`) — the big
+>   remaining Phase 3 conversion. Created via `AnimMan` on skinned objects (uses `Prefab_Pivot`).
 
 **Goal:** replace per-object virtual `Update()`, `Prefab_*`, and the animation controllers with
 data-driven systems.
