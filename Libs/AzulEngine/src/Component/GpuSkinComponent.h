@@ -12,7 +12,7 @@ namespace Azul
 	class ComputeBlend;
 
 	// Handle to the GPU compute-skinning pipeline for a skinned entity. Holds a
-	// NON-owning ComputeBlend* (ownership stays with the AnimController, per the
+	// NON-owning ComputeBlend* (ownership stays with AnimMan's AnimNode, per the
 	// "components hold handles, not GPU objects" rule). The SkinningSystem drives
 	// pBlend->Execute() over the pool -- replacing the pBlend->Execute() call that
 	// used to live at the tail of GameObjectAnimSkin::Update.

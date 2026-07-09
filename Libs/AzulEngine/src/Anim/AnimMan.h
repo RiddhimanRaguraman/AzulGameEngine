@@ -8,9 +8,6 @@
 #include "ManBase.h"
 #include "DLink.h"
 #include "DLinkMan.h"
-#include "AnimController.h"
-#include "AnimController_TwoAnim.h"
-#include "AnimController_OneAnim.h"
 #include "Clip.h"
 #include "AnimTime.h"
 #include "Mesh.h"
@@ -23,6 +20,10 @@
 namespace Azul
 {
 	class GameObjectAnimSkin;
+	class Anim;
+	class TimerController;
+	class ComputeBlend;
+	class ComputeBlend_TwoAnim;
 
     class AZUL_ENGINE_LIBRARY_API AnimMan : public ManBase
     {
@@ -76,7 +77,6 @@ namespace Azul
                           Mesh::Name meshName,
                           Vec3& _pLightColor,
                           Vec3& _pLightPos);
-        static AnimController *Find(Name name);
         static void BlendAnimation(AnimTime tDelta);
 		static float GetBlendTs();
 
@@ -88,7 +88,6 @@ namespace Azul
         static void SetPivotRotZ(Name name, float angle);
         static void SetPivotTotalRot(Name name, const Rot3 mode, float x, float y, float z);
 		static void SetPrefabPivot(Name name);
-        static void SetBlendTs(Name name, float ts);
         static Clip *GetClip(Name name);
 
         static void Remove(DLink *pNode);
@@ -116,9 +115,8 @@ namespace Azul
             AnimNode &operator=(const AnimNode &) = delete;
             virtual ~AnimNode();
 
-            void Set(Name inName, Clip *pClip, AnimController *pController, GameObjectAnimSkin *pGameSkin);
-			void Set(Name inName, Clip *pClip, AnimController *pController, GameObjectAnimSkin *const *pGameSkins, unsigned int numGameSkins);
-            AnimController *GetController();
+            void Set(Name inName, Clip *pClip, GameObjectAnimSkin *pGameSkin);
+			void Set(Name inName, Clip *pClip, GameObjectAnimSkin *const *pGameSkins, unsigned int numGameSkins);
 			unsigned int GetNumGameSkins() const;
 			GameObjectAnimSkin *GetGameSkin(unsigned int index) const;
 
@@ -132,7 +130,14 @@ namespace Azul
         public:
             Name mName;
             Clip *pClip;
-            AnimController *pController;
+            // Owned animation resources (were owned by the deleted AnimController_*):
+            // the AnimClip/AnimBlend components hold NON-owning views of these, and
+            // the Animation/Blend systems drive them. B is null for one-anim.
+            Anim *pAnimA;
+            Anim *pAnimB;
+            TimerController *pTimerA;
+            TimerController *pTimerB;
+            ComputeBlend *pComputeBlend;
 			static const unsigned int MAX_GAME_SKINS = 32;
 			GameObjectAnimSkin *pGameSkins[MAX_GAME_SKINS];
 			unsigned int numGameSkins;
@@ -140,7 +145,9 @@ namespace Azul
 
     private:
         AnimNode *poNodeCompare;
-        AnimController_TwoAnim *poBlendTwoAnimController;
+        // Kept only to push the SPACE-key blend ratio (AnimMan::BlendAnimation);
+        // the two-anim ComputeBlend is owned by its AnimNode, NOT here.
+        ComputeBlend_TwoAnim *poBlendComputeBlend;
 		float mBlendTs;
         static AnimMan *posInstance;
         static CompareStrategyBase *posEnumNameCompare;

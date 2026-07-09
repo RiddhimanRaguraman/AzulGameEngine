@@ -15,7 +15,7 @@ namespace Azul
 	// GpuSkinComponent pool. Replaces the pBlend->Execute() call formerly made
 	// per-object at the tail of GameObjectAnimSkin::Update.
 	//
-	// Ordering: must run AFTER the AnimController updates have sampled the clips
+	// Ordering: must run AFTER the Animation/Blend systems have sampled the clips
 	// into the mixer key buffers (AnimMan::Update, called before
 	// GameObjectMan::Update in the scene). Execute() composes bone matrices in
 	// model space and does NOT read the object's world matrix, so it is

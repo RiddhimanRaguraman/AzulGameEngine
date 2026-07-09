@@ -18,6 +18,7 @@
 #include "Prefab_Pivot.h"
 #include "ComputeBlend_OneAnim.h"
 #include "ComputeBlend_TwoAnim.h"
+#include "TimerController.h"
 #include "PCSNode.h"
 #include "WorldMan.h"
 #include "World.h"
@@ -32,7 +33,9 @@ namespace Azul
     CompareStrategyBase *AnimMan::posEnumNameCompare = nullptr;
 
     AnimMan::AnimNode::AnimNode()
-        : DLink(), mName(Name::Uninitialized), pClip(nullptr), pController(nullptr), pGameSkins{ nullptr }, numGameSkins(0)
+        : DLink(), mName(Name::Uninitialized), pClip(nullptr),
+          pAnimA(nullptr), pAnimB(nullptr), pTimerA(nullptr), pTimerB(nullptr),
+          pComputeBlend(nullptr), pGameSkins{ nullptr }, numGameSkins(0)
     {
         this->privClear();
     }
@@ -44,11 +47,20 @@ namespace Azul
 
     void AnimMan::AnimNode::privClear()
     {
-        if (pController)
-        {
-            delete pController;
-        }
-        pController = nullptr;
+        // Own the animation resources the deleted AnimController_* used to own.
+        // (ComputeBlend has a virtual dtor, so the base pointer deletes the
+        // concrete _OneAnim/_TwoAnim correctly.)
+        delete this->pAnimA;
+        delete this->pAnimB;
+        delete this->pTimerA;
+        delete this->pTimerB;
+        delete this->pComputeBlend;
+        this->pAnimA = nullptr;
+        this->pAnimB = nullptr;
+        this->pTimerA = nullptr;
+        this->pTimerB = nullptr;
+        this->pComputeBlend = nullptr;
+
         pClip = nullptr;
 		for (unsigned int i = 0; i < AnimNode::MAX_GAME_SKINS; i++)
 		{
@@ -58,12 +70,11 @@ namespace Azul
         mName = Name::Uninitialized;
     }
 
-    void AnimMan::AnimNode::Set(Name inName, Clip *clip, AnimController *controller, GameObjectAnimSkin *gameSkin)
+    void AnimMan::AnimNode::Set(Name inName, Clip *clip, GameObjectAnimSkin *gameSkin)
     {
         this->privClear();
         this->mName = inName;
         this->pClip = clip;
-        this->pController = controller;
 		if (gameSkin != nullptr)
 		{
 			this->pGameSkins[0] = gameSkin;
@@ -71,12 +82,11 @@ namespace Azul
 		}
     }
 
-	void AnimMan::AnimNode::Set(Name inName, Clip *clip, AnimController *controller, GameObjectAnimSkin *const *pSkins, unsigned int numSkins)
+	void AnimMan::AnimNode::Set(Name inName, Clip *clip, GameObjectAnimSkin *const *pSkins, unsigned int numSkins)
 	{
 		this->privClear();
 		this->mName = inName;
 		this->pClip = clip;
-		this->pController = controller;
 
 		assert(pSkins != nullptr);
 		assert(numSkins <= AnimNode::MAX_GAME_SKINS);
@@ -92,11 +102,6 @@ namespace Azul
 		}
 		this->numGameSkins = outCount;
 	}
-
-    AnimController *AnimMan::AnimNode::GetController()
-    {
-        return this->pController;
-    }
 
 	unsigned int AnimMan::AnimNode::GetNumGameSkins() const
 	{
@@ -156,7 +161,7 @@ namespace Azul
 
     AnimMan::AnimMan(int reserveNum, int reserveGrow)
         : ManBase(new DLinkMan(), new DLinkMan(), reserveNum, reserveGrow),
-        poBlendTwoAnimController(nullptr),
+        poBlendComputeBlend(nullptr),
 		mBlendTs(0.0f)
     {
         this->proFillReservedPool(reserveNum);
@@ -462,16 +467,21 @@ namespace Azul
         assert(ptAnim);
         ComputeBlend_OneAnim* pBlend = new ComputeBlend_OneAnim(ptAnim);
 
-        AnimController *pController = new AnimController_OneAnim(ptAnim, pBlend, 1.0f);
-        assert(pController);
+        // Timer over the clip's play range (was created inside AnimController_OneAnim).
+        TimerController* pTimer = new TimerController(AnimTime(AnimTime::Duration::ZERO), ptAnim->FindMaxTime());
+        assert(pTimer);
 
-        // Phase 3: the single-clip anim is now sampled by the AnimationSystem.
-        // Park the (AnimMan-owned) controller on a dedicated entity via a
-        // non-owning AnimClipComponent; the system drives it once per frame.
+        // Phase 3: the single-clip anim is sampled by the AnimationSystem. Its
+        // data lives on a dedicated entity via a non-owning AnimClipComponent;
+        // the AnimNode (below) owns ptAnim/pTimer/pBlend and frees them.
         {
             World& w = WorldMan::GetWorld();
             Entity animEnt = w.Create();
-            w.Add<AnimClipComponent>(animEnt).pController = pController;
+            AnimClipComponent& ac = w.Add<AnimClipComponent>(animEnt);
+            ac.pAnim = ptAnim;
+            ac.pTimer = pTimer;
+            ac.pBlend = pBlend;
+            ac.ratio = 1.0f;
         }
 
         GraphicsObject_SkinLightTexture* pGraphicsSkin = new GraphicsObject_SkinLightTexture(meshName,
@@ -492,7 +502,10 @@ namespace Azul
 
         AnimNode *pNode = (AnimNode *)pMan->baseAddToFront();
         assert(pNode);
-        pNode->Set(name, pClip, pController, pGameSkin);
+        pNode->Set(name, pClip, pGameSkin);
+        pNode->pAnimA = ptAnim;
+        pNode->pTimerA = pTimer;
+        pNode->pComputeBlend = pBlend;
         return pNode;
     }
 
@@ -521,16 +534,22 @@ namespace Azul
 		assert(ptAnim);
 		ComputeBlend_OneAnim *pBlend = new ComputeBlend_OneAnim(ptAnim);
 
-		AnimController *pController = new AnimController_OneAnim(ptAnim, pBlend, 1.0f);
-		assert(pController);
+		// Timer over the clip's play range (was created inside AnimController_OneAnim).
+		TimerController *pTimer = new TimerController(AnimTime(AnimTime::Duration::ZERO), ptAnim->FindMaxTime());
+		assert(pTimer);
 
-		// Phase 3: one controller drives every skin mesh below, but it must be
-		// sampled ONCE per frame -- park it on a single dedicated entity via a
-		// non-owning AnimClipComponent that the AnimationSystem drives.
+		// Phase 3: one anim drives every skin mesh below, but it must be sampled
+		// ONCE per frame -- its data lives on a single dedicated entity via a
+		// non-owning AnimClipComponent that the AnimationSystem drives. The
+		// AnimNode (below) owns ptAnim/pTimer/pBlend and frees them.
 		{
 			World& w = WorldMan::GetWorld();
 			Entity animEnt = w.Create();
-			w.Add<AnimClipComponent>(animEnt).pController = pController;
+			AnimClipComponent& ac = w.Add<AnimClipComponent>(animEnt);
+			ac.pAnim = ptAnim;
+			ac.pTimer = pTimer;
+			ac.pBlend = pBlend;
+			ac.ratio = 1.0f;
 		}
 
 		GameObjectAnimSkin *pSkins[AnimNode::MAX_GAME_SKINS]{ nullptr };
@@ -564,7 +583,10 @@ namespace Azul
 
 		AnimNode *pNode = (AnimNode *)pMan->baseAddToFront();
 		assert(pNode);
-		pNode->Set(name, pClip, pController, pSkins, numMeshes);
+		pNode->Set(name, pClip, pSkins, numMeshes);
+		pNode->pAnimA = ptAnim;
+		pNode->pTimerA = pTimer;
+		pNode->pComputeBlend = pBlend;
 		return pNode;
 	}
 
@@ -588,20 +610,29 @@ namespace Azul
         Anim* pAnimB = new Anim(clipName2);
         ComputeBlend_TwoAnim* pBlend = new ComputeBlend_TwoAnim(pAnimA, pAnimB);
 
-        AnimController_TwoAnim *pTwoController = new AnimController_TwoAnim(pAnimA, 1.0f, pAnimB, 1.0f, pBlend);
-        assert(pTwoController);
-        AnimController *pController = pTwoController;
+        // Timers over each clip's play range (were created inside AnimController_TwoAnim).
+        TimerController* pTimerA = new TimerController(AnimTime(AnimTime::Duration::ZERO), pAnimA->FindMaxTime());
+        TimerController* pTimerB = new TimerController(AnimTime(AnimTime::Duration::ZERO), pAnimB->FindMaxTime());
+        assert(pTimerA);
+        assert(pTimerB);
 
-        pMan->poBlendTwoAnimController = pTwoController;
+        // Kept so BlendAnimation can push the SPACE-key blend ratio.
+        pMan->poBlendComputeBlend = pBlend;
 
-        // Phase 3: the two-clip blend is now sampled by the BlendSystem. Park the
-        // (AnimMan-owned) controller on a dedicated entity via a non-owning
-        // AnimBlendComponent; the system drives it once per frame. The blend Ts is
-        // still pushed via AnimMan::BlendAnimation -> pTwoController->SetBlendTs.
+        // Phase 3: the two-clip blend is sampled by the BlendSystem. Its data lives
+        // on a dedicated entity via a non-owning AnimBlendComponent; the AnimNode
+        // (below) owns the anims/timers/blend and frees them.
         {
             World& w = WorldMan::GetWorld();
             Entity blendEnt = w.Create();
-            w.Add<AnimBlendComponent>(blendEnt).pController = pController;
+            AnimBlendComponent& bc = w.Add<AnimBlendComponent>(blendEnt);
+            bc.pAnimA = pAnimA;
+            bc.pTimerA = pTimerA;
+            bc.ratioA = 1.0f;
+            bc.pAnimB = pAnimB;
+            bc.pTimerB = pTimerB;
+            bc.ratioB = 1.0f;
+            bc.pBlend = pBlend;
         }
 
         GraphicsObject_SkinLightTexture* pGraphicsSkin = new GraphicsObject_SkinLightTexture(meshName,
@@ -622,21 +653,13 @@ namespace Azul
 
         AnimNode* pNode = (AnimNode*)pMan->baseAddToFront();
         assert(pNode);
-        pNode->Set(name, pClip, pController, pGameSkin);
+        pNode->Set(name, pClip, pGameSkin);
+        pNode->pAnimA = pAnimA;
+        pNode->pAnimB = pAnimB;
+        pNode->pTimerA = pTimerA;
+        pNode->pTimerB = pTimerB;
+        pNode->pComputeBlend = pBlend;
         return pNode;
-    }
-
-    AnimController *AnimMan::Find(Name name)
-    {
-        AnimMan *pMan = AnimMan::privGetInstance();
-        assert(pMan != nullptr);
-
-        pMan->pCompareStrategy = AnimMan::posEnumNameCompare;
-        assert(pMan->pCompareStrategy);
-
-        pMan->poNodeCompare->mName = name;
-        AnimNode *pData = (AnimNode *)pMan->baseFind(pMan->poNodeCompare);
-        return pData ? pData->GetController() : nullptr;
     }
 
     void AnimMan::BlendAnimation(AnimTime tDelta)
@@ -685,9 +708,9 @@ namespace Azul
 
 		pMan->mBlendTs = sBlendTs;
 
-        if (pMan->poBlendTwoAnimController)
+        if (pMan->poBlendComputeBlend)
         {
-            pMan->poBlendTwoAnimController->SetBlendTs(sBlendTs);
+            pMan->poBlendComputeBlend->SetBlendTs(sBlendTs);
         }
     }
 
@@ -796,25 +819,6 @@ namespace Azul
 			}
 		}
 	}
-
-    void AnimMan::SetBlendTs(Name name, float ts)
-    {
-        AnimMan* pMan = AnimMan::privGetInstance();
-        pMan->pCompareStrategy = AnimMan::posEnumNameCompare;
-        assert(pMan->pCompareStrategy);
-
-        pMan->poNodeCompare->mName = name;
-        AnimNode* pNode = (AnimNode*)pMan->baseFind(pMan->poNodeCompare);
-        if (pNode && pNode->pController)
-        {
-			if (pMan->poBlendTwoAnimController != nullptr &&
-				pNode->pController == pMan->poBlendTwoAnimController)
-			{
-				AnimController_TwoAnim *pTwo = (AnimController_TwoAnim *)pNode->pController;
-				pTwo->SetBlendTs(ts);
-			}
-        }
-    }
 
     void AnimMan::SetPivotRotX(Name name, float angle)
     {

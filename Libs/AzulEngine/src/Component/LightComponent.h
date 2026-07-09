@@ -8,7 +8,8 @@
 namespace Azul
 {
 	// A light source (color + world position). Lifted out of the hard-coded
-	// poLightColor/poLightPos that used to live inside GraphicsObject_LightTexture.
+	// poLightColor/poLightPos that used to live inside the (now-deleted)
+	// GraphicsObject_LightTexture.
 	// Keyed by a light entity the material owns; a later phase can promote this
 	// to a first-class scene light consumed by a lighting/render system.
 	struct LightComponent

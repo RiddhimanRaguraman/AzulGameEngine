@@ -748,14 +748,28 @@ forwarding shim so nothing downstream breaks.
 > (AnimationSystem), two-anim (BlendSystem), GPU skinning (SkinningSystem), plain world
 > (LocalToWorldSystem) are all data-driven systems over component pools. No `Prefab_*` or
 > `AnimController_*` logic runs from any object `Update()`; `AnimMan::Update` is retired.
-> **Remaining Phase 3 cleanup (DEFERRED, own increment):** delete `AnimController`/`_OneAnim`/
-> `_TwoAnim` by moving their owned resources (`Anim`/`TimerController`/`ComputeBlend`) into `AnimNode`,
-> carrying the data in `AnimClip`/`AnimBlendComponent`, and inlining the sample logic in the systems.
-> This is NOT a mechanical inline -- the controllers are the RAII owners of those heap objects, so it
-> is a ~10-file ownership refactor with runtime-only leak/lifetime surface. Do it as its OWN increment
-> AFTER B/C are runtime-verified (don't stack it on unverified changes). No app code uses
-> `AnimController` or `AnimMan::Find` (checked), so the blast radius is contained to the DLL anim
-> subsystem. Then Phase 4 (RenderSystem) is the next big phase.
+> **CONTROLLER-DELETION cleanup DONE (2026-07-08): `AnimController`/`_OneAnim`/`_TwoAnim` deleted --
+> builds 0 errors.**
+> - `git rm` all 6 controller files. Logic moved INTO the systems; data + ownership relocated:
+>   - **Components now carry data** (non-owning views): `AnimClipComponent { Anim* pAnim; TimerController*
+>     pTimer; ComputeBlend_OneAnim* pBlend; float ratio; }`, `AnimBlendComponent { Anim* pAnimA;
+>     TimerController* pTimerA; float ratioA; ...B...; ComputeBlend_TwoAnim* pBlend; }`.
+>   - **`AnimationSystem`/`BlendSystem` inline the sample logic** (timer->Update(ratio*dt) +
+>     AnimateMixerA[/B/C]) -- exactly the old `AnimController_*::Update` bodies.
+>   - **`AnimNode` is now the RAII owner** of `pAnimA/pAnimB/pTimerA/pTimerB/pComputeBlend`
+>     (`privClear` deletes them; `ComputeBlend` base ptr has a virtual dtor). Timers are built in
+>     `AnimMan::Add` from `Anim::FindMaxTime()` (was done in the controller ctor).
+>   - `AnimMan::poBlendTwoAnimController` (controller*) -> `poBlendComputeBlend` (`ComputeBlend_TwoAnim*`)
+>     just for `BlendAnimation`'s SPACE-key `SetBlendTs`.
+>   - Removed dead `AnimMan::Find` (returned `AnimController*`) and dead `AnimMan::SetBlendTs(Name,float)`
+>     + `AnimNode::GetController`.
+> - **Lifetime preserved exactly:** privClear deletes the same objects the controller dtors did, at the
+>   same time (AnimMan::Destroy, before GameObjectMan/WorldMan::Destroy). No new leak/double-free.
+> - **NEEDS RUNTIME TEST: press 1 (one-anim dancers) + 2 (Dance/Gangnam + Blend, SPACE ramps) -- must
+>   look identical AND clean-exit with no leak-check failures on scene switch/exit.**
+>
+> **PHASE 3 COMPLETE.** All motion/behavior/animation is data-driven systems over component pools; no
+> `Prefab_*`, `AnimController_*`, or `AnimMan::Update` logic remains. Next: **Phase 4 (RenderSystem)**.
 
 **Goal:** replace per-object virtual `Update()`, `Prefab_*`, and the animation controllers with
 data-driven systems.
@@ -784,6 +798,75 @@ verified, then delete.
 ---
 
 ### Phase 4 — Replace Draw() with a RenderSystem, and lock down the render facade  ⚠ highest risk
+
+> **SCOPING (2026-07-08): render path fully surveyed. Key findings below.**
+>
+> **Current draw path:** `GameObjectMan::Draw()` walks the PCS tree (DFS) → `GameObject::Draw()`
+> → if `RenderComponent.drawEnable`, `pGraphicsObject->Render()` → `SetState(); SetDataGPU(); Draw();
+> RestoreState()`. `RenderComponent` already exists (Phase 2) but still just wraps `GraphicsObject*`.
+> Each `GraphicsObject_*` owns its mesh/shader/tex/material data and hard-codes camera + state.
+>
+> **Only 4 of the 10 `GraphicsObject_*` are LIVE (instantiated):**
+> | Material | Where | Shader | Camera | State set / restore | Per-object transfers | Draw |
+> |---|---|---|---|---|---|---|
+> | `_Null` | root (GameObjectMan) | NullShader | — | none | none | **no-op** (skip) |
+> | `_FlatTexture` | scene3/4 | FlatTexture | 3D persp | tex activate; if alpha→BlendAlpha / restore BlendOff | WVP, UVMatrix | RenderIndexBuffer |
+> | `_Sprite` | scene1/2 (FontSprite+sprites) | Sprite | 2D ortho | tex activate; if alpha→BlendAlpha / restore BlendOff | WVP(orig*world*transLL), UV, ColorScale | RenderIndexBuffer |
+> | `_SkinLightTexture` | scene1/2 (AnimMan) | SkinLightTexture | 3D persp | tex activate; RasterizerSolidCull / restore BlendOff | WVP, LightPos, LightColor, **BindWorldBoneArray** | ActivateSRVBuffers + RenderIndexBuffer |
+>
+> **DEAD (never `new`'d) -- delete first, like the Prefab cleanup:** `_LightTexture`,
+> `_SkinFlatTexture`, `_ConstColor`, `_ConstColorLight`, `_Wireframe`, `_ColorByVertex` (6 files pairs).
+> (`_LightTexture` is the only current `LightComponent` consumer -- deleting it may orphan
+> `LightComponent`; keep the component, it's harmless, or revisit.)
+>
+> **The hard problems (design decisions for the increments):**
+> 1. **Sprites/FontSprite do NOT fit one-entity-one-draw.** `FontSprite::Draw()` loops glyphs,
+>    mutating the screen rect + color and calling `Render()` **N times per entity** (one per
+>    character). A `ViewOf<Render,Transform>` batched loop can't express that. DECISION (locked):
+>    a dedicated `SpriteRenderSystem` owns the 2D/UI (sprite+font) pass with its own per-glyph inner
+>    loop; the batched `RenderSystem` owns only the 3D materials. 2D pass runs AFTER the 3D pass.
+> 2. **Draw ORDER / transparency.** Opaque 3D must draw before alpha-blended UI. Today the PCS-tree
+>    DFS order guarantees it. A RenderSystem iterating the RenderComponent **pool** uses insertion
+>    order, which is NOT guaranteed to match, and sorting-by-material reorders further -- risking
+>    wrong UI layering. Must explicitly order: opaque 3D pass first, then the 2D/UI pass.
+> 3. **Skinned draw consumes SkinningSystem output** (`BindWorldBoneArray`) -- RenderSystem runs in
+>    the Draw phase (after Update), so ordering is fine, but the component must carry the
+>    `ComputeBlend*` handle (already have `GpuSkinComponent`).
+> 4. **Camera per material** (3D persp vs 2D ortho) -- RenderSystem picks camera by MaterialKind.
+> 5. **`RenderComponent` decomposition** -- from `GraphicsObject*` to
+>    `{ MaterialKind; MeshName; ShaderName; TexName; + params (uvMatrix / light / colorScale) }`.
+>    The sprite params (per-glyph screen rect) are the messy bit -> reinforces keeping 2D separate.
+> 6. **Perf reality (Section 2):** batching gains are marginal at hundreds of objects; the REAL
+>    Phase 4 win is encapsulation -- retire `GraphicsObject_*`, hide shader/RHI selection private
+>    behind the DLL. Don't over-invest in the sort.
+>
+> **DECISIONS LOCKED (user, 2026-07-08):** (1) Sprite path -> **build a `SpriteRenderSystem`** (fully
+> ECS the 2D/UI path, retire `GraphicsObject_Sprite`), run strictly AFTER the 3D pass. (2) Verification
+> bar -> **visual confirmation** per scene (no pixel-diff harness). (3) P4.0 approved + DONE.
+>
+> **PROPOSED INCREMENT SEQUENCE (each builds + runtime-verified + committed before the next):**
+> - **P4.0 DONE (2026-07-08): deleted the 6 dead `GraphicsObject_*`** (`_LightTexture`,
+>   `_SkinFlatTexture`, `_ConstColor`, `_ConstColorLight`, `_Wireframe`, `_ColorByVertex`; 12 files).
+>   Also removed the 4 dead-variant includes from `GameObject.h` (it only needs base `GraphicsObject*`).
+>   `LightComponent` kept (its comment updated). Builds 0 errors; no behavior change. **4 live
+>   materials remain: `_Null`, `_FlatTexture`, `_Sprite`, `_SkinLightTexture`.**
+> - **P4.1 -- RenderSystem shell, opaque-3D only, behind a toggle.** New `RenderSystem` iterating
+>   `RenderComponent` (drawEnable) that, for the 3D materials, calls the existing
+>   `pGraphicsObject->Render()` (NOT yet decomposed). Add `bool useECSRender` in `GameObjectMan::Draw`
+>   so old tree-walk and new system can A/B toggle. Sprites/FontSprite stay on the tree walk. Verify
+>   the 3D objects (cube/terrain/dancers) render identically; watch draw order.
+> - **P4.2 -- decompose the 3D materials.** Move `_FlatTexture` + `_SkinLightTexture`
+>   `SetState/SetDataGPU/Draw/RestoreState` bodies into MaterialKind branches of `RenderSystem`;
+>   `RenderComponent` carries mesh/shader/tex/light handles. Group by (shader,material,mesh); bind
+>   once per group. A/B framebuffer-compare. Then delete `_FlatTexture`/`_SkinLightTexture`.
+> - **P4.3 -- 2D/UI pass = `SpriteRenderSystem`** (locked). Drives the per-glyph loop from component
+>   data, runs strictly AFTER the 3D pass; then delete `_Sprite`.
+> - **P4.4 -- flip default, delete `GraphicsObject`/`_Abstract`/`_Null` + the toggle, move render
+>   internals onto the DLL's private include path (final encapsulation).**
+>
+> **OPEN QUESTIONS for the user before P4.1:** (a) OK to delete the 6 dead materials now? (b) Sprite
+> path: leave FontSprite imperative (lowest risk) or build a SpriteRenderSystem? (c) How strict is the
+> A/B verification bar -- pixel-identical framebuffer diff, or visual confirmation?
 
 **Goal:** one `RenderSystem` that iterates renderables, **sorts by shader/material**, binds
 state once per batch — retiring `GraphicsObject_*` and moving all shader-selection internals

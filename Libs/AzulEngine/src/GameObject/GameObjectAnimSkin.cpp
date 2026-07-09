@@ -44,7 +44,7 @@ namespace Azul
 
 		// Phase 3: the GPU compute-skinning dispatch is now data-driven -- the
 		// SkinningSystem calls pBlend->Execute() over this pool each frame
-		// (non-owning handle; the AnimController still owns the ComputeBlend).
+		// (non-owning handle; AnimMan's AnimNode owns the ComputeBlend).
 		GpuSkinComponent& skin = WorldMan::GetWorld().Add<GpuSkinComponent>(this->GetEntity());
 		skin.pBlend = this->pBlend;
 	}

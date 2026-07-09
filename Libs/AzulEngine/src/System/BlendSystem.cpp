@@ -5,7 +5,9 @@
 #include "BlendSystem.h"
 #include "World.h"
 #include "AnimBlendComponent.h"
-#include "AnimController.h"
+#include "Anim.h"
+#include "TimerController.h"
+#include "ComputeBlend_TwoAnim.h"
 
 namespace Azul
 {
@@ -20,9 +22,21 @@ namespace Azul
 
 		for (unsigned int i = 0; i < count; i++)
 		{
-			AnimBlendComponent &blend = pool.GetData(i);
-			assert(blend.pController);
-			blend.pController->Update(tDelta);
+			AnimBlendComponent &b = pool.GetData(i);
+			assert(b.pTimerA);
+			assert(b.pTimerB);
+			assert(b.pAnimA);
+			assert(b.pAnimB);
+			assert(b.pBlend);
+
+			// (was AnimController_TwoAnim::Update)
+			b.pTimerA->Update(b.ratioA * tDelta);
+			b.pBlend->AnimateMixerA(b.pAnimA->GetClip(), b.pTimerA->GetCurrTime());
+
+			b.pTimerB->Update(b.ratioB * tDelta);
+			b.pBlend->AnimateMixerB(b.pAnimB->GetClip(), b.pTimerB->GetCurrTime());
+
+			b.pBlend->AnimateMixerC();
 		}
 	}
 }

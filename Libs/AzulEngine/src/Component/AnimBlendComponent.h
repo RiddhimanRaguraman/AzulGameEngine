@@ -9,20 +9,30 @@
 
 namespace Azul
 {
-	class AnimController;
+	class Anim;
+	class TimerController;
+	class ComputeBlend_TwoAnim;
 
-	// A two-clip blended animation being sampled each frame. Holds a NON-owning
-	// AnimController* (a two-anim controller: two timers + two clips + MixerC
-	// blend). Ownership stays with AnimMan's AnimNode, which deletes it -- same
-	// non-owning-handle shape as AnimClipComponent/GpuSkinComponent. The
-	// BlendSystem drives pController->Update(tDelta) over the pool.
+	// A two-clip blended animation being sampled each frame. Plain data --
+	// NON-owning views of resources owned by AnimMan's AnimNode (which deletes
+	// them). The BlendSystem advances both timers, samples both clips (MixerA/B)
+	// and blends (MixerC) into pBlend's key buffers (the logic formerly in
+	// AnimController_TwoAnim).
 	//
 	// The blend ratio itself (SPACE-key ramp) is still pushed separately via
-	// AnimMan::BlendAnimation -> controller SetBlendTs; this component only drives
+	// AnimMan::BlendAnimation -> pBlend->SetBlendTs; this component only drives
 	// the per-frame sampling.
 	struct AnimBlendComponent
 	{
-		AnimController *pController;
+		Anim *pAnimA;
+		TimerController *pTimerA;
+		float ratioA;
+
+		Anim *pAnimB;
+		TimerController *pTimerB;
+		float ratioB;
+
+		ComputeBlend_TwoAnim *pBlend;
 
 		static const unsigned int kTypeId = COMPONENT_ANIM_BLEND;
 	};

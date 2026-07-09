@@ -5,7 +5,9 @@
 #include "AnimationSystem.h"
 #include "World.h"
 #include "AnimClipComponent.h"
-#include "AnimController.h"
+#include "Anim.h"
+#include "TimerController.h"
+#include "ComputeBlend_OneAnim.h"
 
 namespace Azul
 {
@@ -20,9 +22,14 @@ namespace Azul
 
 		for (unsigned int i = 0; i < count; i++)
 		{
-			AnimClipComponent &clip = pool.GetData(i);
-			assert(clip.pController);
-			clip.pController->Update(tDelta);
+			AnimClipComponent &c = pool.GetData(i);
+			assert(c.pTimer);
+			assert(c.pAnim);
+			assert(c.pBlend);
+
+			// (was AnimController_OneAnim::Update)
+			c.pTimer->Update(c.ratio * tDelta);
+			c.pBlend->AnimateMixerA(c.pAnim->GetClip(), c.pTimer->GetCurrTime());
 		}
 	}
 }
