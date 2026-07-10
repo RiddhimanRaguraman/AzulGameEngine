@@ -96,7 +96,7 @@ namespace Azul
 			GameObjectRigidBody* pCube = new GameObjectRigidBody(pGO);
 			pCube->SetName("Cube_ColorByVertex");
 			pCube->SetTrans(-kSpacing, 0.0f, 0.0f);
-			pCube->SetScale(kScale);
+			pCube->SetScale(kScale*0.75f);
 
 			RotateComponent& rc = WorldMan::GetWorld().Add<RotateComponent>(pCube->GetEntity());
 			rc.angle = 0.0f;

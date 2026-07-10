@@ -38,6 +38,11 @@ Mesh *GraphicsObject::GetMesh() const
 	return this->pMesh;
 }
 
+ShaderObject *GraphicsObject::GetShader() const
+{
+	return this->pShaderObj;
+}
+
 Mat4 &GraphicsObject::GetWorld()
 {
 	return *this->poWorld;

@@ -24,6 +24,7 @@ namespace Azul
 		void SetWorld(Mat4 &_world);
 
 		Mesh *GetMesh() const;
+		ShaderObject *GetShader() const;
 		Mat4 &GetWorld();
 
 		// Phase 4 bridge: which material path this object is, so RenderComponent

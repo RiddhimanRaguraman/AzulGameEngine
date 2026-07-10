@@ -22,8 +22,8 @@
 
 namespace Azul
 {
-	// P4.1: ECS render path ON by default so the next run exercises it. Flip to
-	// false to A/B compare against the original PCS-tree Draw walk.
+	// ECS render path ON by default. Flip to false to A/B compare against the
+	// pure GraphicsObject::Render() path (both now run in the same PCS-tree order).
 	bool GameObjectMan::sUseECSRender = true;
 
 	bool GameObjectMan::GetUseECSRender()
@@ -187,16 +187,10 @@ namespace Azul
 		GameObjectMan *pGOM = GameObjectMan::privGetInstance();
 		assert(pGOM);
 
-		// P4.1: with the ECS path on, the RenderSystem draws the 3D materials from
-		// the component pool FIRST (opaque pass), then the tree walk draws only the
-		// 2D/UI (Sprite) objects on top (GameObject::Draw skips the 3D kinds). With
-		// it off, the tree walk draws everything (original behavior).
-		if (sUseECSRender)
-		{
-			RenderSystem renderSys;
-			renderSys.Draw(WorldMan::GetWorld());
-		}
-
+		// P4.2: single PCS-tree walk (authoritative draw order). When the ECS path
+		// is on, GameObject::Draw routes 3D materials through the RenderSystem's
+		// per-MaterialKind branches (in this tree order); 2D/UI stay on the
+		// GraphicsObject path. When off, everything draws via GraphicsObject::Render.
 		PCSNode *pRootNode = pGOM->poRootTree->GetRoot();
 		assert(pRootNode);
 

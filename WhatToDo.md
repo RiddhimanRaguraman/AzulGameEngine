@@ -883,10 +883,30 @@ verified, then delete.
 > `Mesh::Name::CUBE_COLOR` (+ StringThis case) via the existing `MeshNodeMan::Add(Name, Mesh*)`
 > overload. scene4's left cube uses it -> interpolated gradient faces. First code-defined (non-proto)
 > mesh in the engine.
-> - **P4.2 -- decompose the 3D materials.** Move `_FlatTexture` + `_SkinLightTexture`
->   `SetState/SetDataGPU/Draw/RestoreState` bodies into MaterialKind branches of `RenderSystem`;
->   `RenderComponent` carries mesh/shader/tex/light handles. Group by (shader,material,mesh); bind
->   once per group. A/B framebuffer-compare. Then delete `_FlatTexture`/`_SkinLightTexture`.
+> - **P4.2 IN PROGRESS -- decompose the 3D materials into RenderSystem branches.** Approach: move each
+>   material's `SetState/SetDataGPU/Draw/RestoreState` into a `RenderSystem::privDraw*` branch ONE at a
+>   time; read mesh/shader via `GraphicsObject::GetMesh()/GetShader()` (added `GetShader`) + concrete
+>   params via a cast to `GraphicsObject_*` (public members), and the world from the entity's
+>   `TransformComponent` (not `poWorld`). Un-migrated kinds fall back to `pGraphicsObject->Render()`.
+>   Data-in-component + `GraphicsObject_*` deletion is the FINAL consolidated step (after all branches
+>   verified). Verify visually per scene.
+>   - **DONE (2026-07-08, builds 0 errors): ColorByVertex, FlatTexture, ConstColorLight, Wireframe**
+>     branches. `RenderSystem::Draw` switches on `MaterialKind`; each priv* is a faithful copy of the
+>     old GraphicsObject_* body. **NEEDS RUNTIME TEST: scene3 (FlatTexture terrain+skybox) + scene4
+>     (the 3 cubes) render identically.** scenes 1/2 (SkinLightTexture) still bridge -> unchanged.
+>   - **DRAW-ORDER BUG found + fixed (2026-07-08): skybox rendered translucent under the ECS path.**
+>     Root cause = hard-problem #2: the RenderSystem iterated the RenderComponent **pool** (creation
+>     order: terrain->skybox), but the **PCS tree inserts children at the FRONT**, so the tree DFS
+>     order is skybox->terrain (reverse). The alpha-blended skybox (a backdrop) depends on that order,
+>     so pool order blended it wrong. **A/B toggle confirmed** it (old tree-walk path = vivid skybox).
+>     FIX: RenderSystem no longer iterates the pool -- `RenderSystem::DrawObject(RenderComponent&,Mat4&)`
+>     is now driven per-object from `GameObject::Draw` (the tree walk), so 3D renders in the
+>     authoritative PCS-tree order. `GameObjectMan::Draw` is a single tree walk again (no separate pool
+>     pass). Batched pool iteration + material sorting is deferred to Phase 6 (needs Phase 5 ordering).
+>     **NEEDS RUNTIME RE-TEST: scene3 skybox vivid again; scene4 cubes + scenes 1/2 unaffected.**
+>   - **NEXT: SkinLightTexture branch** (the last; consumes SkinningSystem output via
+>     `BindWorldBoneArray`, needs `ActivateSRVBuffers` + light + tex + the ComputeBlend handle). Then
+>     the data-migration + delete-`GraphicsObject_*` consolidation, then P4.3 (SpriteRenderSystem).
 > - **P4.3 -- 2D/UI pass = `SpriteRenderSystem`** (locked). Drives the per-glyph loop from component
 >   data, runs strictly AFTER the 3D pass; then delete `_Sprite`.
 > - **P4.4 -- flip default, delete `GraphicsObject`/`_Abstract`/`_Null` + the toggle, move render

@@ -6,29 +6,34 @@
 #define AZUL_RENDER_SYSTEM_H
 
 #include "EngineDLLInterface.h"
+#include "MathEngine.h"
 
 namespace Azul
 {
-	class World;
+	struct RenderComponent;
 
-	// Draw-phase system (NOT a SystemMan/Update system). Iterates the
-	// RenderComponent pool and draws the 3D materials (FlatTexture,
-	// SkinLightTexture) in one flat pass -- replacing the 3D portion of the
-	// GameObjectMan::Draw PCS-tree walk. The 2D/UI (Sprite + fonts) are handled
-	// separately (P4.3 SpriteRenderSystem); for now they stay on the tree walk.
+	// Draw-phase render dispatch. Owns the per-MaterialKind render logic (the
+	// migrated GraphicsObject_*::SetState/SetDataGPU/Draw/RestoreState bodies).
 	//
-	// P4.1 bridge: still calls the existing GraphicsObject->Render() per object;
-	// P4.2 will move the SetState/SetDataGPU/Draw/RestoreState bodies into
-	// per-MaterialKind branches here and batch by shader/material.
+	// P4.2 ORDERING NOTE: this is driven per-object from GameObject::Draw, so 3D
+	// objects render in the authoritative **PCS-tree order** (the PCS tree inserts
+	// children at the front, so its DFS order is NOT the component-pool insertion
+	// order). Alpha-blended objects (e.g. the skybox drawn as a backdrop) depend on
+	// that order, so pool-order iteration produced wrong blending. Batched
+	// pool iteration + material sorting is a Phase 6 concern once ordering moves
+	// fully into the ECS (Phase 5).
 	class AZUL_ENGINE_LIBRARY_API RenderSystem
 	{
 	public:
-		RenderSystem() = default;
-		RenderSystem(const RenderSystem &) = delete;
-		RenderSystem &operator=(const RenderSystem &) = delete;
-		~RenderSystem() = default;
+		// Render one 3D renderable via its MaterialKind branch. `world` is the
+		// entity's TransformComponent world matrix.
+		static void DrawObject(RenderComponent &r, Mat4 &world);
 
-		void Draw(World &world);
+	private:
+		static void privDrawColorByVertex(RenderComponent &r, Mat4 &world);
+		static void privDrawFlatTexture(RenderComponent &r, Mat4 &world);
+		static void privDrawConstColorLight(RenderComponent &r, Mat4 &world);
+		static void privDrawWireframe(RenderComponent &r, Mat4 &world);
 	};
 }
 

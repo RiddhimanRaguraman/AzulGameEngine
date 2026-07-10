@@ -5,6 +5,7 @@
 #include "MathEngine.h"
 #include "GameObject.h"
 #include "GameObjectMan.h"
+#include "RenderSystem.h"
 #include "Camera.h"
 #include "WorldMan.h"
 #include "World.h"
@@ -117,12 +118,13 @@ namespace Azul
 			return;
 		}
 
-		// P4.1: when the ECS render path is on, the 3D materials are drawn by the
-		// RenderSystem (before this tree walk). Skip them here so they aren't
-		// drawn twice; the tree walk still draws the 2D/UI (Sprite) objects --
-		// including FontSprite's per-glyph Draw override.
+		// P4.2: 3D materials render through the RenderSystem's per-MaterialKind
+		// branches, but driven here in the tree walk so they keep the authoritative
+		// PCS-tree draw order (correct alpha-blend layering). 2D/UI (Sprite) and
+		// not-yet-migrated paths still go straight through the GraphicsObject.
 		if (GameObjectMan::GetUseECSRender() && MaterialKindIs3D(r.kind))
 		{
+			RenderSystem::DrawObject(r, this->GetTransform().world);
 			return;
 		}
 
