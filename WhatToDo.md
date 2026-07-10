@@ -850,11 +850,39 @@ verified, then delete.
 >   Also removed the 4 dead-variant includes from `GameObject.h` (it only needs base `GraphicsObject*`).
 >   `LightComponent` kept (its comment updated). Builds 0 errors; no behavior change. **4 live
 >   materials remain: `_Null`, `_FlatTexture`, `_Sprite`, `_SkinLightTexture`.**
-> - **P4.1 -- RenderSystem shell, opaque-3D only, behind a toggle.** New `RenderSystem` iterating
->   `RenderComponent` (drawEnable) that, for the 3D materials, calls the existing
->   `pGraphicsObject->Render()` (NOT yet decomposed). Add `bool useECSRender` in `GameObjectMan::Draw`
->   so old tree-walk and new system can A/B toggle. Sprites/FontSprite stay on the tree walk. Verify
->   the 3D objects (cube/terrain/dancers) render identically; watch draw order.
+> - **P4.1 DONE (2026-07-08): RenderSystem shell, opaque-3D behind a toggle -- builds 0 errors.**
+>   - New `Component/MaterialKind.h` (`enum class MaterialKind { Null, FlatTexture, Sprite,
+>     SkinLightTexture }` + `MaterialKindIs3D`). `RenderComponent` gained a `MaterialKind kind` field.
+>   - `GraphicsObject` got a pure-virtual `GetMaterialKind()`; the 4 live variants return their kind
+>     (inline). `GameObject` ctor seeds `render.kind = pGraphicsObject->GetMaterialKind()`.
+>   - New `System/RenderSystem.h/.cpp` -- draw-phase class (NOT a SystemMan/Update system); `Draw(World&)`
+>     iterates the RenderComponent pool and `Render()`s the 3D kinds. Still calls the existing
+>     `GraphicsObject->Render()` (decomposition is P4.2).
+>   - `GameObjectMan`: `static bool sUseECSRender` (+ Get/Set), **defaults TRUE**. `Draw()` runs
+>     `RenderSystem::Draw` first (3D opaque), then the tree walk. `GameObject::Draw` skips 3D kinds when
+>     the toggle is on (so no double-draw); the tree walk still draws Sprite/FontSprite (2D) -- incl.
+>     FontSprite's per-glyph `Draw` override. Net: 3D drawn from the pool, 2D on top from the tree ->
+>     natural opaque-then-UI layering. Verified only base `GameObject::Draw` + `FontSprite::Draw` exist
+>     (no 3D subclass overrides Draw), so the skip is safe.
+>   - **NEEDS RUNTIME TEST (toggle defaults ON): press 1/2 (dancers + fonts), 3 (terrain+skybox),
+>     4 (cube) -- all identical to before. To A/B compare, set `GameObjectMan::sUseECSRender=false`
+>     + rebuild for the original tree-walk path.**
+>
+> **MATERIALS restored as first-class MaterialKinds (2026-07-08, scene4 demo/test):** ColorByVertex,
+> ConstColorLight, and Wireframe brought back (recovered from commit `af302b3`) with `GetMaterialKind()`
+> overrides + `MaterialKind` entries (all 3D). **Wired the `ConstColorLight` SHADER** into the pipeline
+> (it existed as `ShaderObject_ConstColorLight` + compiled HLSL but was never in the enum): added
+> `ShaderObject::Name::ConstColorLight` + factory case + `StringThis` case. Wireframe reuses the
+> `ConstColor` shader + wire rasterizer. scene4 now shows 3 equally-spaced spinning cubes
+> (ColorByVertex | ConstColorLight | Wireframe), each a 3D kind drawn by the RenderSystem -- proving
+> P4.1 handles kinds that didn't exist when it was written. This answers the P4.2 "carry
+> Wireframe/ColorByVertex forward?" question: YES, first-class kinds now.
+> GRADIENT CUBE DONE: `CubeMesh.m.proto.azul` has NO vertex colors (ColorByVertex rendered it black),
+> so added `Mesh/MeshCubeColor` -- a procedural unit cube with a unique RGBA per corner (8 verts, 36
+> CCW-from-outside indices to match the engine's CULL_FRONT winding), registered under a new
+> `Mesh::Name::CUBE_COLOR` (+ StringThis case) via the existing `MeshNodeMan::Add(Name, Mesh*)`
+> overload. scene4's left cube uses it -> interpolated gradient faces. First code-defined (non-proto)
+> mesh in the engine.
 > - **P4.2 -- decompose the 3D materials.** Move `_FlatTexture` + `_SkinLightTexture`
 >   `SetState/SetDataGPU/Draw/RestoreState` bodies into MaterialKind branches of `RenderSystem`;
 >   `RenderComponent` carries mesh/shader/tex/light handles. Group by (shader,material,mesh); bind

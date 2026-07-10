@@ -271,6 +271,7 @@ namespace Azul
 		Crownboi23,
 		Terrain,
 		SkyBox,
+		CUBE_COLOR,
 		NOT_INITIALIZED
 		};
 

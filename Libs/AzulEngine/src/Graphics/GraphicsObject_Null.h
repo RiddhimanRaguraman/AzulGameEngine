@@ -27,6 +27,7 @@ namespace Azul
 		virtual void SetDataGPU() override;
 		virtual void Draw() override;
 		virtual void RestoreState() override;
+		virtual MaterialKind GetMaterialKind() const override { return MaterialKind::Null; }
 
 		// data:  place uniform instancing here
 

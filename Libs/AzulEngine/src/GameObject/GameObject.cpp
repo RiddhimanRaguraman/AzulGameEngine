@@ -4,6 +4,7 @@
 
 #include "MathEngine.h"
 #include "GameObject.h"
+#include "GameObjectMan.h"
 #include "Camera.h"
 #include "WorldMan.h"
 #include "World.h"
@@ -26,6 +27,7 @@ namespace Azul
 
 		RenderComponent &r = WorldMan::GetWorld().Add<RenderComponent>(this->mEntity);
 		r.pGraphicsObject = pGraphicsObject;
+		r.kind = pGraphicsObject->GetMaterialKind();
 		r.drawEnable = true;
 
 		HierarchyComponent &h = WorldMan::GetWorld().Add<HierarchyComponent>(this->mEntity);
@@ -110,10 +112,21 @@ namespace Azul
 
 		RenderComponent &r = this->GetRender();
 		assert(r.pGraphicsObject);
-		if (r.drawEnable)
+		if (!r.drawEnable)
 		{
-			r.pGraphicsObject->Render();
+			return;
 		}
+
+		// P4.1: when the ECS render path is on, the 3D materials are drawn by the
+		// RenderSystem (before this tree walk). Skip them here so they aren't
+		// drawn twice; the tree walk still draws the 2D/UI (Sprite) objects --
+		// including FontSprite's per-glyph Draw override.
+		if (GameObjectMan::GetUseECSRender() && MaterialKindIs3D(r.kind))
+		{
+			return;
+		}
+
+		r.pGraphicsObject->Render();
 	}
 
 }

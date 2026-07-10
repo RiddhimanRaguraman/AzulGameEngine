@@ -34,6 +34,7 @@ namespace Azul
 			MixerCCompute,
 
 			ConstColor,
+			ConstColorLight,
 			Sprite,
 			Uninitialized
 		};

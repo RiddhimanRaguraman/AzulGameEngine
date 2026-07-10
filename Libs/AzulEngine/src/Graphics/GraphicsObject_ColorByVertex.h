@@ -1,0 +1,42 @@
+//----------------------------------------------------------------------------
+// Copyright 2025, Ed Keenan, all rights reserved.
+//----------------------------------------------------------------------------
+
+#ifndef GRAPHICS_OBJECT_COLOR_BY_Vertex_H
+#define GRAPHICS_OBJECT_COLOR_BY_Vertex_H
+
+#include "GraphicsObject.h"
+
+#include "EngineDLLInterface.h"
+
+namespace Azul
+{
+
+	class AZUL_ENGINE_LIBRARY_API GraphicsObject_ColorByVertex :public GraphicsObject
+	{
+	public:
+		GraphicsObject_ColorByVertex(Mesh::Name meshName,
+			ShaderObject::Name shaderName);
+
+		GraphicsObject_ColorByVertex() = delete;
+		GraphicsObject_ColorByVertex(const GraphicsObject_ColorByVertex &) = delete;
+		GraphicsObject_ColorByVertex &operator = (const GraphicsObject_ColorByVertex &) = delete;
+		virtual ~GraphicsObject_ColorByVertex() = default;
+
+		// Rendermaterial contract
+		virtual void SetState() override;
+		virtual void SetDataGPU() override;
+		virtual void Draw() override;
+		virtual void RestoreState() override;
+		virtual MaterialKind GetMaterialKind() const override { return MaterialKind::ColorByVertex; }
+
+		// data:  place uniform instancing here
+
+	};
+
+}
+
+#endif
+
+
+// --- End of File ---

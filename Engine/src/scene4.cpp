@@ -4,6 +4,7 @@
 
 #include "ShaderObjectNodeMan.h"
 #include "MeshNodeMan.h"
+#include "MeshCubeColor.h"
 #include "GameObjectMan.h"
 #include "RotateComponent.h"
 #include "WorldMan.h"
@@ -11,7 +12,9 @@
 #include "CameraNodeMan.h"
 #include "TexNodeMan.h"
 
-#include "GraphicsObject_FlatTexture.h"
+#include "GraphicsObject_ColorByVertex.h"
+#include "GraphicsObject_ConstColorLight.h"
+#include "GraphicsObject_Wireframe.h"
 #include "GameObjectRigidBody.h"
 
 namespace Azul
@@ -35,7 +38,7 @@ namespace Azul
 				1.0f,
 				100000.0f);
 
-			Vec3 pos(0.0f, 150.0f, 450.0f);
+			Vec3 pos(0.0f, 120.0f, 650.0f);
 			Vec3 tar(0.0f, 0.0f, 0.0f);
 			Vec3 up = pos + Vec3(0.0f, 1.0f, 0.0f);
 			pCam3D->SetHelper(up, tar, pos);
@@ -67,30 +70,85 @@ namespace Azul
 		}
 
 		MeshNodeMan::Add(Mesh::Name::CUBE, "CubeMesh.m.proto.azul");
+		// Procedural cube with a unique color per corner (the proto cube has no
+		// vertex colors, so ColorByVertex renders it black).
+		MeshNodeMan::Add(Mesh::Name::CUBE_COLOR, new MeshCubeColor(Mesh::Name::CUBE_COLOR));
 
-		ShaderObjectNodeMan::Add(ShaderObject::Name::FlatTexture);
+		// Three material paths, all drawn by the P4.1 RenderSystem from the
+		// component pool (each is a 3D MaterialKind).
+		ShaderObjectNodeMan::Add(ShaderObject::Name::ColorByVertex);
+		ShaderObjectNodeMan::Add(ShaderObject::Name::ConstColorLight);
+		ShaderObjectNodeMan::Add(ShaderObject::Name::ConstColor);   // wireframe uses this + wire rasterizer
 
-		TexNodeMan::Add(TextureObject::Name::Ward, "Ward.t.proto.azul");
+		// Three equally-spaced cubes, one per material, each spun by the ECS
+		// RotateComponent + RotateSystem (no Prefab, no per-object Update).
+		const float kSpacing = 220.0f;
+		const float kScale = 70.0f;
+		const float kSpin = 0.01f;
 
-		// DEMO: a single cube whose spin is driven entirely by the ECS
-		// RotateComponent + RotateSystem -- no Prefab, no per-object Update.
+		// LEFT -- ColorByVertex on the procedural colored cube (unique color per
+		// corner -> gradient faces).
 		{
-			GraphicsObject* pGraphicsObject = new GraphicsObject_FlatTexture(
-				Mesh::Name::CUBE,
-				ShaderObject::Name::FlatTexture,
-				TextureObject::Name::Ward);
+			GraphicsObject* pGO = new GraphicsObject_ColorByVertex(
+				Mesh::Name::CUBE_COLOR,
+				ShaderObject::Name::ColorByVertex);
 
-			GameObjectRigidBody* pSpinner = new GameObjectRigidBody(pGraphicsObject);
-			pSpinner->SetName("RotatingCube");
-			pSpinner->SetTrans(0.0f, 0.0f, 0.0f);
-			pSpinner->SetScale(100.0f);
+			GameObjectRigidBody* pCube = new GameObjectRigidBody(pGO);
+			pCube->SetName("Cube_ColorByVertex");
+			pCube->SetTrans(-kSpacing, 0.0f, 0.0f);
+			pCube->SetScale(kScale);
 
-			// Attach the behavior as data on the entity; RotateSystem does the rest.
-			RotateComponent& rc = WorldMan::GetWorld().Add<RotateComponent>(pSpinner->GetEntity());
+			RotateComponent& rc = WorldMan::GetWorld().Add<RotateComponent>(pCube->GetEntity());
 			rc.angle = 0.0f;
-			rc.speed = 0.01f;
+			rc.speed = kSpin;
 
-			GameObjectMan::Add(pSpinner, GameObjectMan::GetRoot());
+			GameObjectMan::Add(pCube, GameObjectMan::GetRoot());
+		}
+
+		// MIDDLE -- ConstColorLight (constant body color + a light).
+		{
+			Vec3 lightColor(1.0f, 1.0f, 1.0f);
+			Vec3 lightPos(150.0f, 200.0f, 300.0f);
+			Vec3 bodyColor(0.2f, 0.5f, 0.95f);   // blue-ish
+
+			GraphicsObject* pGO = new GraphicsObject_ConstColorLight(
+				Mesh::Name::CUBE,
+				ShaderObject::Name::ConstColorLight,
+				lightColor,
+				lightPos,
+				bodyColor);
+
+			GameObjectRigidBody* pCube = new GameObjectRigidBody(pGO);
+			pCube->SetName("Cube_ConstColorLight");
+			pCube->SetTrans(0.0f, 0.0f, 0.0f);
+			pCube->SetScale(kScale);
+
+			RotateComponent& rc = WorldMan::GetWorld().Add<RotateComponent>(pCube->GetEntity());
+			rc.angle = 0.0f;
+			rc.speed = kSpin;
+
+			GameObjectMan::Add(pCube, GameObjectMan::GetRoot());
+		}
+
+		// RIGHT -- Wireframe (wire rasterizer + a constant color).
+		{
+			Vec3 wireColor(0.1f, 1.0f, 0.3f);   // green
+
+			GraphicsObject* pGO = new GraphicsObject_Wireframe(
+				Mesh::Name::CUBE,
+				ShaderObject::Name::ConstColor,
+				wireColor);
+
+			GameObjectRigidBody* pCube = new GameObjectRigidBody(pGO);
+			pCube->SetName("Cube_Wireframe");
+			pCube->SetTrans(kSpacing, 0.0f, 0.0f);
+			pCube->SetScale(kScale);
+
+			RotateComponent& rc = WorldMan::GetWorld().Add<RotateComponent>(pCube->GetEntity());
+			rc.angle = 0.0f;
+			rc.speed = kSpin;
+
+			GameObjectMan::Add(pCube, GameObjectMan::GetRoot());
 		}
 
 		return true;

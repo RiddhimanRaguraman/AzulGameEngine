@@ -18,9 +18,24 @@
 #include "AnimationSystem.h"
 #include "BlendSystem.h"
 #include "SkinningSystem.h"
+#include "RenderSystem.h"
 
 namespace Azul
 {
+	// P4.1: ECS render path ON by default so the next run exercises it. Flip to
+	// false to A/B compare against the original PCS-tree Draw walk.
+	bool GameObjectMan::sUseECSRender = true;
+
+	bool GameObjectMan::GetUseECSRender()
+	{
+		return sUseECSRender;
+	}
+
+	void GameObjectMan::SetUseECSRender(bool b)
+	{
+		sUseECSRender = b;
+	}
+
 	void GameObjectMan::Add(GameObject *pObj, GameObject *pParent)
 	{
 		assert(pObj);
@@ -171,6 +186,16 @@ namespace Azul
 		//Trace::out("--- GameObjectMan::Draw() ----\n");
 		GameObjectMan *pGOM = GameObjectMan::privGetInstance();
 		assert(pGOM);
+
+		// P4.1: with the ECS path on, the RenderSystem draws the 3D materials from
+		// the component pool FIRST (opaque pass), then the tree walk draws only the
+		// 2D/UI (Sprite) objects on top (GameObject::Draw skips the 3D kinds). With
+		// it off, the tree walk draws everything (original behavior).
+		if (sUseECSRender)
+		{
+			RenderSystem renderSys;
+			renderSys.Draw(WorldMan::GetWorld());
+		}
 
 		PCSNode *pRootNode = pGOM->poRootTree->GetRoot();
 		assert(pRootNode);

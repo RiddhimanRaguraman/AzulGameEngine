@@ -17,6 +17,7 @@
 #include "ShaderObject_WorldC.h"
 #include "ShaderObject_LightTexture.h"
 #include "ShaderObject_ConstColor.h"
+#include "ShaderObject_ConstColorLight.h"
 #include "ShaderObject_Sprite.h"
 #include "ShaderObject_MixerA.h"
 #include "ShaderObject_MixerB.h"

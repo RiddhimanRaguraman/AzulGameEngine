@@ -120,6 +120,9 @@ namespace Azul
 			case ShaderObject::Name::ConstColor:
 				pShader = new ShaderObject_ConstColor(ShaderObject::Name::ConstColor);
 				break;
+			case ShaderObject::Name::ConstColorLight:
+				pShader = new ShaderObject_ConstColorLight(ShaderObject::Name::ConstColorLight);
+				break;
 			case ShaderObject::Name::SkinFlatTexture:
 				pShader = new ShaderObject_SkinFlatTexture(ShaderObject::Name::SkinFlatTexture);
 				break;

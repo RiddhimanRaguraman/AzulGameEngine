@@ -151,6 +151,10 @@ namespace Azul
 				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(Mesh::CUBE));
 				break;
 
+			case Mesh::Name::CUBE_COLOR:
+				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(Mesh::CUBE_COLOR));
+				break;
+
 			case Mesh::Name::PYRAMID:
 				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(Mesh::PYRAMID));
 				break;
@@ -279,6 +283,10 @@ namespace Azul
 
 			case ShaderObject::Name::ConstColor:
 				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(ShaderObject::ConstColor));
+				break;
+
+			case ShaderObject::Name::ConstColorLight:
+				strcpy_s(this->buffer, BUFFER_SIZE, STRING_ME(ShaderObject::ConstColorLight));
 				break;
 
 			case ShaderObject::Name::Sprite:

@@ -9,6 +9,7 @@
 #include "ShaderObject.h"
 #include "GraphicsObject_Abstract.h"
 #include "Mesh.h"
+#include "MaterialKind.h"
 
 #include "EngineDLLInterface.h"
 
@@ -24,6 +25,10 @@ namespace Azul
 
 		Mesh *GetMesh() const;
 		Mat4 &GetWorld();
+
+		// Phase 4 bridge: which material path this object is, so RenderComponent
+		// can carry it as data and the RenderSystem can branch without RTTI.
+		virtual MaterialKind GetMaterialKind() const = 0;
 
 		virtual ~GraphicsObject() override;
 
