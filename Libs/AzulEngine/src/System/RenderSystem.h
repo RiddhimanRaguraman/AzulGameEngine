@@ -34,6 +34,7 @@ namespace Azul
 		static void privDrawFlatTexture(RenderComponent &r, Mat4 &world);
 		static void privDrawConstColorLight(RenderComponent &r, Mat4 &world);
 		static void privDrawWireframe(RenderComponent &r, Mat4 &world);
+		static void privDrawSkinLightTexture(RenderComponent &r, Mat4 &world);
 	};
 }
 

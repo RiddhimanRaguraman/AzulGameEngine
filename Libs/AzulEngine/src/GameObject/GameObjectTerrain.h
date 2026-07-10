@@ -2,17 +2,24 @@
 #define GAME_OBJECT_TERRAIN_H
 
 #include "GameObjectRigidBody.h"
+#include "Mesh.h"
+#include "ShaderObject.h"
+#include "TextureObject.h"
 
 #include "EngineDLLInterface.h"
 
 namespace Azul
 {
-	class GraphicsObject_FlatTexture;
-
+	// Data-path FlatTexture terrain: no GraphicsObject. Its render handles live in
+	// the entity's RenderComponent (filled in the ctor); SetUVRepeat writes the
+	// RenderComponent.uvMatrix (the "late setter" that made a snapshot impossible).
 	class AZUL_ENGINE_LIBRARY_API GameObjectTerrain : public GameObjectRigidBody
 	{
 	public:
-		GameObjectTerrain(GraphicsObject_FlatTexture* pGraphicsObject, float authoredSizeX, float authoredSizeZ, float authoredHeight);
+		GameObjectTerrain(Mesh::Name mesh,
+			ShaderObject::Name shader,
+			TextureObject::Name tex,
+			float authoredSizeX, float authoredSizeZ, float authoredHeight);
 		GameObjectTerrain() = delete;
 		GameObjectTerrain(const GameObjectTerrain&) = delete;
 		GameObjectTerrain& operator=(const GameObjectTerrain&) = delete;
@@ -26,8 +33,6 @@ namespace Azul
 		void privApplyScale();
 
 	private:
-		GraphicsObject_FlatTexture* pGraphicsObjectFlat;
-
 		float authoredSizeX;
 		float authoredSizeZ;
 		float authoredHeight;
@@ -42,4 +47,3 @@ namespace Azul
 }
 
 #endif
-

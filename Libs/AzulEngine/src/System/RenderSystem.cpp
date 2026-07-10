@@ -5,9 +5,8 @@
 #include "RenderSystem.h"
 #include "RenderComponent.h"
 #include "GraphicsObject.h"
-#include "GraphicsObject_FlatTexture.h"
-#include "GraphicsObject_ConstColorLight.h"
-#include "GraphicsObject_Wireframe.h"
+#include "GraphicsObject_SkinLightTexture.h"
+#include "ComputeBlend.h"
 #include "Mesh.h"
 #include "ShaderObject.h"
 #include "TextureObject.h"
@@ -19,8 +18,6 @@ namespace Azul
 {
 	void RenderSystem::DrawObject(RenderComponent &r, Mat4 &world)
 	{
-		assert(r.pGraphicsObject);
-
 		switch (r.kind)
 		{
 		case MaterialKind::ColorByVertex:
@@ -39,19 +36,25 @@ namespace Azul
 			privDrawWireframe(r, world);
 			break;
 
+		case MaterialKind::SkinLightTexture:
+			privDrawSkinLightTexture(r, world);
+			break;
+
 		default:
-			// Not-yet-migrated materials (SkinLightTexture): bridge through
-			// the GraphicsObject.
+			// All 3D kinds are migrated; this bridge remains only as a safety net.
 			r.pGraphicsObject->Render();
 			break;
 		}
 	}
 
 	// (was GraphicsObject_ColorByVertex::SetState/SetDataGPU/Draw/RestoreState)
+	// MIGRATED to data-path: reads mesh/shader from RenderComponent (no GraphicsObject).
 	void RenderSystem::privDrawColorByVertex(RenderComponent &r, Mat4 &world)
 	{
-		Mesh *pMesh = r.pGraphicsObject->GetMesh();
-		ShaderObject *pShader = r.pGraphicsObject->GetShader();
+		Mesh *pMesh = r.pMesh;
+		ShaderObject *pShader = r.pShader;
+		assert(pMesh);
+		assert(pShader);
 
 		pMesh->ActivateMesh();
 		pShader->ActivateShader();
@@ -62,15 +65,18 @@ namespace Azul
 	}
 
 	// (was GraphicsObject_FlatTexture::SetState/SetDataGPU/Draw/RestoreState)
+	// MIGRATED to data-path: mesh/shader/tex/uvMatrix from RenderComponent.
 	void RenderSystem::privDrawFlatTexture(RenderComponent &r, Mat4 &world)
 	{
-		GraphicsObject_FlatTexture *pGO = (GraphicsObject_FlatTexture *)r.pGraphicsObject;
-		Mesh *pMesh = pGO->GetMesh();
-		ShaderObject *pShader = pGO->GetShader();
+		Mesh *pMesh = r.pMesh;
+		ShaderObject *pShader = r.pShader;
+		assert(pMesh);
+		assert(pShader);
+		assert(r.pTex);
 
 		// SetState
-		pGO->pTex->ActivateTexture();
-		if (pGO->pTex->HasAlpha())
+		r.pTex->ActivateTexture();
+		if (r.pTex->HasAlpha())
 		{
 			Engine::GetInstance()->mBlendStateAlpha.Activate();
 		}
@@ -80,7 +86,7 @@ namespace Azul
 		pShader->ActivateShader();
 		pShader->ActivateCBV();
 		pShader->TransferWorldViewProj(CameraNodeMan::GetCurrent(Camera::Type::PERSPECTIVE_3D), &world);
-		pShader->TransferUVMatrix(&pGO->uvMatrix);
+		pShader->TransferUVMatrix(&r.uvMatrix);
 
 		// Draw
 		pMesh->RenderIndexBuffer();
@@ -90,31 +96,35 @@ namespace Azul
 	}
 
 	// (was GraphicsObject_ConstColorLight::SetState/SetDataGPU/Draw/RestoreState)
+	// MIGRATED to data-path: params from RenderComponent.
 	void RenderSystem::privDrawConstColorLight(RenderComponent &r, Mat4 &world)
 	{
-		GraphicsObject_ConstColorLight *pGO = (GraphicsObject_ConstColorLight *)r.pGraphicsObject;
-		Mesh *pMesh = pGO->GetMesh();
-		ShaderObject *pShader = pGO->GetShader();
+		Mesh *pMesh = r.pMesh;
+		ShaderObject *pShader = r.pShader;
+		assert(pMesh);
+		assert(pShader);
 
 		pMesh->ActivateMesh();
 		pShader->ActivateShader();
 		pShader->ActivateCBV();
 		pShader->TransferWorldViewProj(CameraNodeMan::GetCurrent(Camera::Type::PERSPECTIVE_3D), &world);
-		pShader->TransferPos(pGO->poLightPos);
-		pShader->TransferColor(pGO->poLightColor);
+		pShader->TransferPos(&r.lightPos);
+		pShader->TransferColor(&r.lightColor);
 
-		Color col(*pGO->poBodyColor);
+		Color col(r.bodyColor);
 		pShader->TransferBodyColor(&col);
 
 		pMesh->RenderIndexBuffer();
 	}
 
 	// (was GraphicsObject_Wireframe::SetState/SetDataGPU/Draw/RestoreState)
+	// MIGRATED to data-path: color from RenderComponent.lightColor.
 	void RenderSystem::privDrawWireframe(RenderComponent &r, Mat4 &world)
 	{
-		GraphicsObject_Wireframe *pGO = (GraphicsObject_Wireframe *)r.pGraphicsObject;
-		Mesh *pMesh = pGO->GetMesh();
-		ShaderObject *pShader = pGO->GetShader();
+		Mesh *pMesh = r.pMesh;
+		ShaderObject *pShader = r.pShader;
+		assert(pMesh);
+		assert(pShader);
 
 		// SetState
 		Engine::GetInstance()->mStateRasterizerWireNoCull.Activate();
@@ -124,13 +134,43 @@ namespace Azul
 		pShader->ActivateShader();
 		pShader->ActivateCBV();
 		pShader->TransferWorldViewProj(CameraNodeMan::GetCurrent(Camera::Type::PERSPECTIVE_3D), &world);
-		pShader->TransferColor(pGO->poLightColor);
+		pShader->TransferColor(&r.lightColor);
 
 		// Draw
 		pMesh->RenderIndexBuffer();
 
 		// RestoreState
 		Engine::GetInstance()->mStateRasterizerSolidCull.Activate();
+	}
+
+	// (was GraphicsObject_SkinLightTexture::SetState/SetDataGPU/Draw/RestoreState)
+	// Consumes the SkinningSystem output: BindWorldBoneArray binds the bone-world
+	// SRV that ComputeBlend::Execute produced during Update (runs before Draw).
+	void RenderSystem::privDrawSkinLightTexture(RenderComponent &r, Mat4 &world)
+	{
+		GraphicsObject_SkinLightTexture *pGO = (GraphicsObject_SkinLightTexture *)r.pGraphicsObject;
+		Mesh *pMesh = pGO->GetMesh();
+		ShaderObject *pShader = pGO->GetShader();
+
+		// SetState
+		pGO->pTex->ActivateTexture();
+		Engine::GetInstance()->mStateRasterizerSolidCull.Activate();
+
+		// SetDataGPU
+		pMesh->ActivateMesh();
+		pMesh->ActivateSRVBuffers();
+		pShader->ActivateShader();
+		pShader->ActivateCBV();
+		pShader->TransferWorldViewProj(CameraNodeMan::GetCurrent(Camera::Type::PERSPECTIVE_3D), &world);
+		pShader->TransferPos(pGO->poLightPos);
+		pShader->TransferColor(pGO->poLightColor);
+		pGO->poComputeBlend->BindWorldBoneArray();
+
+		// Draw
+		pMesh->RenderIndexBuffer();
+
+		// RestoreState
+		Engine::GetInstance()->mBlendStateOff.Activate();
 	}
 }
 

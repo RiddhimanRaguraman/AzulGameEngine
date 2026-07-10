@@ -13,6 +13,9 @@ namespace Azul
 		friend class Prefab;
 	public:
 		GameObjectRigidBody(GraphicsObject* pGraphicsObject);
+		// Data-path (Phase 4 consolidation): no GraphicsObject; caller fills the
+		// RenderComponent via GetRender().
+		GameObjectRigidBody(MaterialKind kind);
 		GameObjectRigidBody() = delete;
 		GameObjectRigidBody(const GameObjectRigidBody&) = delete;
 		GameObjectRigidBody& operator = (const GameObjectRigidBody&) = delete;

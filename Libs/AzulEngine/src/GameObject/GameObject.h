@@ -11,7 +11,6 @@
 #include "GraphicsObject.h"
 #include "PCSNode.h"
 #include "Prefab.h"
-#include "GraphicsObject_FlatTexture.h"
 #include "GraphicsObject_Null.h"
 #include "GraphicsObject_Sprite.h"
 #include "AnimTime.h"
@@ -35,6 +34,11 @@ namespace Azul
 
 		GameObject(GraphicsObject *poGraphicsObject);
 
+		// Data-path ctor (Phase 4 consolidation): no GraphicsObject. Creates the
+		// entity + components; the caller fills RenderComponent (kind + handles)
+		// via GetRender(). Used by 3D materials whose logic is a RenderSystem branch.
+		GameObject(MaterialKind kind);
+
 		virtual void Update(AnimTime currentTime) = 0;
 		virtual void Draw();
 
@@ -54,8 +58,11 @@ namespace Azul
 		Entity GetEntity() const;
 		void SetParent(GameObject *pParent);
 
-	protected:
+		// Public so scene/creation code can populate render data on the data-path
+		// (no GraphicsObject). Returns the entity's RenderComponent.
 		RenderComponent &GetRender();
+
+	protected:
 		HierarchyComponent &GetHierarchy();
 
 		// Bridge: the transform and render data now live in ECS components keyed

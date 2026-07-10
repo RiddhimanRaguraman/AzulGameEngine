@@ -12,10 +12,8 @@
 #include "CameraNodeMan.h"
 #include "TexNodeMan.h"
 
-#include "GraphicsObject_ColorByVertex.h"
-#include "GraphicsObject_ConstColorLight.h"
-#include "GraphicsObject_Wireframe.h"
 #include "GameObjectRigidBody.h"
+#include "RenderComponent.h"
 
 namespace Azul
 {
@@ -87,17 +85,18 @@ namespace Azul
 		const float kSpin = 0.01f;
 
 		// LEFT -- ColorByVertex on the procedural colored cube (unique color per
-		// corner -> gradient faces).
+		// corner -> gradient faces). DATA-PATH: no GraphicsObject; RenderComponent
+		// carries the mesh/shader handles, RenderSystem does the drawing.
 		{
-			GraphicsObject* pGO = new GraphicsObject_ColorByVertex(
-				Mesh::Name::CUBE_COLOR,
-				ShaderObject::Name::ColorByVertex);
-
-			GameObjectRigidBody* pCube = new GameObjectRigidBody(pGO);
+			GameObjectRigidBody* pCube = new GameObjectRigidBody(MaterialKind::ColorByVertex);
 			pCube->SetName("Cube_ColorByVertex");
 			pCube->SetTrans(-kSpacing, 0.0f, 0.0f);
 			pCube->SetScale(kScale*0.75f);
 
+			RenderComponent& r = pCube->GetRender();
+			r.pMesh = MeshNodeMan::Find(Mesh::Name::CUBE_COLOR);
+			r.pShader = ShaderObjectNodeMan::Find(ShaderObject::Name::ColorByVertex);
+
 			RotateComponent& rc = WorldMan::GetWorld().Add<RotateComponent>(pCube->GetEntity());
 			rc.angle = 0.0f;
 			rc.speed = kSpin;
@@ -105,24 +104,20 @@ namespace Azul
 			GameObjectMan::Add(pCube, GameObjectMan::GetRoot());
 		}
 
-		// MIDDLE -- ConstColorLight (constant body color + a light).
+		// MIDDLE -- ConstColorLight (constant body color + a light). DATA-PATH.
 		{
-			Vec3 lightColor(1.0f, 1.0f, 1.0f);
-			Vec3 lightPos(150.0f, 200.0f, 300.0f);
-			Vec3 bodyColor(0.2f, 0.5f, 0.95f);   // blue-ish
-
-			GraphicsObject* pGO = new GraphicsObject_ConstColorLight(
-				Mesh::Name::CUBE,
-				ShaderObject::Name::ConstColorLight,
-				lightColor,
-				lightPos,
-				bodyColor);
-
-			GameObjectRigidBody* pCube = new GameObjectRigidBody(pGO);
+			GameObjectRigidBody* pCube = new GameObjectRigidBody(MaterialKind::ConstColorLight);
 			pCube->SetName("Cube_ConstColorLight");
 			pCube->SetTrans(0.0f, 0.0f, 0.0f);
 			pCube->SetScale(kScale);
 
+			RenderComponent& r = pCube->GetRender();
+			r.pMesh = MeshNodeMan::Find(Mesh::Name::CUBE);
+			r.pShader = ShaderObjectNodeMan::Find(ShaderObject::Name::ConstColorLight);
+			r.lightColor.set(1.0f, 1.0f, 1.0f);
+			r.lightPos.set(150.0f, 200.0f, 300.0f);
+			r.bodyColor.set(0.2f, 0.5f, 0.95f);   // blue-ish
+
 			RotateComponent& rc = WorldMan::GetWorld().Add<RotateComponent>(pCube->GetEntity());
 			rc.angle = 0.0f;
 			rc.speed = kSpin;
@@ -130,19 +125,17 @@ namespace Azul
 			GameObjectMan::Add(pCube, GameObjectMan::GetRoot());
 		}
 
-		// RIGHT -- Wireframe (wire rasterizer + a constant color).
+		// RIGHT -- Wireframe (wire rasterizer + a constant color). DATA-PATH.
 		{
-			Vec3 wireColor(0.1f, 1.0f, 0.3f);   // green
-
-			GraphicsObject* pGO = new GraphicsObject_Wireframe(
-				Mesh::Name::CUBE,
-				ShaderObject::Name::ConstColor,
-				wireColor);
-
-			GameObjectRigidBody* pCube = new GameObjectRigidBody(pGO);
+			GameObjectRigidBody* pCube = new GameObjectRigidBody(MaterialKind::Wireframe);
 			pCube->SetName("Cube_Wireframe");
 			pCube->SetTrans(kSpacing, 0.0f, 0.0f);
 			pCube->SetScale(kScale);
+
+			RenderComponent& r = pCube->GetRender();
+			r.pMesh = MeshNodeMan::Find(Mesh::Name::CUBE);
+			r.pShader = ShaderObjectNodeMan::Find(ShaderObject::Name::ConstColor);
+			r.lightColor.set(0.1f, 1.0f, 0.3f);   // green wire color
 
 			RotateComponent& rc = WorldMan::GetWorld().Add<RotateComponent>(pCube->GetEntity());
 			rc.angle = 0.0f;

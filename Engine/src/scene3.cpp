@@ -9,9 +9,9 @@
 #include "CameraNodeMan.h"
 #include "TexNodeMan.h"
 
-#include "GraphicsObject_FlatTexture.h"
 #include "GameObjectRigidBody.h"
 #include "GameObjectTerrain.h"
+#include "RenderComponent.h"
 
 namespace Azul
 {
@@ -73,13 +73,13 @@ namespace Azul
 		TexNodeMan::Add(TextureObject::Name::Terrain, "Terrain.t.proto.azul");
 		TexNodeMan::Add(TextureObject::Name::SkyBox, "SkyBox.t.proto.azul");
 
+		// Terrain -- data-path FlatTexture (RenderComponent holds the handles).
 		{
-			GraphicsObject* pGraphicsObject = new GraphicsObject_FlatTexture(
+			GameObjectTerrain* pTerrain = new GameObjectTerrain(
 				Mesh::Name::Terrain,
 				ShaderObject::Name::FlatTexture,
-				TextureObject::Name::Terrain);
-
-			GameObjectTerrain* pTerrain = new GameObjectTerrain((GraphicsObject_FlatTexture*)pGraphicsObject, 200.0f, 200.0f, 20.0f);
+				TextureObject::Name::Terrain,
+				200.0f, 200.0f, 20.0f);
 			pTerrain->SetName("Terrain");
 			pTerrain->SetTrans(0.0f, 0.0f, 0.0f);
 			pTerrain->SetSize(800.0f, 800.0f);
@@ -88,15 +88,17 @@ namespace Azul
 			GameObjectMan::Add(pTerrain, GameObjectMan::GetRoot());
 		}
 
+		// SkyBox -- data-path FlatTexture.
 		{
-			GraphicsObject* pGraphicsObject = new GraphicsObject_FlatTexture(
-				Mesh::Name::SkyBox,
-				ShaderObject::Name::FlatTexture,
-				TextureObject::Name::SkyBox);
-
-			GameObjectRigidBody* pSkyBox = new GameObjectRigidBody(pGraphicsObject);
+			GameObjectRigidBody* pSkyBox = new GameObjectRigidBody(MaterialKind::FlatTexture);
 			pSkyBox->SetName("SkyBox");
 			pSkyBox->SetTrans(0.0f, 0.0f, 0.0f);
+
+			RenderComponent& r = pSkyBox->GetRender();
+			r.pMesh = MeshNodeMan::Find(Mesh::Name::SkyBox);
+			r.pShader = ShaderObjectNodeMan::Find(ShaderObject::Name::FlatTexture);
+			r.pTex = TexNodeMan::Find(TextureObject::Name::SkyBox);
+
 			GameObjectMan::Add(pSkyBox, GameObjectMan::GetRoot());
 		}
 

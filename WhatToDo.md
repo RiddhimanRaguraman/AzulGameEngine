@@ -904,9 +904,38 @@ verified, then delete.
 >     authoritative PCS-tree order. `GameObjectMan::Draw` is a single tree walk again (no separate pool
 >     pass). Batched pool iteration + material sorting is deferred to Phase 6 (needs Phase 5 ordering).
 >     **NEEDS RUNTIME RE-TEST: scene3 skybox vivid again; scene4 cubes + scenes 1/2 unaffected.**
->   - **NEXT: SkinLightTexture branch** (the last; consumes SkinningSystem output via
->     `BindWorldBoneArray`, needs `ActivateSRVBuffers` + light + tex + the ComputeBlend handle). Then
->     the data-migration + delete-`GraphicsObject_*` consolidation, then P4.3 (SpriteRenderSystem).
+>   - **DONE (2026-07-08): SkinLightTexture branch -- builds 0 errors.** `privDrawSkinLightTexture`
+>     (tex + SolidCull rasterizer + `ActivateMesh`/`ActivateSRVBuffers` + WVP + light + `poComputeBlend
+>     ->BindWorldBoneArray` + draw + BlendOff). Consumes the SkinningSystem's bone-world SRV (computed
+>     in Update, before Draw). **ALL 5 3D MATERIALS now RenderSystem branches**; the `default:
+>     Render()` is just a safety net (unreachable for known kinds). **NEEDS RUNTIME TEST: scenes 1/2
+>     dancers animate + render identically.**
+> **DATA-MIGRATION CONSOLIDATION IN PROGRESS (2026-07-08): scene4 fully data-path, builds 0 errors.**
+> Done material-by-material (snapshot-at-ctor won't work -- e.g. terrain UV is set AFTER ctor -- so
+> RenderComponent must be the source of truth, which means construction no longer needs a GraphicsObject).
+> - **Foundation:** `RenderComponent` gained the data fields (`pMesh`, `pShader`, `pTex`, `pComputeBlend`,
+>   `lightColor`, `lightPos`, `bodyColor`, `uvMatrix`); kept `pGraphicsObject` for un-migrated + 2D/Null.
+>   New **data-path ctors** `GameObject(MaterialKind)` / `GameObjectRigidBody(MaterialKind)` (no
+>   GraphicsObject; `pGraphicsObject=nullptr`). `GameObject::GetRender()` made **public** so scenes fill
+>   handles. `GameObject::Draw` asserts pGraphicsObject only on the Render() path; `RigidBody::Update`
+>   null-guards the `SetWorld` push; `RenderSystem::DrawObject` dropped its top pGraphicsObject assert.
+> - **MIGRATED + DELETED (3 classes): `GraphicsObject_ColorByVertex`, `_ConstColorLight`, `_Wireframe`.**
+>   Their RenderSystem branches now read `r.pMesh/r.pShader` + `r.lightColor/lightPos/bodyColor`. scene4's
+>   3 cubes are created via `new GameObjectRigidBody(MaterialKind::X)` + `pCube->GetRender()` populated
+>   with mesh/shader/params. **NEEDS RUNTIME TEST: press 4 -- gradient / blue-lit / green-wire cubes
+>   identical.**
+> - **FlatTexture MIGRATED + DELETED (2026-07-08): scene3 data-path, builds 0 errors.** `GameObjectTerrain`
+>   reworked: ctor now takes `Mesh::Name/ShaderObject::Name/TextureObject::Name` (+ sizes), fills
+>   RenderComponent handles, and `SetUVRepeat` writes `RenderComponent.uvMatrix` (the late-setter that
+>   forced source-of-truth). Skybox = `GameObjectRigidBody(MaterialKind::FlatTexture)` + GetRender().
+>   `GameObject(MaterialKind)` ctor now inits uvMatrix=Identity + light/body Vec3s=0. FlatTexture branch
+>   reads `r.pMesh/pShader/pTex/uvMatrix`. Removed `GraphicsObject_FlatTexture.h` include from
+>   `GameObject.h`. **NEEDS RUNTIME TEST: press 3 -- terrain (with 80x80 UV tiling) + skybox identical.**
+>   **4 of 5 3D materials now data-path + deleted** (ColorByVertex, ConstColorLight, Wireframe, FlatTexture).
+> - **NEXT: migrate `SkinLightTexture`** (AnimMan's 3 Add variants; carries tex + light + the ComputeBlend
+>   handle). The skinned objects are created inside `AnimMan` -- populate RenderComponent there. Then
+>   delete `_SkinLightTexture` + the `Render()` fallback. `_Null`/`_Sprite` stay until P4.3
+>   (SpriteRenderSystem); then P4.4 (internals private behind the DLL).
 > - **P4.3 -- 2D/UI pass = `SpriteRenderSystem`** (locked). Drives the per-glyph loop from component
 >   data, runs strictly AFTER the 3D pass; then delete `_Sprite`.
 > - **P4.4 -- flip default, delete `GraphicsObject`/`_Abstract`/`_Null` + the toggle, move render

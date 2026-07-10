@@ -30,9 +30,39 @@ namespace Azul
 		r.pGraphicsObject = pGraphicsObject;
 		r.kind = pGraphicsObject->GetMaterialKind();
 		r.drawEnable = true;
+		r.pMesh = pGraphicsObject->GetMesh();
+		r.pShader = pGraphicsObject->GetShader();
+		r.pTex = nullptr;
+		r.pComputeBlend = nullptr;
 
 		HierarchyComponent &h = WorldMan::GetWorld().Add<HierarchyComponent>(this->mEntity);
 		h.parent = EntityNull();   // set by GameObjectMan::Add when inserted under a parent
+	}
+
+	GameObject::GameObject(MaterialKind kind)
+	{
+		// Data-path: one entity; transform + render + hierarchy in components. No
+		// GraphicsObject -- the caller fills the render handles via GetRender().
+		this->mEntity = WorldMan::GetWorld().Create();
+
+		TransformComponent &t = WorldMan::GetWorld().Add<TransformComponent>(this->mEntity);
+		t.world = Mat4(Identity);
+
+		RenderComponent &r = WorldMan::GetWorld().Add<RenderComponent>(this->mEntity);
+		r.pGraphicsObject = nullptr;
+		r.kind = kind;
+		r.drawEnable = true;
+		r.pMesh = nullptr;
+		r.pShader = nullptr;
+		r.pTex = nullptr;
+		r.pComputeBlend = nullptr;
+		r.lightColor.set(0.0f, 0.0f, 0.0f);
+		r.lightPos.set(0.0f, 0.0f, 0.0f);
+		r.bodyColor.set(0.0f, 0.0f, 0.0f);
+		r.uvMatrix = Mat4(Identity);
+
+		HierarchyComponent &h = WorldMan::GetWorld().Add<HierarchyComponent>(this->mEntity);
+		h.parent = EntityNull();
 	}
 
 	GameObject::~GameObject()
@@ -112,7 +142,6 @@ namespace Azul
 		// ---------------------------------------------
 
 		RenderComponent &r = this->GetRender();
-		assert(r.pGraphicsObject);
 		if (!r.drawEnable)
 		{
 			return;
@@ -128,6 +157,7 @@ namespace Azul
 			return;
 		}
 
+		assert(r.pGraphicsObject);
 		r.pGraphicsObject->Render();
 	}
 

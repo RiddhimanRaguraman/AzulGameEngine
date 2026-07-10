@@ -1,12 +1,18 @@
 #include "GameObjectTerrain.h"
 
-#include "GraphicsObject_FlatTexture.h"
+#include "MathEngine.h"
+#include "MeshNodeMan.h"
+#include "ShaderObjectNodeMan.h"
+#include "TexNodeMan.h"
+#include "RenderComponent.h"
 
 namespace Azul
 {
-	GameObjectTerrain::GameObjectTerrain(GraphicsObject_FlatTexture* pGraphicsObject, float _authoredSizeX, float _authoredSizeZ, float _authoredHeight)
-		: GameObjectRigidBody(pGraphicsObject),
-		pGraphicsObjectFlat(pGraphicsObject),
+	GameObjectTerrain::GameObjectTerrain(Mesh::Name mesh,
+		ShaderObject::Name shader,
+		TextureObject::Name tex,
+		float _authoredSizeX, float _authoredSizeZ, float _authoredHeight)
+		: GameObjectRigidBody(MaterialKind::FlatTexture),
 		authoredSizeX(_authoredSizeX),
 		authoredSizeZ(_authoredSizeZ),
 		authoredHeight(_authoredHeight),
@@ -16,10 +22,18 @@ namespace Azul
 		uRepeat(1.0f),
 		vRepeat(1.0f)
 	{
-		assert(this->pGraphicsObjectFlat);
 		assert(this->authoredSizeX > 0.0f);
 		assert(this->authoredSizeZ > 0.0f);
 		assert(this->authoredHeight > 0.0f);
+
+		// Fill the render handles (data-path -- no GraphicsObject).
+		RenderComponent& r = this->GetRender();
+		r.pMesh = MeshNodeMan::Find(mesh);
+		r.pShader = ShaderObjectNodeMan::Find(shader);
+		r.pTex = TexNodeMan::Find(tex);
+		assert(r.pMesh);
+		assert(r.pShader);
+		assert(r.pTex);
 
 		this->privApplyScale();
 		this->SetUVRepeat(1.0f, 1.0f);
@@ -51,7 +65,9 @@ namespace Azul
 		this->uRepeat = _uRepeat;
 		this->vRepeat = _vRepeat;
 
-		this->pGraphicsObjectFlat->SetUVRepeat(this->uRepeat, this->vRepeat);
+		// (was GraphicsObject_FlatTexture::SetUVRepeat) -> RenderComponent.uvMatrix
+		Scale s(this->uRepeat, this->vRepeat, 1.0f);
+		this->GetRender().uvMatrix = s;
 	}
 
 	void GameObjectTerrain::privApplyScale()
@@ -63,4 +79,3 @@ namespace Azul
 		this->SetScale(sx, sy, sz);
 	}
 }
-
