@@ -4,8 +4,6 @@
 
 #include "RenderSystem.h"
 #include "RenderComponent.h"
-#include "GraphicsObject.h"
-#include "GraphicsObject_SkinLightTexture.h"
 #include "ComputeBlend.h"
 #include "Mesh.h"
 #include "ShaderObject.h"
@@ -41,8 +39,9 @@ namespace Azul
 			break;
 
 		default:
-			// All 3D kinds are migrated; this bridge remains only as a safety net.
-			r.pGraphicsObject->Render();
+			// DrawObject is only called for 3D kinds (all have a branch above);
+			// Null/Sprite never reach here.
+			assert(false);
 			break;
 		}
 	}
@@ -144,16 +143,20 @@ namespace Azul
 	}
 
 	// (was GraphicsObject_SkinLightTexture::SetState/SetDataGPU/Draw/RestoreState)
+	// MIGRATED to data-path: mesh/shader/tex/light/ComputeBlend from RenderComponent.
 	// Consumes the SkinningSystem output: BindWorldBoneArray binds the bone-world
 	// SRV that ComputeBlend::Execute produced during Update (runs before Draw).
 	void RenderSystem::privDrawSkinLightTexture(RenderComponent &r, Mat4 &world)
 	{
-		GraphicsObject_SkinLightTexture *pGO = (GraphicsObject_SkinLightTexture *)r.pGraphicsObject;
-		Mesh *pMesh = pGO->GetMesh();
-		ShaderObject *pShader = pGO->GetShader();
+		Mesh *pMesh = r.pMesh;
+		ShaderObject *pShader = r.pShader;
+		assert(pMesh);
+		assert(pShader);
+		assert(r.pTex);
+		assert(r.pComputeBlend);
 
 		// SetState
-		pGO->pTex->ActivateTexture();
+		r.pTex->ActivateTexture();
 		Engine::GetInstance()->mStateRasterizerSolidCull.Activate();
 
 		// SetDataGPU
@@ -162,9 +165,9 @@ namespace Azul
 		pShader->ActivateShader();
 		pShader->ActivateCBV();
 		pShader->TransferWorldViewProj(CameraNodeMan::GetCurrent(Camera::Type::PERSPECTIVE_3D), &world);
-		pShader->TransferPos(pGO->poLightPos);
-		pShader->TransferColor(pGO->poLightColor);
-		pGO->poComputeBlend->BindWorldBoneArray();
+		pShader->TransferPos(&r.lightPos);
+		pShader->TransferColor(&r.lightColor);
+		r.pComputeBlend->BindWorldBoneArray();
 
 		// Draw
 		pMesh->RenderIndexBuffer();

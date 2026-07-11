@@ -4,7 +4,6 @@
 
 #include "MathEngine.h"
 #include "GameObject.h"
-#include "GameObjectMan.h"
 #include "RenderSystem.h"
 #include "Camera.h"
 #include "WorldMan.h"
@@ -16,40 +15,16 @@
 namespace Azul
 {
 
-	GameObject::GameObject(GraphicsObject *pGraphicsObject)
-	{
-		assert(pGraphicsObject);
-
-		// Bridge: one entity; its transform + render + hierarchy live in components.
-		this->mEntity = WorldMan::GetWorld().Create();
-
-		TransformComponent &t = WorldMan::GetWorld().Add<TransformComponent>(this->mEntity);
-		t.world = Mat4(Identity);
-
-		RenderComponent &r = WorldMan::GetWorld().Add<RenderComponent>(this->mEntity);
-		r.pGraphicsObject = pGraphicsObject;
-		r.kind = pGraphicsObject->GetMaterialKind();
-		r.drawEnable = true;
-		r.pMesh = pGraphicsObject->GetMesh();
-		r.pShader = pGraphicsObject->GetShader();
-		r.pTex = nullptr;
-		r.pComputeBlend = nullptr;
-
-		HierarchyComponent &h = WorldMan::GetWorld().Add<HierarchyComponent>(this->mEntity);
-		h.parent = EntityNull();   // set by GameObjectMan::Add when inserted under a parent
-	}
-
 	GameObject::GameObject(MaterialKind kind)
 	{
-		// Data-path: one entity; transform + render + hierarchy in components. No
-		// GraphicsObject -- the caller fills the render handles via GetRender().
+		// One entity; transform + render + hierarchy in components. The caller
+		// fills the render handles via GetRender().
 		this->mEntity = WorldMan::GetWorld().Create();
 
 		TransformComponent &t = WorldMan::GetWorld().Add<TransformComponent>(this->mEntity);
 		t.world = Mat4(Identity);
 
 		RenderComponent &r = WorldMan::GetWorld().Add<RenderComponent>(this->mEntity);
-		r.pGraphicsObject = nullptr;
 		r.kind = kind;
 		r.drawEnable = true;
 		r.pMesh = nullptr;
@@ -67,9 +42,6 @@ namespace Azul
 
 	GameObject::~GameObject()
 	{
-		// The GameObject owns its GraphicsObject; free it before the entity
-		// (and its components) go away.
-		delete this->GetRender().pGraphicsObject;
 		WorldMan::GetWorld().Destroy(this->mEntity);
 	}
 
@@ -110,11 +82,6 @@ namespace Azul
 		return &this->GetTransform().world;
 	}
 
-	GraphicsObject *GameObject::GetGraphicsObject()
-	{
-		return this->GetRender().pGraphicsObject;
-	}
-
 	void GameObject::SetWorld(Mat4 *pWorld)
 	{
 		assert(pWorld);
@@ -147,18 +114,14 @@ namespace Azul
 			return;
 		}
 
-		// P4.2: 3D materials render through the RenderSystem's per-MaterialKind
-		// branches, but driven here in the tree walk so they keep the authoritative
-		// PCS-tree draw order (correct alpha-blend layering). 2D/UI (Sprite) and
-		// not-yet-migrated paths still go straight through the GraphicsObject.
-		if (GameObjectMan::GetUseECSRender() && MaterialKindIs3D(r.kind))
+		// 3D materials render through the RenderSystem's per-MaterialKind branches,
+		// driven here in the tree walk so they keep the authoritative PCS-tree draw
+		// order (correct alpha-blend layering). 2D/UI sprites override Draw
+		// (GameObjectSprite/FontSprite). kind==Null (the root) draws nothing.
+		if (MaterialKindIs3D(r.kind))
 		{
 			RenderSystem::DrawObject(r, this->GetTransform().world);
-			return;
 		}
-
-		assert(r.pGraphicsObject);
-		r.pGraphicsObject->Render();
 	}
 
 }

@@ -932,10 +932,54 @@ verified, then delete.
 >   reads `r.pMesh/pShader/pTex/uvMatrix`. Removed `GraphicsObject_FlatTexture.h` include from
 >   `GameObject.h`. **NEEDS RUNTIME TEST: press 3 -- terrain (with 80x80 UV tiling) + skybox identical.**
 >   **4 of 5 3D materials now data-path + deleted** (ColorByVertex, ConstColorLight, Wireframe, FlatTexture).
-> - **NEXT: migrate `SkinLightTexture`** (AnimMan's 3 Add variants; carries tex + light + the ComputeBlend
->   handle). The skinned objects are created inside `AnimMan` -- populate RenderComponent there. Then
->   delete `_SkinLightTexture` + the `Render()` fallback. `_Null`/`_Sprite` stay until P4.3
->   (SpriteRenderSystem); then P4.4 (internals private behind the DLL).
+> - **SkinLightTexture MIGRATED + DELETED (2026-07-08): builds 0 errors.** Added data-path ctors up the
+>   chain: `GameObjectControlled(MaterialKind)` and `GameObjectAnimSkin(MaterialKind, ComputeBlend*)`
+>   (null-guarded its `GetGraphicsObject()->SetWorld` push). AnimMan's 3 Add variants now create
+>   `new GameObjectAnimSkin(MaterialKind::SkinLightTexture, pBlend)` + a `privFillSkinRender` helper that
+>   populates RenderComponent (mesh/shader/tex/lightColor/lightPos/pComputeBlend). Branch reads all from
+>   RenderComponent (incl. `r.pComputeBlend->BindWorldBoneArray()`). **NEEDS RUNTIME TEST: press 1/2 --
+>   dancers animate + render identically.**
+>
+> **3D DATA-MIGRATION CONSOLIDATION COMPLETE.** ALL 5 3D `GraphicsObject_*` deleted (ColorByVertex,
+> ConstColorLight, Wireframe, FlatTexture, SkinLightTexture). Every 3D renderable is now pure ECS data:
+> `GameObjectRigidBody/AnimSkin(MaterialKind)` + `RenderComponent` handles, drawn by `RenderSystem`
+> branches. Remaining `GraphicsObject_*`: only `_Null` (root) + `_Sprite` (2D). The `RenderSystem`
+> `default: Render()` is now dead (unreachable -- all 3D kinds branch).
+> **P4.3 DONE (2026-07-08): SpriteRenderSystem -- 2D/UI fully data-path, builds 0 errors.**
+> - New `Component/Sprite2DComponent.h` (`COMPONENT_SPRITE2D`: pMesh/pShader/pTexture + uvMatrix +
+>   origMatrix + color -- the mutable state that was inside GraphicsObject_Sprite). New
+>   `System/SpriteRenderSystem.h/.cpp` (`DrawSprite(Sprite2DComponent&, Mat4& world)` -- the ortho-cam
+>   screen-rect/UV/colorScale/alpha logic; was GraphicsObject_Sprite's contract).
+> - `GameObjectSprite` reworked to data-path: ctor `(Mesh::Name, ShaderObject::Name, Image::Name, Rect)`
+>   fills the Sprite2DComponent; SetImage/SetTexture/SetScreenRect/SetColor write it; `Draw()` calls
+>   `SpriteRenderSystem::DrawSprite`; Update just computes world = S*R*T (2D). `FontSprite` data-path
+>   ctor; its per-glyph `Draw` loop now configures the Sprite2DComponent via GameObjectSprite methods
+>   (SetTexture/SetImage/SetScreenRect) + per-glyph `GameObjectSprite::Update`/`Draw`. `FontSprite::Update`
+>   is now a no-op (was pushing world to the GraphicsObject).
+> - scenes 1/2: FontSprite created directly `new FontSprite(Mesh::SPRITE, Sprite, Image::GreenBird,
+>   Rect(...))` (no GraphicsObject_Sprite); scene2's `->pGraphicsObjectSprite->poColor->Set` calls ->
+>   `s_pFontBlend->SetColor(...)`. Deleted `GraphicsObject_Sprite`.
+> - **NEEDS RUNTIME TEST (the risky one -- text rendering, can't self-verify): press 1 & 2 -- all UI
+>   text labels render correctly (position/color); scene2 SPACE toggles the blend label text+color.**
+> **P4.4 DONE (2026-07-08): GraphicsObject hierarchy fully DELETED -- PHASE 4 COMPLETE. Builds 0 errors.**
+> - Root is now `new GameObjectRigidBody(MaterialKind::Null)` (no GraphicsObject_Null); `GameObject::Draw`
+>   skips `kind==Null` (draws nothing) and dropped the `Render()` fallback + the `useECSRender` toggle
+>   (no non-ECS path exists anymore -- removed `sUseECSRender`/Get/Set).
+> - Removed `RenderComponent.pGraphicsObject`; removed every `GameObject*(GraphicsObject*)` ctor
+>   (GameObject/RigidBody/Controlled/AnimSkin) + `GameObject::GetGraphicsObject()` + the null-guarded
+>   `SetWorld` pushes in RigidBody/AnimSkin Update. RenderSystem `default` case -> `assert(false)`.
+> - **DELETED `Graphics/` entirely** (folder now empty): `GraphicsObject`, `GraphicsObject_Abstract`,
+>   `GraphicsObject_Null` (+ earlier the 5 3D + Sprite = all 10 material classes gone).
+> - **NEEDS RUNTIME TEST (broad -- touched root + all ctors + Draw): press 1/2/3/4, switch scenes
+>   repeatedly, and exit -- everything renders + clean leak check.**
+>
+> **=== PHASE 4 COMPLETE ===** `RenderSystem` (3D, per-MaterialKind branches) + `SpriteRenderSystem`
+> (2D/UI) own all rendering; `RenderComponent` (3D data) + `Sprite2DComponent` (2D data) are the source
+> of truth; the whole `GraphicsObject_*` class explosion is deleted. Gameplay (scenes) describes
+> renderables purely as `MaterialKind` + component handles -- it never touches shader/RHI internals
+> (encapsulation achieved; the boundary is enforced by the DLL link + the data-only public surface).
+> **Next: Phase 5 (delete GameObject/PCSTree scaffolding -> pure ECS) or Phase 6 (profile/optimize:
+> batch the RenderSystem by shader/material, archetype storage, job-parallel systems).**
 > - **P4.3 -- 2D/UI pass = `SpriteRenderSystem`** (locked). Drives the per-glyph loop from component
 >   data, runs strictly AFTER the 3D pass; then delete `_Sprite`.
 > - **P4.4 -- flip default, delete `GraphicsObject`/`_Abstract`/`_Null` + the toggle, move render
@@ -976,6 +1020,76 @@ state changes); output matches old path; shader internals are private behind the
 ---
 
 ### Phase 5 — Delete the OOP scaffolding
+
+> **SCOPING (2026-07-08): investigated the remaining object model. Findings below.**
+>
+> **What still runs OOP (driven by GameObjectMan::Update/Draw -> PCS-tree walk -> per-object
+> Update()/Draw()):**
+> | OOP piece | Still holds / does | ECS destination |
+> |---|---|---|
+> | `GameObject` (base) | entity id + Update/Draw virtuals | gone (the entity IS the id) |
+> | `GameObjectRigidBody` | prefab-driven world in Update | prefab -> system |
+> | `GameObjectControlled` | thin base (`int index`) | gone |
+> | `GameObjectAnimSkin` | `cur_rot_x/y/z` + `delta_*` + `Prefab_Pivot` + transform setters; Update = pivot/delta world | `PivotComponent` + `PivotSystem` |
+> | `GameObjectSprite` | posX/posY/scale/angle -> world (Update); Draw override | 2D-transform system |
+> | `FontSprite` | text (message/glyph/x/y/color) + **per-glyph Draw loop** | `TextComponent` + SpriteRenderSystem glyph loop |
+> | `GameObjectTerrain` | data-path FlatTexture helper (sizes->scale, UV) | scene sets components (small helper) |
+> | `GameObjectMan` | owns PCSTree; Update = SystemMan::Run + tree walk; Draw = tree walk | pure system runner + ordered draw |
+> | `PCSTree`/`PCSNode` | **FLAT** (root + all objects as direct children); gives iteration ORDER + lifetime | ordered entity list / draw-order |
+> | `AnimMan` -> `GameObjectAnimSkin*` | pokes skins: SetPos/Scale, `SetPrefab(Prefab_Pivot)`, `cur_rot_*`, SetQuat | AnimMan writes components / holds entities |
+>
+> **Confirmed: the hierarchy is 100% FLAT** -- every `GameObjectMan::Add(obj, GetRoot())`. No object
+> parents another. So the PCS tree is NOT used for hierarchy; it's used only for (a) draw/update ORDER
+> and (b) lifetime. That means NO `TransformPropagationSystem` is needed (Section 9 open decision #1
+> resolves to: flatten to world transforms).
+>
+> **The hard problems:**
+> 1. **DRAW ORDER is the crux.** The flat PCS DFS order = REVERSE creation order (PCS front-insert),
+>    and P4 RELIES on it for transparency (skybox-before-terrain; UI-after-3D). The RenderComponent
+>    POOL order != that. Removing the tree needs an explicit order: an ordered entity "scene draw list"
+>    (preserves current semantics, lowest disruption) OR a layer/z sort key on renderables. The 2D UI
+>    pass must still run strictly after the 3D pass.
+> 2. **Per-object Update -> systems:** sprite 2D transform (posX/posY->world), anim pivot/delta-rot
+>    (`Prefab_Pivot` + `cur_rot_*`). New `PivotComponent`/`PivotSystem`; a sprite-transform system.
+> 3. **FontSprite per-glyph:** SpriteRenderSystem must own the glyph loop, reading a `TextComponent`
+>    (message/glyph/x/y/color) -- currently `FontSprite::Draw` does it imperatively.
+> 4. **AnimMan rework (biggest single piece):** it stores `GameObjectAnimSkin*` in its AnimNode and
+>    drives them. Must instead hold entities + write `TransformComponent`/`PivotComponent`. Also owns
+>    the anim resources already (post-controller-deletion), so lifetime is partly there.
+> 5. **Lifetime:** `GameObjectMan::Destroy` deletes GameObjects (which free `FontSprite::poMessage`,
+>    `poPrefab`). Without GameObjects, those heap resources need a new owner (component + explicit free,
+>    or move to AnimMan/a manager).
+>
+> **PROPOSED SEQUENCE (each shippable + runtime-verified):**
+> - **P5.0 -- explicit draw order.** Add an ordered entity list ("scene render list") the RenderSystem
+>   + SpriteRenderSystem iterate (opaque 3D pass, then 2D pass), replacing the tree-walk draw. Keep
+>   GameObject for Update. De-risks ordering FIRST (this is what broke before).
+> - **P5.1 -- Sprite/Font -> ECS.** `Sprite2DComponent` already exists; add sprite-transform handling +
+>   `TextComponent`; SpriteRenderSystem does the glyph loop. Delete `GameObjectSprite`/`FontSprite`.
+> - **P5.2 -- AnimSkin pivot -> ECS.** `PivotComponent` + `PivotSystem`; rework `AnimMan` to drive
+>   components (not `GameObjectAnimSkin*`). Delete `GameObjectAnimSkin`/`GameObjectControlled`.
+> - **P5.3 -- RigidBody/Terrain -> ECS.** Scenes create entities + components directly (thin helpers).
+>   Delete `GameObjectRigidBody`/`GameObjectTerrain`.
+> - **P5.4 -- delete `GameObject`, `GameObjectMan`, PCSTree usage.** `Game.cpp`/scenes/AnimMan drive
+>   `World` + the system runner + the draw list directly. PCSTree/PCSNode stay in Libs (unused by game).
+>
+> **Reality check:** Phase 5 is the biggest phase -- it dismantles the object model AND reworks AnimMan
+> AND solves ordering, for architecture purity (no measured perf gain by itself). **Phase 6 (batch the
+> RenderSystem by shader/material, archetype storage, job-parallel) is the actual PERF win and is
+> largely INDEPENDENT of Phase 5.** Worth deciding which to do next.
+>
+> **DECISIONS LOCKED (user, 2026-07-08):** (a) do **Phase 5 (pure ECS) NEXT**. (b) draw order via a
+> **layer/z sort key** on renderables (RenderComponent gets a `layer`; the RenderSystem sorts by it each
+> frame; 2D UI runs after the 3D pass). Scenes assign layers (skybox = background layer so it draws
+> before the terrain -- that was the transparency dependency). Sort is hand-written (no `<algorithm>`
+> per 0a) over a temp array; a few hundred renderables, negligible.
+>
+> **P5.0 PLAN (draw order first):** add `int layer` to `RenderComponent` (default 0). `RenderSystem::Draw
+> (World&)` gathers 3D drawEnable entities, stable-sorts by layer asc, draws each branch (opaque 3D
+> pass). `GameObjectMan::Draw` = `RenderSystem::Draw` (sorted 3D) then the tree walk (2D sprites/fonts
+> only; `GameObject::Draw` skips 3D). scene3 skybox gets a low layer so it precedes the terrain. This
+> re-introduces the pool-driven 3D pass (like P4.1) but ORDER-CORRECT via the sort -- de-risking the
+> tree removal before P5.1+ move the rest off the tree.
 
 **Goal:** remove the bridge and the tree; the world is now pure ECS.
 

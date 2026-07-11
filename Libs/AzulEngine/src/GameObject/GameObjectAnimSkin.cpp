@@ -4,7 +4,6 @@
 
 #include "MathEngine.h"
 #include "GameObjectAnimSkin.h"
-#include "GraphicsObject.h"
 #include "ShaderMappings.h"
 #include "Mesh.h"
 #include "Anim.h"
@@ -21,8 +20,8 @@
 namespace Azul
 {
 
-	GameObjectAnimSkin::GameObjectAnimSkin(GraphicsObject *pGraphicsObject, ComputeBlend* _pBlend)
-		: GameObjectControlled(pGraphicsObject),
+	GameObjectAnimSkin::GameObjectAnimSkin(MaterialKind kind, ComputeBlend* _pBlend)
+		: GameObjectControlled(kind),
 		delta_x{ 0.0f },
 		delta_y{ 0.0f },
 		delta_z{ 0.0f },
@@ -33,18 +32,14 @@ namespace Azul
 		setorupdate(false),
 		poPrefab(nullptr)
 	{
-		assert(pGraphicsObject);
 		assert(this->pBlend);
 
-		// Seed the transform (was poScale/poQuat/poTrans defaults).
+		// Data-path: no GraphicsObject. Seed the transform.
 		TransformComponent& t = this->GetTransform();
 		t.pos.set(0.0f, 0.0f, 0.0f);
 		t.scale.set(1.0f, 1.0f, 1.0f);
 		t.rot.set(0.0f, 0.0f, 0.0f, 1.0f);
 
-		// Phase 3: the GPU compute-skinning dispatch is now data-driven -- the
-		// SkinningSystem calls pBlend->Execute() over this pool each frame
-		// (non-owning handle; AnimMan's AnimNode owns the ComputeBlend).
 		GpuSkinComponent& skin = WorldMan::GetWorld().Add<GpuSkinComponent>(this->GetEntity());
 		skin.pBlend = this->pBlend;
 	}
@@ -68,11 +63,9 @@ namespace Azul
 			setorupdate = true;
 		}
 
-		// update the bounding volume based on world matrix
-		this->GetGraphicsObject()->SetWorld(*this->GetWorld());
-
-		// NOTE: the GPU compute-skinning dispatch (pBlend->Execute) now runs in
-		// the SkinningSystem over the GpuSkinComponent pool -- see GameObjectMan.
+		// The RenderSystem reads the world from TransformComponent; the GPU
+		// compute-skinning dispatch (pBlend->Execute) runs in the SkinningSystem
+		// over the GpuSkinComponent pool -- see GameObjectMan.
 	}
 
 	void GameObjectAnimSkin::privUpdate(AnimTime currentTime)

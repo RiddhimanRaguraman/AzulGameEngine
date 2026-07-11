@@ -12,7 +12,6 @@
 #include "JointTableMan.h"
 #include "GlyphMan.h"
 #include "FontSprite.h"
-#include "GraphicsObject_Sprite.h"
 #include "SkelMan.h"
 #include "ClipMan.h"
 #include "AnimMan.h"
@@ -136,32 +135,28 @@ namespace Azul
 		TexNodeMan::Add(TextureObject::Name::FontAriel36, "Header.t.proto.azul");
 		GlyphMan::Add(TextureObject::Name::FontAriel36, "HeaderMetrics.xml.proto.azul");
 
-		GraphicsObject* pGraphicsObject(nullptr);
 		Color color2(0.0f, 0.0f, 0.0f, 1.0f);
 		FontSprite* pFontSprite(nullptr);
 
-		pGraphicsObject = new GraphicsObject_Sprite(Mesh::Name::SPRITE,
+		pFontSprite = new FontSprite(Mesh::Name::SPRITE,
 			ShaderObject::Name::Sprite,
 			Image::GreenBird,
 			Rect(100, 100, 100, 100));
-		pFontSprite = new FontSprite(pGraphicsObject);
 		GameObjectMan::Add(pFontSprite, GameObjectMan::GetRoot());
 		pFontSprite->Set(FontSprite::Name::TestMessage, "Blending Animation", Glyph::Name::Arial36pt, 450, 850, color2);
 
-		pGraphicsObject = new GraphicsObject_Sprite(Mesh::Name::SPRITE,
+		pFontSprite = new FontSprite(Mesh::Name::SPRITE,
 			ShaderObject::Name::Sprite,
 			Image::GreenBird,
 			Rect(100, 100, 100, 100));
-		pFontSprite = new FontSprite(pGraphicsObject);
 		GameObjectMan::Add(pFontSprite, GameObjectMan::GetRoot());
 		pFontSprite->Set(FontSprite::Name::TestMessage, "Press Spacebar to blend animation", Glyph::Name::Arial36pt, 350, 800, color2);
 
 
-		pGraphicsObject = new GraphicsObject_Sprite(Mesh::Name::SPRITE,
+		pFontSprite = new FontSprite(Mesh::Name::SPRITE,
 			ShaderObject::Name::Sprite,
 			Image::GreenBird,
 			Rect(100, 100, 100, 100));
-		pFontSprite = new FontSprite(pGraphicsObject);
 		GameObjectMan::Add(pFontSprite, GameObjectMan::GetRoot());
 		pFontSprite->Set(FontSprite::Name::TestOneOff, "Press 1 to switch to Scene 1", Glyph::Name::Arial36pt, 20, 40, color2);
 
@@ -208,27 +203,24 @@ namespace Azul
 		Color fontRed(1.0f, 0.0f, 0.0f, 1.0f);
 		Color fontBlue(0.0f, 0.0f, 1.0f, 1.0f);
 
-		pGraphicsObject = new GraphicsObject_Sprite(Mesh::Name::SPRITE,
+		s_pFontSilly = new FontSprite(Mesh::Name::SPRITE,
 			ShaderObject::Name::Sprite,
 			Image::GreenBird,
 			Rect(100, 100, 100, 100));
-		s_pFontSilly = new FontSprite(pGraphicsObject);
 		GameObjectMan::Add(s_pFontSilly, GameObjectMan::GetRoot());
 		s_pFontSilly->Set(FontSprite::Name::TestMessage, "Silly", Glyph::Name::Arial36pt, 150, 300, fontBlue );
 
-		pGraphicsObject = new GraphicsObject_Sprite(Mesh::Name::SPRITE,
+		s_pFontBlend = new FontSprite(Mesh::Name::SPRITE,
 			ShaderObject::Name::Sprite,
 			Image::GreenBird,
 			Rect(100, 100, 100, 100));
-		s_pFontBlend = new FontSprite(pGraphicsObject);
 		GameObjectMan::Add(s_pFontBlend, GameObjectMan::GetRoot());
 		s_pFontBlend->Set(FontSprite::Name::TestMessage, "Silly", Glyph::Name::Arial36pt, 550, 180, fontRed);
 
-		pGraphicsObject = new GraphicsObject_Sprite(Mesh::Name::SPRITE,
+		s_pFontGangnam = new FontSprite(Mesh::Name::SPRITE,
 			ShaderObject::Name::Sprite,
 			Image::GreenBird,
 			Rect(100, 100, 100, 100));
-		s_pFontGangnam = new FontSprite(pGraphicsObject);
 		GameObjectMan::Add(s_pFontGangnam, GameObjectMan::GetRoot());
 		s_pFontGangnam->Set(FontSprite::Name::TestMessage, "Gangnam", Glyph::Name::Arial36pt, 950, 300, fontRed);
 		s_blendLabelState = -1;
@@ -263,17 +255,17 @@ namespace Azul
 				if (newState == 0)
 				{
 					s_pFontBlend->UpdateMessage("Gangnam");
-					s_pFontBlend->pGraphicsObjectSprite->poColor->Set(1.0f, 0.0f, 0.0f, 1.0f);
+					s_pFontBlend->SetColor(1.0f, 0.0f, 0.0f, 1.0f);
 				}
 				else if (newState == 2)
 				{
 					s_pFontBlend->UpdateMessage("Silly");
-					s_pFontBlend->pGraphicsObjectSprite->poColor->Set(0.0f, 0.0f, 1.0f, 1.0f);
+					s_pFontBlend->SetColor(0.0f, 0.0f, 1.0f, 1.0f);
 				}
 				else
 				{
 					s_pFontBlend->UpdateMessage("Blending");
-					s_pFontBlend->pGraphicsObjectSprite->poColor->Set(0.0f, 0.0f, 0.0f, 1.0f);
+					s_pFontBlend->SetColor(0.0f, 0.0f, 0.0f, 1.0f);
 				}
 			}
 		}

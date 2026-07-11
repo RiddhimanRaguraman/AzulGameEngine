@@ -9,10 +9,13 @@
 #include "Anim.h"
 #include "AnimManCompareStrategyEnumName.h"
 #include "GameObjectMan.h"
-#include "GraphicsObject_SkinLightTexture.h"
 #include "GameObjectAnimSkin.h"
 #include "Skeleton.h"
 #include "ShaderObject.h"
+#include "MeshNodeMan.h"
+#include "ShaderObjectNodeMan.h"
+#include "TexNodeMan.h"
+#include "RenderComponent.h"
 #include "MathEngine.h"
 #include "HierarchyTableMan.h"
 #include "Prefab_Pivot.h"
@@ -453,6 +456,22 @@ namespace Azul
         }
     }
 
+    void AnimMan::privFillSkinRender(GameObjectAnimSkin *pSkin, Mesh::Name mesh,
+        TextureObject::Name tex, ComputeBlend *pBlend, Vec3 &lightColor, Vec3 &lightPos)
+    {
+        assert(pSkin);
+        RenderComponent &rc = pSkin->GetRender();
+        rc.pMesh = MeshNodeMan::Find(mesh);
+        rc.pShader = ShaderObjectNodeMan::Find(ShaderObject::Name::SkinLightTexture);
+        rc.pTex = TexNodeMan::Find(tex);
+        rc.lightColor = lightColor;
+        rc.lightPos = lightPos;
+        rc.pComputeBlend = pBlend;
+        assert(rc.pMesh);
+        assert(rc.pShader);
+        assert(rc.pTex);
+    }
+
     DLink *AnimMan::Add(Name name, const char *clipFileName, Skel::Name skelName, TextureObject::Name texName, Mesh::Name meshName, Vec3 &_pLightColor, Vec3 &_pLightPos)
     {
         AnimMan *pMan = AnimMan::privGetInstance();
@@ -484,16 +503,10 @@ namespace Azul
             ac.ratio = 1.0f;
         }
 
-        GraphicsObject_SkinLightTexture* pGraphicsSkin = new GraphicsObject_SkinLightTexture(meshName,
-                                                                                             ShaderObject::Name::SkinLightTexture,
-                                                                                             texName,
-                                                                                             pBlend,
-                                                                                             _pLightColor,
-                                                                                             _pLightPos);
-		assert(pGraphicsSkin);
-
-		GameObjectAnimSkin *pGameSkin = new GameObjectAnimSkin(pGraphicsSkin, pBlend);
+		// Data-path SkinLightTexture: no GraphicsObject; fill the RenderComponent.
+		GameObjectAnimSkin *pGameSkin = new GameObjectAnimSkin(MaterialKind::SkinLightTexture, pBlend);
 		assert(pGameSkin);
+		privFillSkinRender(pGameSkin, meshName, texName, pBlend, _pLightColor, _pLightPos);
 		pGameSkin->SetName(AnimMan::NameToString(name));
 		GameObjectMan::Add(pGameSkin, GameObjectMan::GetRoot());
 
@@ -556,16 +569,9 @@ namespace Azul
 
 		for (unsigned int i = 0; i < numMeshes; i++)
 		{
-			GraphicsObject_SkinLightTexture *pGraphicsSkin = new GraphicsObject_SkinLightTexture(pMeshNames[i],
-																								 ShaderObject::Name::SkinLightTexture,
-																								 texName,
-																								 pBlend,
-																								 _pLightColor,
-																								 _pLightPos);
-			assert(pGraphicsSkin);
-
-			GameObjectAnimSkin *pGameSkin = new GameObjectAnimSkin(pGraphicsSkin, pBlend);
+			GameObjectAnimSkin *pGameSkin = new GameObjectAnimSkin(MaterialKind::SkinLightTexture, pBlend);
 			assert(pGameSkin);
+			privFillSkinRender(pGameSkin, pMeshNames[i], texName, pBlend, _pLightColor, _pLightPos);
 
 			char goName[PCSNode::NAME_SIZE]{ 0 };
 			strcpy_s(goName, PCSNode::NAME_SIZE, AnimMan::NameToString(name));
@@ -635,16 +641,9 @@ namespace Azul
             bc.pBlend = pBlend;
         }
 
-        GraphicsObject_SkinLightTexture* pGraphicsSkin = new GraphicsObject_SkinLightTexture(meshName,
-            ShaderObject::Name::SkinLightTexture,
-            texName,
-            pBlend,
-            _pLightColor,
-            _pLightPos);
-        assert(pGraphicsSkin);
-
-        GameObjectAnimSkin* pGameSkin = new GameObjectAnimSkin(pGraphicsSkin, pBlend);
+        GameObjectAnimSkin* pGameSkin = new GameObjectAnimSkin(MaterialKind::SkinLightTexture, pBlend);
         assert(pGameSkin);
+        privFillSkinRender(pGameSkin, meshName, texName, pBlend, _pLightColor, _pLightPos);
         pGameSkin->SetName(AnimMan::NameToString(name));
         GameObjectMan::Add(pGameSkin, GameObjectMan::GetRoot());
 

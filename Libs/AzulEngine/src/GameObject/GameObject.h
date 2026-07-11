@@ -8,16 +8,14 @@
 #include "MathEngine.h"
 #include "Mesh.h"
 #include "ShaderObject.h"
-#include "GraphicsObject.h"
 #include "PCSNode.h"
 #include "Prefab.h"
-#include "GraphicsObject_Null.h"
-#include "GraphicsObject_Sprite.h"
 #include "AnimTime.h"
 #include "Entity.h"
 #include "TransformComponent.h"
 #include "RenderComponent.h"
 #include "HierarchyComponent.h"
+#include "MaterialKind.h"
 
 #include "EngineDLLInterface.h"
 
@@ -32,18 +30,14 @@ namespace Azul
 		GameObject &operator = (const GameObject &) = delete;
 		virtual ~GameObject();
 
-		GameObject(GraphicsObject *poGraphicsObject);
-
-		// Data-path ctor (Phase 4 consolidation): no GraphicsObject. Creates the
-		// entity + components; the caller fills RenderComponent (kind + handles)
-		// via GetRender(). Used by 3D materials whose logic is a RenderSystem branch.
+		// The render data lives in the entity's RenderComponent; the caller fills
+		// the kind's handles via GetRender() after construction.
 		GameObject(MaterialKind kind);
 
 		virtual void Update(AnimTime currentTime) = 0;
 		virtual void Draw();
 
 	// Set/Get
-		GraphicsObject *GetGraphicsObject();
 		Mat4 *GetWorld();
 		void SetWorld(Mat4 *pWorld);
 

@@ -9,18 +9,25 @@
 #include "MathEngine.h"
 #include "ShaderObject.h"
 #include "Mesh.h"
-#include "GraphicsObject.h"
-#include "PCSNode.h"
+#include "Image.h"
+#include "Rect.h"
+#include "Color.h"
+#include "TextureObject.h"
 #include "AnimTime.h"
 
 #include "EngineDLLInterface.h"
 
 namespace Azul
 {
+	struct Sprite2DComponent;
+
+	// Data-path 2D sprite: no GraphicsObject. The mutable sprite state lives in the
+	// entity's Sprite2DComponent; SpriteRenderSystem does the drawing. The 2D
+	// transform (posX/posY/scale/angle) feeds the TransformComponent world.
 	class AZUL_ENGINE_LIBRARY_API GameObjectSprite : public GameObjectRigidBody
 	{
 	public:
-		GameObjectSprite(GraphicsObject *graphicsObject);
+		GameObjectSprite(Mesh::Name mesh, ShaderObject::Name shader, Image::Name image, Rect rect);
 
 		// Big four
 		GameObjectSprite() = delete;
@@ -29,8 +36,16 @@ namespace Azul
 		virtual ~GameObjectSprite();
 
 		void SetImage(Image::Name image);
+		void SetTexture(TextureObject *pText);
+		void SetImage(Rect &imageRect, TextureObject *pText);
+		void SetScreenRect(Rect &rect);
+		void SetColor(Color &c);
+		void SetColor(float r, float g, float b, float a);
 
-		virtual void Update(AnimTime currTime);
+		Sprite2DComponent &GetSprite2D();
+
+		virtual void Update(AnimTime currTime) override;
+		virtual void Draw() override;
 
 	private:
 		void privUpdate(AnimTime currTime);
@@ -41,10 +56,6 @@ namespace Azul
 		float posX;
 		float posY;
 		float angle;
-
-		// Alias
-		GraphicsObject_Sprite* pGraphicsObjectSprite;
-
 	};
 }
 

@@ -17,7 +17,7 @@ namespace Azul
 	{
 	public:
 		
-		GameObjectAnimSkin(	GraphicsObject* graphicsObject, ComputeBlend* pBlend);
+		GameObjectAnimSkin( MaterialKind kind, ComputeBlend* pBlend);
 		// Big four
 		GameObjectAnimSkin() = delete;
 		GameObjectAnimSkin(const GameObjectAnimSkin&) = delete;

@@ -3,24 +3,11 @@
 
 namespace Azul
 {
-	GameObjectRigidBody::GameObjectRigidBody(GraphicsObject* pGraphicsObject)
-		: GameObject(pGraphicsObject),
-		poPrefab(nullptr)
-	{
-		assert(this->GetGraphicsObject());
-
-		// Seed the transform (was poScale/poQuat/poTrans defaults).
-		TransformComponent& t = this->GetTransform();
-		t.pos.set(0.0f, 0.0f, 0.0f);
-		t.scale.set(1.0f, 1.0f, 1.0f);
-		t.rot = Quat(Identity);
-	}
-
 	GameObjectRigidBody::GameObjectRigidBody(MaterialKind kind)
 		: GameObject(kind),
 		poPrefab(nullptr)
 	{
-		// Data-path: no GraphicsObject. Seed the transform defaults.
+		// Seed the transform defaults.
 		TransformComponent& t = this->GetTransform();
 		t.pos.set(0.0f, 0.0f, 0.0f);
 		t.scale.set(1.0f, 1.0f, 1.0f);
@@ -45,15 +32,8 @@ namespace Azul
 			poPrefab->Update();
 			poPrefab->ReturnWorld(t.world);
 		}
-		// non-prefab: world = S*R*T is computed by LocalToWorldSystem before
-		// this tree walk (Phase 3).
-
-		// Data-path 3D objects have no GraphicsObject (the RenderSystem reads the
-		// world from TransformComponent); only push to a bridge GraphicsObject.
-		if (this->GetGraphicsObject() != nullptr)
-		{
-			this->GetGraphicsObject()->SetWorld(t.world);
-		}
+		// non-prefab: world = S*R*T is computed by LocalToWorldSystem before this
+		// tree walk. The RenderSystem reads the world from TransformComponent.
 	}
 
 	void GameObjectRigidBody::SetPos(Vec3 v)

@@ -14,7 +14,7 @@ namespace Azul
 	class AZUL_ENGINE_LIBRARY_API GameObjectControlled : public GameObject
 	{
 	public:
-		GameObjectControlled(GraphicsObject *pGraphicsObject);
+		GameObjectControlled(MaterialKind kind);
 
 		// Big four
 		GameObjectControlled() = delete;

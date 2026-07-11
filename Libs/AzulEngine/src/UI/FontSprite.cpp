@@ -4,7 +4,6 @@
 
 #include "FontSprite.h"
 #include "GlyphMan.h"
-#include "GraphicsObject_Sprite.h"
 
 namespace Azul
 {
@@ -13,8 +12,8 @@ namespace Azul
 		delete[] this->poMessage;
 	}
 
-	FontSprite::FontSprite(GraphicsObject *pGraphicsObject)
-		: GameObjectSprite(pGraphicsObject),
+	FontSprite::FontSprite(Mesh::Name mesh, ShaderObject::Name shader, Image::Name image, Rect rect)
+		: GameObjectSprite(mesh, shader, image, rect),
 		name(FontSprite::Name::Uninitialized),
 		pScreenRect(nullptr),
 		poMessage(nullptr),
@@ -45,7 +44,7 @@ namespace Azul
 		this->name = _name;
 		this->glyphName = _glyphName;
 
-		pGraphicsObjectSprite->poColor->Set(_color);
+		this->SetColor(_color);
 	}
 
 	void FontSprite::UpdateMessage(const char *_pMessage)
@@ -60,7 +59,7 @@ namespace Azul
 	}
 
 	void FontSprite::Draw()
-	{	
+	{
 		assert(poMessage);
 		size_t len = strlen(poMessage);
 
@@ -81,19 +80,18 @@ namespace Azul
 			xTmp = xEnd + pGlyph->glyphRect.width / 2;
 			screenRect.Set(xTmp, yTmp, pGlyph->glyphRect.width, pGlyph->glyphRect.height);
 
-			pGraphicsObjectSprite->SetTexture(pGlyph->pText);
-			pGraphicsObjectSprite->SetImage(pGlyph->glyphRect, pGlyph->pText);
-			pGraphicsObjectSprite->SetScreenRect(screenRect);
+			// Configure the per-glyph 2D-sprite state (data-path -> Sprite2DComponent).
+			this->SetTexture(pGlyph->pText);
+			this->SetImage(pGlyph->glyphRect, pGlyph->pText);
+			this->SetScreenRect(screenRect);
 
 			this->posX = xTmp;
 			this->posY = yTmp;
-			GameObjectSprite::Update(AnimTime());
-			GameObjectSprite::Draw();
-		
+			GameObjectSprite::Update(AnimTime());   // world = S*R*T for this glyph
+			GameObjectSprite::Draw();               // SpriteRenderSystem draws it
 
 			// move the starting to the next character
 			xEnd = pGlyph->glyphRect.width / 2 + xTmp;
-
 		}
 	}
 
@@ -106,9 +104,9 @@ namespace Azul
 
 	void FontSprite::Update(AnimTime currentTime)
 	{
-
-		// update the bounding volume based on world matrix
-		this->GetGraphicsObject()->SetWorld(*this->GetWorld());
+		// Data-path: nothing to do here -- each glyph's world is computed in Draw
+		// (per-glyph GameObjectSprite::Update).
+		AZUL_UNUSED_VAR(currentTime);
 	}
 
 }

@@ -12,7 +12,6 @@
 #include "JointTableMan.h"
 #include "GlyphMan.h"
 #include "FontSprite.h"
-#include "GraphicsObject_Sprite.h"
 #include "SkelMan.h"
 #include "ClipMan.h"
 #include "AnimMan.h"
@@ -179,23 +178,20 @@ namespace Azul
 		TexNodeMan::Add(TextureObject::Name::FontAriel36, "Header.t.proto.azul");
 		GlyphMan::Add(TextureObject::Name::FontAriel36, "HeaderMetrics.xml.proto.azul");
 
-		GraphicsObject* pGraphicsObject(nullptr);
 		Color color2(0.0f, 0.0f, 0.0f, 1.0f);
 		FontSprite* pFontSprite(nullptr);
 
-		pGraphicsObject = new GraphicsObject_Sprite(Mesh::Name::SPRITE,
+		pFontSprite = new FontSprite(Mesh::Name::SPRITE,
 													ShaderObject::Name::Sprite,
 													Image::GreenBird,
 													Rect(100, 100, 100, 100));
-		pFontSprite = new FontSprite(pGraphicsObject);
 		GameObjectMan::Add(pFontSprite, GameObjectMan::GetRoot());
 		pFontSprite->Set(FontSprite::Name::TestMessage, "Multiple Animation", Glyph::Name::Arial36pt, 450, 850, color2);
 
-		pGraphicsObject = new GraphicsObject_Sprite(Mesh::Name::SPRITE,
+		pFontSprite = new FontSprite(Mesh::Name::SPRITE,
 													ShaderObject::Name::Sprite,
 													Image::GreenBird,
 													Rect(100, 100, 100, 100));
-		pFontSprite = new FontSprite(pGraphicsObject);
 		GameObjectMan::Add(pFontSprite, GameObjectMan::GetRoot());
 		pFontSprite->Set(FontSprite::Name::TestOneOff, "Press 2 to switch to Scene 2", Glyph::Name::Arial36pt, 20, 40, color2);
 
@@ -218,12 +214,11 @@ namespace Azul
 			AnimMan::SetPos(AnimMan::Name::Wave, 0.0f, 3.0f, 0.0f);
 			AnimMan::SetUniformScale(AnimMan::Name::Wave, 0.8f);
 
-			pGraphicsObject = new GraphicsObject_Sprite(Mesh::Name::SPRITE,
+			pFontSprite = new FontSprite(Mesh::Name::SPRITE,
 				ShaderObject::Name::Sprite,
 				Image::GreenBird,
 				Rect(100, 100, 100, 100));
-			pFontSprite = new FontSprite(pGraphicsObject);
-			GameObjectMan::Add(pFontSprite, GameObjectMan::GetRoot());
+				GameObjectMan::Add(pFontSprite, GameObjectMan::GetRoot());
 			pFontSprite->Set(FontSprite::Name::TestOneOff, "Ward doing the Wave", Glyph::Name::Arial36pt, 450, 520, color2);
 		}
 
@@ -239,12 +234,11 @@ namespace Azul
 			AnimMan::SetPos(AnimMan::Name::Swing, 0.0f, -0.5f, 0.0f);
 			AnimMan::SetUniformScale(AnimMan::Name::Swing, 1.3f);
 
-			pGraphicsObject = new GraphicsObject_Sprite(Mesh::Name::SPRITE,
+			pFontSprite = new FontSprite(Mesh::Name::SPRITE,
 				ShaderObject::Name::Sprite,
 				Image::GreenBird,
 				Rect(100, 100, 100, 100));
-			pFontSprite = new FontSprite(pGraphicsObject);
-			GameObjectMan::Add(pFontSprite, GameObjectMan::GetRoot());
+				GameObjectMan::Add(pFontSprite, GameObjectMan::GetRoot());
 			pFontSprite->Set(FontSprite::Name::TestOneOff, "Drax doing the bar Swing", Glyph::Name::Arial36pt, 420, 120, color2);
 		}
 
@@ -260,12 +254,11 @@ namespace Azul
 			AnimMan::SetPos(AnimMan::Name::Breakdance, 3.0f, 3.0f, 0.0f);
 			AnimMan::SetUniformScale(AnimMan::Name::Breakdance, 1.0f);
 
-			pGraphicsObject = new GraphicsObject_Sprite(Mesh::Name::SPRITE,
+			pFontSprite = new FontSprite(Mesh::Name::SPRITE,
 				ShaderObject::Name::Sprite,
 				Image::GreenBird,
 				Rect(100, 100, 100, 100));
-			pFontSprite = new FontSprite(pGraphicsObject);
-			GameObjectMan::Add(pFontSprite, GameObjectMan::GetRoot());
+				GameObjectMan::Add(pFontSprite, GameObjectMan::GetRoot());
 			pFontSprite->Set(FontSprite::Name::TestOneOff, "Maw doing the Breakdance", Glyph::Name::Arial36pt, 800, 520, color2);
 		}
 
@@ -281,12 +274,11 @@ namespace Azul
 			AnimMan::SetPos(AnimMan::Name::Salsa, -3.0f, 3.0f, 0.0f);
 			AnimMan::SetUniformScale(AnimMan::Name::Salsa, 2.5f);
 
-			pGraphicsObject = new GraphicsObject_Sprite(Mesh::Name::SPRITE,
+			pFontSprite = new FontSprite(Mesh::Name::SPRITE,
 				ShaderObject::Name::Sprite,
 				Image::GreenBird,
 				Rect(100, 100, 100, 100));
-			pFontSprite = new FontSprite(pGraphicsObject);
-			GameObjectMan::Add(pFontSprite, GameObjectMan::GetRoot());
+				GameObjectMan::Add(pFontSprite, GameObjectMan::GetRoot());
 			pFontSprite->Set(FontSprite::Name::TestOneOff, "Pirate doing the Salsa", Glyph::Name::Arial36pt, 60, 520, color2);
 		}
 
@@ -309,12 +301,11 @@ namespace Azul
 			AnimMan::SetPos(AnimMan::Name::Shuffle, -3.0f, -0.5f, 0.0f);
 			AnimMan::SetUniformScale(AnimMan::Name::Shuffle, 1.5f);
 
-			pGraphicsObject = new GraphicsObject_Sprite(Mesh::Name::SPRITE,
+			pFontSprite = new FontSprite(Mesh::Name::SPRITE,
 				ShaderObject::Name::Sprite,
 				Image::GreenBird,
 				Rect(100, 100, 100, 100));
-			pFontSprite = new FontSprite(pGraphicsObject);
-			GameObjectMan::Add(pFontSprite, GameObjectMan::GetRoot());
+				GameObjectMan::Add(pFontSprite, GameObjectMan::GetRoot());
 			pFontSprite->Set(FontSprite::Name::TestOneOff, "Halo doing the shuffle", Glyph::Name::Arial36pt, 60, 120, color2);
 		}
 
@@ -336,11 +327,10 @@ namespace Azul
 		AnimMan::SetPos(AnimMan::Name::Rumba, 3.0f, -0.5f, 0.0f);
 		AnimMan::SetUniformScale(AnimMan::Name::Rumba, 1.3f);
 
-		pGraphicsObject = new GraphicsObject_Sprite(Mesh::Name::SPRITE,
+		pFontSprite = new FontSprite(Mesh::Name::SPRITE,
 			ShaderObject::Name::Sprite,
 			Image::GreenBird,
 			Rect(100, 100, 100, 100));
-		pFontSprite = new FontSprite(pGraphicsObject);
 		GameObjectMan::Add(pFontSprite, GameObjectMan::GetRoot());
 		pFontSprite->Set(FontSprite::Name::TestOneOff, "Crownboi doing Rumba", Glyph::Name::Arial36pt, 820, 120, color2);
 

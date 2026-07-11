@@ -1,0 +1,37 @@
+//----------------------------------------------------------------------------
+// Copyright 2026, Ed Keenan, all rights reserved.
+//----------------------------------------------------------------------------
+
+#ifndef AZUL_SPRITE2D_COMPONENT_H
+#define AZUL_SPRITE2D_COMPONENT_H
+
+#include "MathEngine.h"
+#include "Color.h"
+#include "ComponentId.h"
+
+namespace Azul
+{
+	class Mesh;
+	class ShaderObject;
+	class TextureObject;
+
+	// The mutable 2D-sprite render state (was the data inside GraphicsObject_Sprite).
+	// For a plain sprite it's set once; for a FontSprite it's re-filled per glyph
+	// (texture + uvMatrix + origMatrix) inside FontSprite::Draw. The SpriteRenderSystem
+	// reads it + the entity's TransformComponent.world to draw one 2D quad.
+	struct Sprite2DComponent
+	{
+		Mesh *pMesh;
+		ShaderObject *pShader;
+		TextureObject *pTexture;
+		Mat4 uvMatrix;     // sub-image UV transform (was poMatrix_uv)
+		Mat4 origMatrix;   // screen-rect scale (was poMatrix_orig)
+		Color color;       // color scale (was poColor)
+
+		static const unsigned int kTypeId = COMPONENT_SPRITE2D;
+	};
+}
+
+#endif
+
+// --- End of File ---

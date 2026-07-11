@@ -4,13 +4,12 @@
 
 #include "MathEngine.h"
 #include "GameObjectControlled.h"
-#include "GraphicsObject.h"
 
 namespace Azul
 {
 
-	GameObjectControlled::GameObjectControlled(GraphicsObject *pGraphicsObject)
-		: GameObject(pGraphicsObject),
+	GameObjectControlled::GameObjectControlled(MaterialKind kind)
+		: GameObject(kind),
 		index(-1)
 	{
 

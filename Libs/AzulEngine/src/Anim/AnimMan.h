@@ -96,6 +96,9 @@ namespace Azul
     private:
         static AnimMan *privGetInstance();
         static HierarchyTable::Name privMapToHierarchyName(Skel::Name skelName);
+        // Fills a data-path skin's RenderComponent (mesh/shader/tex/light/blend).
+        static void privFillSkinRender(GameObjectAnimSkin *pSkin, Mesh::Name mesh,
+            TextureObject::Name tex, ComputeBlend *pBlend, Vec3 &lightColor, Vec3 &lightPos);
         AnimMan() = delete;
         AnimMan(const AnimMan &) = delete;
         AnimMan &operator = (const AnimMan &) = delete;

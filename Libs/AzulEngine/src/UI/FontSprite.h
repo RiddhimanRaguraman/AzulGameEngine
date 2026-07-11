@@ -9,6 +9,7 @@
 #include "Rect.h"
 #include "Glyph.h"
 #include "Color.h"
+#include "Image.h"
 
 #include "EngineDLLInterface.h"
 
@@ -29,7 +30,7 @@ namespace Azul
 
 	public:
 
-		FontSprite(GraphicsObject *graphicsObject);
+		FontSprite(Mesh::Name mesh, ShaderObject::Name shader, Image::Name image, Rect rect);
 
 		FontSprite() = delete;
 		FontSprite(const FontSprite &) = delete;

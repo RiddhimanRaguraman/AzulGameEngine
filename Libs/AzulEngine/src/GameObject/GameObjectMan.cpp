@@ -3,7 +3,6 @@
 //----------------------------------------------------------------------------
 
 #include "MeshNull.h"
-#include "GraphicsObject_Null.h"
 #include "ShaderObject_Null.h"
 #include "GameObject.h"
 #include "GameObjectMan.h"
@@ -22,20 +21,6 @@
 
 namespace Azul
 {
-	// ECS render path ON by default. Flip to false to A/B compare against the
-	// pure GraphicsObject::Render() path (both now run in the same PCS-tree order).
-	bool GameObjectMan::sUseECSRender = true;
-
-	bool GameObjectMan::GetUseECSRender()
-	{
-		return sUseECSRender;
-	}
-
-	void GameObjectMan::SetUseECSRender(bool b)
-	{
-		sUseECSRender = b;
-	}
-
 	void GameObjectMan::Add(GameObject *pObj, GameObject *pParent)
 	{
 		assert(pObj);
@@ -89,8 +74,8 @@ namespace Azul
 			assert(pShader);
 			ShaderObjectNodeMan::Add(pShader);
 
-			GraphicsObject_Null *pGraphicsObject = new GraphicsObject_Null(Mesh::Name::NULL_MESH, ShaderObject::Name::NullShader);
-			GameObjectRigidBody *pGameRoot = new GameObjectRigidBody(pGraphicsObject);
+			// Data-path Null root: no GraphicsObject; kind==Null is skipped in Draw.
+			GameObjectRigidBody *pGameRoot = new GameObjectRigidBody(MaterialKind::Null);
 			pGameRoot->SetName("GameObject_Root");
 
 			pGOM->poRootTree = new PCSTree();
