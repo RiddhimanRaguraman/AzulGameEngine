@@ -4,7 +4,6 @@
 
 #include "MathEngine.h"
 #include "GameObject.h"
-#include "RenderSystem.h"
 #include "Camera.h"
 #include "WorldMan.h"
 #include "World.h"
@@ -27,6 +26,7 @@ namespace Azul
 		RenderComponent &r = WorldMan::GetWorld().Add<RenderComponent>(this->mEntity);
 		r.kind = kind;
 		r.drawEnable = true;
+		r.layer = 0;
 		r.pMesh = nullptr;
 		r.pShader = nullptr;
 		r.pTex = nullptr;
@@ -100,28 +100,10 @@ namespace Azul
 
 	void GameObject::Draw()
 	{
-		// ---------------------------------------------
-		//  Transfer data to the constant buffer
-		//    CPU ---> GPU
-		//    World, View, Projection Matrix
-		//    Set Shader
-		//    Render
-		// ---------------------------------------------
-
-		RenderComponent &r = this->GetRender();
-		if (!r.drawEnable)
-		{
-			return;
-		}
-
-		// 3D materials render through the RenderSystem's per-MaterialKind branches,
-		// driven here in the tree walk so they keep the authoritative PCS-tree draw
-		// order (correct alpha-blend layering). 2D/UI sprites override Draw
-		// (GameObjectSprite/FontSprite). kind==Null (the root) draws nothing.
-		if (MaterialKindIs3D(r.kind))
-		{
-			RenderSystem::DrawObject(r, this->GetTransform().world);
-		}
+		// P5.1: draw is fully pool-driven (RenderSystem::Draw for 3D, then
+		// SpriteRenderSystem::Draw for 2D/text) -- GameObjectMan::Draw no longer
+		// walks the tree, so this base no-op is now unused. Kept until the
+		// GameObject shim itself is removed (P5.4).
 	}
 
 }

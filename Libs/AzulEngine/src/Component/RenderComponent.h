@@ -24,6 +24,7 @@ namespace Azul
 	{
 		MaterialKind kind;
 		bool drawEnable;
+		int layer;   // draw order: RenderSystem sorts ascending (lower = drawn first).
 
 		Mesh *pMesh;
 		ShaderObject *pShader;

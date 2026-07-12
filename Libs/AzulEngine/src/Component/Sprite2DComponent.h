@@ -16,9 +16,9 @@ namespace Azul
 	class TextureObject;
 
 	// The mutable 2D-sprite render state (was the data inside GraphicsObject_Sprite).
-	// For a plain sprite it's set once; for a FontSprite it's re-filled per glyph
-	// (texture + uvMatrix + origMatrix) inside FontSprite::Draw. The SpriteRenderSystem
-	// reads it + the entity's TransformComponent.world to draw one 2D quad.
+	// For a plain sprite it's set once; for a text run (Text2D) it's re-filled per
+	// glyph (texture + uvMatrix + origMatrix) by SpriteRenderSystem's text pass.
+	// The SpriteRenderSystem reads it + a world matrix to draw one 2D quad.
 	struct Sprite2DComponent
 	{
 		Mesh *pMesh;

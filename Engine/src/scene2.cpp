@@ -11,7 +11,7 @@
 #include "ImageMan.h"
 #include "JointTableMan.h"
 #include "GlyphMan.h"
-#include "FontSprite.h"
+#include "Text2D.h"
 #include "SkelMan.h"
 #include "ClipMan.h"
 #include "AnimMan.h"
@@ -19,9 +19,7 @@
 
 namespace Azul
 {
-	static FontSprite* s_pFontSilly(nullptr);
-	static FontSprite* s_pFontGangnam(nullptr);
-	static FontSprite* s_pFontBlend(nullptr);
+	static Entity s_eFontBlend = EntityNull();
 	static int s_blendLabelState(-1);
 
 	bool Scene2::Load(Game& game)
@@ -136,29 +134,13 @@ namespace Azul
 		GlyphMan::Add(TextureObject::Name::FontAriel36, "HeaderMetrics.xml.proto.azul");
 
 		Color color2(0.0f, 0.0f, 0.0f, 1.0f);
-		FontSprite* pFontSprite(nullptr);
 
-		pFontSprite = new FontSprite(Mesh::Name::SPRITE,
-			ShaderObject::Name::Sprite,
-			Image::GreenBird,
-			Rect(100, 100, 100, 100));
-		GameObjectMan::Add(pFontSprite, GameObjectMan::GetRoot());
-		pFontSprite->Set(FontSprite::Name::TestMessage, "Blending Animation", Glyph::Name::Arial36pt, 450, 850, color2);
+		Text2D::Add(Mesh::Name::SPRITE, ShaderObject::Name::Sprite, Image::GreenBird, "Blending Animation", Glyph::Name::Arial36pt, 450, 850, color2);
 
-		pFontSprite = new FontSprite(Mesh::Name::SPRITE,
-			ShaderObject::Name::Sprite,
-			Image::GreenBird,
-			Rect(100, 100, 100, 100));
-		GameObjectMan::Add(pFontSprite, GameObjectMan::GetRoot());
-		pFontSprite->Set(FontSprite::Name::TestMessage, "Press Spacebar to blend animation", Glyph::Name::Arial36pt, 350, 800, color2);
+		Text2D::Add(Mesh::Name::SPRITE, ShaderObject::Name::Sprite, Image::GreenBird, "Press Spacebar to blend animation", Glyph::Name::Arial36pt, 350, 800, color2);
 
 
-		pFontSprite = new FontSprite(Mesh::Name::SPRITE,
-			ShaderObject::Name::Sprite,
-			Image::GreenBird,
-			Rect(100, 100, 100, 100));
-		GameObjectMan::Add(pFontSprite, GameObjectMan::GetRoot());
-		pFontSprite->Set(FontSprite::Name::TestOneOff, "Press 1 to switch to Scene 1", Glyph::Name::Arial36pt, 20, 40, color2);
+		Text2D::Add(Mesh::Name::SPRITE, ShaderObject::Name::Sprite, Image::GreenBird, "Press 1 to switch to Scene 1", Glyph::Name::Arial36pt, 20, 40, color2);
 
 		//----------------------------------------------------------------------------------
 		// Gameobject Animation
@@ -203,26 +185,11 @@ namespace Azul
 		Color fontRed(1.0f, 0.0f, 0.0f, 1.0f);
 		Color fontBlue(0.0f, 0.0f, 1.0f, 1.0f);
 
-		s_pFontSilly = new FontSprite(Mesh::Name::SPRITE,
-			ShaderObject::Name::Sprite,
-			Image::GreenBird,
-			Rect(100, 100, 100, 100));
-		GameObjectMan::Add(s_pFontSilly, GameObjectMan::GetRoot());
-		s_pFontSilly->Set(FontSprite::Name::TestMessage, "Silly", Glyph::Name::Arial36pt, 150, 300, fontBlue );
+		Text2D::Add(Mesh::Name::SPRITE, ShaderObject::Name::Sprite, Image::GreenBird, "Silly", Glyph::Name::Arial36pt, 150, 300, fontBlue);
 
-		s_pFontBlend = new FontSprite(Mesh::Name::SPRITE,
-			ShaderObject::Name::Sprite,
-			Image::GreenBird,
-			Rect(100, 100, 100, 100));
-		GameObjectMan::Add(s_pFontBlend, GameObjectMan::GetRoot());
-		s_pFontBlend->Set(FontSprite::Name::TestMessage, "Silly", Glyph::Name::Arial36pt, 550, 180, fontRed);
+		s_eFontBlend = Text2D::Add(Mesh::Name::SPRITE, ShaderObject::Name::Sprite, Image::GreenBird, "Silly", Glyph::Name::Arial36pt, 550, 180, fontRed);
 
-		s_pFontGangnam = new FontSprite(Mesh::Name::SPRITE,
-			ShaderObject::Name::Sprite,
-			Image::GreenBird,
-			Rect(100, 100, 100, 100));
-		GameObjectMan::Add(s_pFontGangnam, GameObjectMan::GetRoot());
-		s_pFontGangnam->Set(FontSprite::Name::TestMessage, "Gangnam", Glyph::Name::Arial36pt, 950, 300, fontRed);
+		Text2D::Add(Mesh::Name::SPRITE, ShaderObject::Name::Sprite, Image::GreenBird, "Gangnam", Glyph::Name::Arial36pt, 950, 300, fontRed);
 		s_blendLabelState = -1;
 		
 		return true;
@@ -236,7 +203,7 @@ namespace Azul
 
 		AnimMan::BlendAnimation(tDelta);
 
-		if (s_pFontBlend)
+		if (!EntityIsNull(s_eFontBlend))
 		{
 			const float ts = AnimMan::GetBlendTs();
 			int newState = 1;
@@ -254,18 +221,18 @@ namespace Azul
 				s_blendLabelState = newState;
 				if (newState == 0)
 				{
-					s_pFontBlend->UpdateMessage("Gangnam");
-					s_pFontBlend->SetColor(1.0f, 0.0f, 0.0f, 1.0f);
+					Text2D::SetMessage(s_eFontBlend, "Gangnam");
+					Text2D::SetColor(s_eFontBlend, Color(1.0f, 0.0f, 0.0f, 1.0f));
 				}
 				else if (newState == 2)
 				{
-					s_pFontBlend->UpdateMessage("Silly");
-					s_pFontBlend->SetColor(0.0f, 0.0f, 1.0f, 1.0f);
+					Text2D::SetMessage(s_eFontBlend, "Silly");
+					Text2D::SetColor(s_eFontBlend, Color(0.0f, 0.0f, 1.0f, 1.0f));
 				}
 				else
 				{
-					s_pFontBlend->UpdateMessage("Blending");
-					s_pFontBlend->SetColor(0.0f, 0.0f, 0.0f, 1.0f);
+					Text2D::SetMessage(s_eFontBlend, "Blending");
+					Text2D::SetColor(s_eFontBlend, Color(0.0f, 0.0f, 0.0f, 1.0f));
 				}
 			}
 		}
@@ -291,9 +258,7 @@ namespace Azul
 		MeshNodeMan::Destroy();
 		CameraNodeMan::Destroy();
 
-		s_pFontSilly = nullptr;
-		s_pFontGangnam = nullptr;
-		s_pFontBlend = nullptr;
+		s_eFontBlend = EntityNull();
 		s_blendLabelState = -1;
 	}
 }

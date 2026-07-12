@@ -98,6 +98,7 @@ namespace Azul
 			r.pMesh = MeshNodeMan::Find(Mesh::Name::SkyBox);
 			r.pShader = ShaderObjectNodeMan::Find(ShaderObject::Name::FlatTexture);
 			r.pTex = TexNodeMan::Find(TextureObject::Name::SkyBox);
+			r.layer = -1;   // background: draw before the terrain (alpha-blended skybox)
 
 			GameObjectMan::Add(pSkyBox, GameObjectMan::GetRoot());
 		}

@@ -1084,12 +1084,71 @@ state changes); output matches old path; shader internals are private behind the
 > before the terrain -- that was the transparency dependency). Sort is hand-written (no `<algorithm>`
 > per 0a) over a temp array; a few hundred renderables, negligible.
 >
-> **P5.0 PLAN (draw order first):** add `int layer` to `RenderComponent` (default 0). `RenderSystem::Draw
-> (World&)` gathers 3D drawEnable entities, stable-sorts by layer asc, draws each branch (opaque 3D
-> pass). `GameObjectMan::Draw` = `RenderSystem::Draw` (sorted 3D) then the tree walk (2D sprites/fonts
-> only; `GameObject::Draw` skips 3D). scene3 skybox gets a low layer so it precedes the terrain. This
-> re-introduces the pool-driven 3D pass (like P4.1) but ORDER-CORRECT via the sort -- de-risking the
-> tree removal before P5.1+ move the rest off the tree.
+> **P5.0 DONE (2026-07-08): layer-sorted 3D draw -- builds 0 errors.**
+> - `RenderComponent` gained `int layer` (default 0). `RenderSystem::Draw(World&)` gathers the 3D
+>   drawEnable entities into a temp index array, **stable insertion-sorts by layer asc** (hand-written,
+>   no `<algorithm>`; n is small), then draws each via `DrawObject` (now private) reading each entity's
+>   TransformComponent world. `GameObjectMan::Draw` now = `RenderSystem::Draw` (sorted 3D pass) THEN the
+>   tree walk (2D sprites/fonts via their Draw override; base `GameObject::Draw` is now a no-op for
+>   3D/Null). scene3 skybox set `r.layer = -1` so it draws before the terrain (the P4 transparency dep).
+> - This removes the tree's role in 3D DRAW ORDER (now the layer sort) -- the tree still drives Update +
+>   the 2D sprite/font Draw for now. **NEEDS RUNTIME TEST: press 3 (skybox vivid, before terrain), 4
+>   (cubes), 1/2 (dancers + UI text) -- all identical.**
+> - **NEXT: P5.1 -- Sprite/Font -> ECS** (TextComponent + SpriteRenderSystem glyph loop; a 2D transform
+>   handling), so the 2D draw also leaves the tree walk. Then P5.2 (AnimSkin pivot), P5.3 (RigidBody/
+>   Terrain), P5.4 (delete GameObject/GameObjectMan/PCSTree).
+>
+> **P5.1a DONE (2026-07-11): 2D/font draw leaves the tree walk -- builds 0 errors.**
+> - New `Component/TextComponent.h` (`const char *pMessage` [non-owning], `Glyph::Name glyphName`,
+>   `float x,y`; id `COMPONENT_TEXT`). The color/mesh/shader stay in the same entity's
+>   `Sprite2DComponent`. Only `FontSprite` uses the 2D path today (no plain `GameObjectSprite`
+>   instances in any scene), so text is the live case.
+> - `SpriteRenderSystem` gained the pool pass **`Draw(World&)`** (`DrawSprite`/`DrawText` now
+>   private): iterates the `Sprite2DComponent` pool; entities with a `TextComponent` run the
+>   per-glyph loop (moved verbatim from `FontSprite::Draw` -- GlyphMan lookup, per-glyph
+>   texture/UV/screen-rect into the scratch `Sprite2DComponent`, world = `Trans(x,y)` since text
+>   never scales/rotates), the rest draw one quad from their `TransformComponent.world`.
+> - `FontSprite`: ctor `Add`s the `TextComponent`; `Set`/`UpdateMessage` mirror message/glyph/x/y
+>   into it via `privSyncText` (repointing `pMessage` after each realloc -- FontSprite still owns
+>   the `poMessage` buffer + frees it in its dtor). **Removed `FontSprite::Draw` and
+>   `GameObjectSprite::Draw` overrides** (the system draws now).
+> - `GameObjectMan::Draw` is now **fully pool-driven, no PCS-tree walk**: `RenderSystem::Draw`
+>   (3D, layer-sorted) then `SpriteRenderSystem::Draw` (2D, after 3D). The Update tree walk stays
+>   (anim/prefab objects) until P5.2/P5.4. `GameObject`/`GameObjectSprite`/`FontSprite` still
+>   exist as thin creators/holders -- **deletion is the next P5.1 increment** (needs the scenes to
+>   create entity+components directly; scene2 holds `s_pFontBlend` for `UpdateMessage`/`SetColor`,
+>   so it needs an entity/handle).
+> - **NEEDS RUNTIME TEST:** press 1/2 (UI text: titles, per-dancer labels, scene2 Silly/Gangnam/
+>   Blend + the spacebar `UpdateMessage`/`SetColor` toggle) -- all identical to before; 3/4 unchanged.
+>
+> **P5.1b DONE (2026-07-11): `GameObjectSprite` + `FontSprite` DELETED -- builds 0 errors. → P5.1 COMPLETE.**
+> - **Deleted** `GameObject/GameObjectSprite.{h,cpp}` and `UI/FontSprite.{h,cpp}` (the only 2D
+>   object-model classes; no plain `GameObjectSprite` ever existed, `FontSprite` was the sole user).
+>   Removed the `GameObjectSprite.h` include from `GameObjectMan.h`.
+> - **New `UI/Text2D.{h,cpp}`** (exported factory, replaces FontSprite): `Text2D::Add(mesh, shader,
+>   image, msg, glyph, x, y, color) -> Entity` creates a **pure ECS text entity** -- `world.Create()`
+>   + `Sprite2DComponent` + `TextComponent`, **NOT a GameObject / PCS node**. `SetMessage(e,msg)` /
+>   `SetColor(e,color)` mutate it. No per-object Update/Draw, no new/delete: the entity + components
+>   live in the World and are freed wholesale by `WorldMan::Destroy` at scene unload.
+> - **Message lifetime simplified to non-owning literal pointers.** FontSprite used to deep-copy
+>   `poMessage` (heap, freed in its dtor); every scene message is a string literal, so `TextComponent
+>   .pMessage` now just points at the caller's literal (stable lifetime, not copied). This dissolves
+>   the "who frees poMessage without a GameObject" lifetime problem (scoping pt 5) -- there's no heap
+>   to free. (If dynamic strings are ever needed, add a TextMan owner.)
+> - Text entities carry **no TransformComponent** -- the text pass computes each glyph's world
+>   (`Trans(x,y)`) itself, so no system needs a transform for them.
+> - **Scenes rewritten** (scene1: 8 sites; scene2: 6 sites) from `new FontSprite(...)` + `GameObjectMan
+>   ::Add` + `->Set(...)` to a single `Text2D::Add(...)`. scene2's mutable label is now
+>   `static Entity s_eFontBlend` (was `FontSprite*`): guard `!EntityIsNull(...)`, `Text2D::SetMessage`/
+>   `Text2D::SetColor`; the unused `s_pFontSilly`/`s_pFontGangnam` statics were dropped.
+> - `GameObject::Draw` base is now fully unused (kept as a no-op until the GameObject shim goes in
+>   P5.4). Regenerated premake (globs drop the 4 deleted files, add Text2D); clean build 0 errors.
+> - **NEEDS RUNTIME TEST (same as P5.1a):** press 1/2 -- all UI text identical (incl. scene2 spacebar
+>   Silly/Gangnam/Blend color+message toggle); 3/4 unchanged. Also watch the framework leak check at
+>   scene unload (text entities now freed via `WorldMan::Destroy`, not a GameObject dtor).
+>
+> **NEXT: P5.2 -- AnimSkin pivot -> ECS** (`PivotComponent` + `PivotSystem`; rework `AnimMan` to drive
+> components instead of `GameObjectAnimSkin*`; delete `GameObjectAnimSkin`/`GameObjectControlled`).
 
 **Goal:** remove the bridge and the tree; the world is now pure ECS.
 

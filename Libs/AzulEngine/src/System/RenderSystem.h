@@ -10,6 +10,7 @@
 
 namespace Azul
 {
+	class World;
 	struct RenderComponent;
 
 	// Draw-phase render dispatch. Owns the per-MaterialKind render logic (the
@@ -25,11 +26,16 @@ namespace Azul
 	class AZUL_ENGINE_LIBRARY_API RenderSystem
 	{
 	public:
-		// Render one 3D renderable via its MaterialKind branch. `world` is the
-		// entity's TransformComponent world matrix.
-		static void DrawObject(RenderComponent &r, Mat4 &world);
+		// P5.0: draw all 3D renderables from the RenderComponent pool, sorted by
+		// `layer` ascending (lower = drawn first). Replaces the per-object 3D draw
+		// that the PCS-tree walk used to drive -- the sort provides the draw order
+		// the tree used to (e.g. the alpha skybox before the terrain).
+		static void Draw(World &world);
 
 	private:
+		// Render one 3D renderable via its MaterialKind branch.
+		static void DrawObject(RenderComponent &r, Mat4 &world);
+
 		static void privDrawColorByVertex(RenderComponent &r, Mat4 &world);
 		static void privDrawFlatTexture(RenderComponent &r, Mat4 &world);
 		static void privDrawConstColorLight(RenderComponent &r, Mat4 &world);

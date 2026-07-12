@@ -3,7 +3,9 @@
 //----------------------------------------------------------------------------
 
 #include "RenderSystem.h"
+#include "World.h"
 #include "RenderComponent.h"
+#include "TransformComponent.h"
 #include "ComputeBlend.h"
 #include "Mesh.h"
 #include "ShaderObject.h"
@@ -14,6 +16,53 @@
 
 namespace Azul
 {
+	// P5.0: sorted pool pass over all 3D renderables. Gathers the drawEnable 3D
+	// entities, stable insertion-sorts them by layer (ascending), and draws each
+	// via its MaterialKind branch. No <algorithm> per the coding standard.
+	void RenderSystem::Draw(World &world)
+	{
+		ComponentPool<RenderComponent> &pool = world.Pool<RenderComponent>();
+		const unsigned int count = pool.GetCount();
+
+		const unsigned int MAX_RENDERABLES = 4096;
+		unsigned int order[MAX_RENDERABLES];
+		unsigned int n = 0;
+
+		for (unsigned int i = 0; i < count; i++)
+		{
+			RenderComponent &r = pool.GetData(i);
+			if (r.drawEnable && MaterialKindIs3D(r.kind))
+			{
+				assert(n < MAX_RENDERABLES);
+				order[n] = i;
+				n++;
+			}
+		}
+
+		// Stable insertion sort by layer (ascending). n is small (tens-hundreds).
+		for (unsigned int a = 1; a < n; a++)
+		{
+			const unsigned int keyIdx = order[a];
+			const int keyLayer = pool.GetData(keyIdx).layer;
+			int b = (int)a - 1;
+			while (b >= 0 && pool.GetData(order[b]).layer > keyLayer)
+			{
+				order[b + 1] = order[b];
+				b--;
+			}
+			order[b + 1] = keyIdx;
+		}
+
+		for (unsigned int k = 0; k < n; k++)
+		{
+			RenderComponent &r = pool.GetData(order[k]);
+			const Entity &e = pool.GetOwner(order[k]);
+			TransformComponent *pT = world.TryGet<TransformComponent>(e);
+			assert(pT);
+			DrawObject(r, pT->world);
+		}
+	}
+
 	void RenderSystem::DrawObject(RenderComponent &r, Mat4 &world)
 	{
 		switch (r.kind)

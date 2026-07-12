@@ -18,6 +18,7 @@
 #include "BlendSystem.h"
 #include "SkinningSystem.h"
 #include "RenderSystem.h"
+#include "SpriteRenderSystem.h"
 
 namespace Azul
 {
@@ -167,28 +168,14 @@ namespace Azul
 
 	void GameObjectMan::Draw()
 	{
-		//Trace::out("\n");
-		//Trace::out("--- GameObjectMan::Draw() ----\n");
-		GameObjectMan *pGOM = GameObjectMan::privGetInstance();
-		assert(pGOM);
-
-		// P4.2: single PCS-tree walk (authoritative draw order). When the ECS path
-		// is on, GameObject::Draw routes 3D materials through the RenderSystem's
-		// per-MaterialKind branches (in this tree order); 2D/UI stay on the
-		// GraphicsObject path. When off, everything draws via GraphicsObject::Render.
-		PCSNode *pRootNode = pGOM->poRootTree->GetRoot();
-		assert(pRootNode);
-
-		PCSTreeForwardIterator pIt(pRootNode);
-
-		GameObject *pGameObj = nullptr;
-
-		for (pIt.First(); !pIt.IsDone(); pIt.Next())
-		{
-			pGameObj = (GameObject *) pIt.Current();
-			//pGameObj->PrintNode();
-			pGameObj->Draw();
-		}
+		// P5.1: the draw is now fully pool-driven -- no PCS-tree walk.
+		//   1) 3D opaque pass: RenderSystem draws all 3D renderables from the
+		//      RenderComponent pool, layer-sorted (P5.0).
+		//   2) 2D/UI pass: SpriteRenderSystem draws all sprites + text from the
+		//      Sprite2DComponent/TextComponent pools, after the 3D pass.
+		World &world = WorldMan::GetWorld();
+		RenderSystem::Draw(world);
+		SpriteRenderSystem::Draw(world);
 	}
 
 	GameObjectMan::GameObjectMan()
