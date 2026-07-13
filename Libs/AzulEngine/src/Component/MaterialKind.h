@@ -3,11 +3,8 @@
 
 namespace Azul
 {
-	// Which material/shader path a renderable uses. Phase 4 turns the
-	// GraphicsObject_* class explosion into this data tag on RenderComponent:
-	// the RenderSystem (3D) and SpriteRenderSystem (2D) branch on it. Only the
-	// currently-live kinds are listed; add more (e.g. Wireframe, ColorByVertex)
-	// as first-class kinds when their material branch is implemented.
+	// Which material/shader path a renderable uses. The RenderSystem (3D) and
+	// SpriteRenderSystem (2D) branch on it.
 	enum class MaterialKind
 	{
 		Null,             // root/placeholder -- not drawn
@@ -19,8 +16,7 @@ namespace Azul
 		SkinLightTexture  // 3D, skinned + lit (perspective)
 	};
 
-	// True for kinds the batched 3D RenderSystem owns (vs the 2D SpriteRenderSystem
-	// / the no-op Null root).
+	// True for the 3D kinds the RenderSystem draws (vs the 2D Sprite kind / Null root).
 	inline bool MaterialKindIs3D(MaterialKind k)
 	{
 		return k == MaterialKind::FlatTexture

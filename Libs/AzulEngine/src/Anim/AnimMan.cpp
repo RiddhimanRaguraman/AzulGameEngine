@@ -44,9 +44,8 @@ namespace Azul
 
     void AnimMan::AnimNode::privClear()
     {
-        // Own the animation resources the deleted AnimController_* used to own.
-        // (ComputeBlend has a virtual dtor, so the base pointer deletes the
-        // concrete _OneAnim/_TwoAnim correctly.)
+        // Free the owned animation resources. (ComputeBlend has a virtual dtor, so
+        // the base pointer deletes the concrete _OneAnim/_TwoAnim correctly.)
         delete this->pAnimA;
         delete this->pAnimB;
         delete this->pTimerA;
@@ -463,7 +462,7 @@ namespace Azul
         t.scale.set(1.0f, 1.0f, 1.0f);
         t.rot.set(0.0f, 0.0f, 0.0f, 1.0f);
 
-        // SkinLightTexture render data (was privFillSkinRender on the GameObject).
+        // SkinLightTexture render data.
         RenderComponent &rc = w.Add<RenderComponent>(e);
         rc.kind = MaterialKind::SkinLightTexture;
         rc.drawEnable = true;
@@ -499,13 +498,13 @@ namespace Azul
         assert(ptAnim);
         ComputeBlend_OneAnim* pBlend = new ComputeBlend_OneAnim(ptAnim);
 
-        // Timer over the clip's play range (was created inside AnimController_OneAnim).
+        // Timer over the clip's play range.
         TimerController* pTimer = new TimerController(AnimTime(AnimTime::Duration::ZERO), ptAnim->FindMaxTime());
         assert(pTimer);
 
-        // Phase 3: the single-clip anim is sampled by the AnimationSystem. Its
-        // data lives on a dedicated entity via a non-owning AnimClipComponent;
-        // the AnimNode (below) owns ptAnim/pTimer/pBlend and frees them.
+        // The single-clip anim is sampled by the AnimationSystem. Its data lives on
+        // a dedicated entity via a non-owning AnimClipComponent; the AnimNode
+        // (below) owns ptAnim/pTimer/pBlend and frees them.
         {
             World& w = WorldMan::GetWorld();
             Entity animEnt = w.Create();
@@ -516,7 +515,6 @@ namespace Azul
             ac.ratio = 1.0f;
         }
 
-		// Pure-ECS skinned entity (was GameObjectAnimSkin + GameObjectMan::Add).
 		Entity skinEnt = privCreateSkinEntity(pBlend, meshName, texName, _pLightColor, _pLightPos);
 
         Clip *pClip = ClipMan::Find(clipName);
@@ -556,14 +554,14 @@ namespace Azul
 		assert(ptAnim);
 		ComputeBlend_OneAnim *pBlend = new ComputeBlend_OneAnim(ptAnim);
 
-		// Timer over the clip's play range (was created inside AnimController_OneAnim).
+		// Timer over the clip's play range.
 		TimerController *pTimer = new TimerController(AnimTime(AnimTime::Duration::ZERO), ptAnim->FindMaxTime());
 		assert(pTimer);
 
-		// Phase 3: one anim drives every skin mesh below, but it must be sampled
-		// ONCE per frame -- its data lives on a single dedicated entity via a
-		// non-owning AnimClipComponent that the AnimationSystem drives. The
-		// AnimNode (below) owns ptAnim/pTimer/pBlend and frees them.
+		// One anim drives every skin mesh below, but it must be sampled ONCE per
+		// frame -- its data lives on a single dedicated entity via a non-owning
+		// AnimClipComponent that the AnimationSystem drives. The AnimNode (below)
+		// owns ptAnim/pTimer/pBlend and frees them.
 		{
 			World& w = WorldMan::GetWorld();
 			Entity animEnt = w.Create();
@@ -574,8 +572,8 @@ namespace Azul
 			ac.ratio = 1.0f;
 		}
 
-		// One clip drives every mesh; each mesh is its own pure-ECS skinned entity
-		// sharing the same ComputeBlend (was N GameObjectAnimSkins).
+		// One clip drives every mesh; each mesh is its own skinned entity sharing
+		// the same ComputeBlend.
 		Entity skinEnts[AnimNode::MAX_SKIN_ENTITIES];
 
 		for (unsigned int i = 0; i < numMeshes; i++)
@@ -615,7 +613,7 @@ namespace Azul
         Anim* pAnimB = new Anim(clipName2);
         ComputeBlend_TwoAnim* pBlend = new ComputeBlend_TwoAnim(pAnimA, pAnimB);
 
-        // Timers over each clip's play range (were created inside AnimController_TwoAnim).
+        // Timers over each clip's play range.
         TimerController* pTimerA = new TimerController(AnimTime(AnimTime::Duration::ZERO), pAnimA->FindMaxTime());
         TimerController* pTimerB = new TimerController(AnimTime(AnimTime::Duration::ZERO), pAnimB->FindMaxTime());
         assert(pTimerA);
@@ -624,8 +622,8 @@ namespace Azul
         // Kept so BlendAnimation can push the SPACE-key blend ratio.
         pMan->poBlendComputeBlend = pBlend;
 
-        // Phase 3: the two-clip blend is sampled by the BlendSystem. Its data lives
-        // on a dedicated entity via a non-owning AnimBlendComponent; the AnimNode
+        // The two-clip blend is sampled by the BlendSystem. Its data lives on a
+        // dedicated entity via a non-owning AnimBlendComponent; the AnimNode
         // (below) owns the anims/timers/blend and frees them.
         {
             World& w = WorldMan::GetWorld();
@@ -640,7 +638,6 @@ namespace Azul
             bc.pBlend = pBlend;
         }
 
-        // Pure-ECS skinned entity (was GameObjectAnimSkin + GameObjectMan::Add).
         Entity skinEnt = privCreateSkinEntity(pBlend, meshName, texName, _pLightColor, _pLightPos);
 
         Clip* pClip = ClipMan::Find(clipName1);
@@ -733,8 +730,6 @@ namespace Azul
 
     // The setters below write each skinned entity's TransformComponent; the
     // LocalToWorldSystem folds pos/rot/scale into the world matrix each frame.
-    // (The old pivot/quat setters manipulated GameObjectAnimSkin's cur_rot/prefab,
-    // which no scene ever drove -- that path was deleted with the class in P5.2.)
 
     void AnimMan::SetScale(Name name, float sx, float sy, float sz)
     {

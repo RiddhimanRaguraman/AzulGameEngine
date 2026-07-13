@@ -5,9 +5,8 @@
 
 namespace Azul
 {
-	// Phase 1 self-check for the ECS core. Call once at startup, confirm the
-	// asserts pass and the trace prints "ECS smoke test PASSED", then delete
-	// the call (this whole file is throwaway scaffolding).
+	// Self-check for the ECS core. Call once at startup; confirm the asserts pass
+	// and the trace prints "ECS smoke test PASSED".
 	AZUL_ENGINE_LIBRARY_API void ECS_SmokeTest();
 }
 

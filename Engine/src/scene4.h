@@ -5,8 +5,8 @@
 
 namespace Azul
 {
-	// Phase 3 demo scene: a single cube spun purely by the ECS RotateComponent +
-	// RotateSystem (no Prefab, no per-object Update logic). Press 4 to activate.
+	// Demo scene: three cubes spun by the RotateComponent + RotateSystem, one per
+	// material (ColorByVertex / ConstColorLight / Wireframe). Press 4 to activate.
 	class Scene4 final : public GameSceneState
 	{
 	public:

@@ -31,12 +31,11 @@ namespace Azul
 		assert(posInstance == nullptr);
 		posInstance = new SystemMan();
 
-		// The standard engine systems, in run order (was GameObjectMan::Create).
-		// LocalToWorld composes world = S*R*T; RotateSystem spins RotateComponent
-		// entities (overwrites the plain world, so after LocalToWorld);
-		// Animation/Blend sample clips into the mixer buffers; Skinning then
-		// dispatches the GPU compute skinning that consumes them. Each is a no-op
-		// in scenes without the matching components.
+		// The standard engine systems, in run order. LocalToWorld composes
+		// world = S*R*T; RotateSystem spins RotateComponent entities (overwrites the
+		// plain world, so after LocalToWorld); Animation/Blend sample clips into the
+		// mixer buffers; Skinning then dispatches the GPU compute skinning that
+		// consumes them. Each is a no-op in scenes without the matching components.
 		SystemMan::Add(new LocalToWorldSystem());
 		SystemMan::Add(new RotateSystem());
 		SystemMan::Add(new AnimationSystem());
@@ -84,8 +83,7 @@ namespace Azul
 		AnimTimer timer;
 		timer.Tic();
 
-		// Pool-driven draw (was GameObjectMan::Draw): the layer-sorted 3D pass
-		// then the 2D/UI pass (sprites + text), after the 3D pass.
+		// Pool-driven draw: the layer-sorted 3D pass, then the 2D/UI pass (sprites + text).
 		RenderSystem::Draw(world);
 		SpriteRenderSystem::Draw(world);
 

@@ -11,7 +11,7 @@ namespace Azul
 	// NON-owning ComputeBlend* (ownership stays with AnimMan's AnimNode, per the
 	// "components hold handles, not GPU objects" rule). The SkinningSystem drives
 	// pBlend->Execute() over the pool. AnimMan::privCreateSkinEntity adds this to
-	// each skinned entity (there is no GameObject anymore).
+	// each skinned entity.
 	struct GpuSkinComponent
 	{
 		ComputeBlend *pBlend;

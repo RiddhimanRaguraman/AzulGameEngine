@@ -9,11 +9,8 @@ namespace Azul
 	// see World.h for why that matters across the module boundary).
 	//
 	// ID SPLIT (World::MAX_COMPONENT_TYPES == 64 slots total):
-	//   [0, GAME_COMPONENT_BASE)          -> ENGINE components (defined here)
-	//   [GAME_COMPONENT_BASE, 64)         -> reserved for GAME/app components
-	// All components (incl. behavior components like RotateComponent) now live in
-	// the engine DLL, so every id below is an engine id; the game range stays
-	// reserved as an extension point should the app ever add its own component.
+	//   [0, GAME_COMPONENT_BASE)          -> engine components (defined here)
+	//   [GAME_COMPONENT_BASE, 64)         -> reserved for game/app components
 	enum ComponentId : unsigned int
 	{
 		COMPONENT_TRANSFORM = 0,

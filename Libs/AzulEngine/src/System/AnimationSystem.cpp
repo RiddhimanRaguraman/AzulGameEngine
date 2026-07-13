@@ -23,7 +23,7 @@ namespace Azul
 			assert(c.pAnim);
 			assert(c.pBlend);
 
-			// (was AnimController_OneAnim::Update)
+			// Advance the clip timer and sample the pose into the mixer buffer.
 			c.pTimer->Update(c.ratio * tDelta);
 			c.pBlend->AnimateMixerA(c.pAnim->GetClip(), c.pTimer->GetCurrTime());
 		}

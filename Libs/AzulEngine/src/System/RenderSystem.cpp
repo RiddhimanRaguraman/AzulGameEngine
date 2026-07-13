@@ -13,23 +13,23 @@
 
 namespace Azul
 {
-	// P5.0: sorted pool pass over all 3D renderables. Gathers the drawEnable 3D
-	// entities, stable insertion-sorts them by layer (ascending), and draws each
-	// via its MaterialKind branch. No <algorithm> per the coding standard.
-	//
-	// P6.1 batching: the shader + its constant buffer are bound ONCE per contiguous
-	// run of same-shader draws instead of once per object. Re-binding the same
-	// shader is idempotent, so this is visually identical -- it just drops the
-	// redundant ActivateShader/ActivateCBV binds (e.g. scene1's dancers all share
-	// SkinLightTexture -> 1 shader bind instead of 7; a same-shader run even spans
-	// layers). Per-object mesh/texture/rasterizer/blend/transform binds are unchanged.
+	// Sorted pool pass over all 3D renderables: gathers the drawEnable 3D entities,
+	// stable insertion-sorts them by layer (ascending), and draws each via its
+	// MaterialKind branch. The shader + its constant buffer are bound once per
+	// contiguous run of same-shader draws (re-binding the same shader is idempotent),
+	// dropping redundant ActivateShader/ActivateCBV binds.
 	void RenderSystem::Draw(World &world)
 	{
 		ComponentPool<RenderComponent> &pool = world.Pool<RenderComponent>();
 		const unsigned int count = pool.GetCount();
+		if (count == 0)
+		{
+			return;
+		}
 
-		const unsigned int MAX_RENDERABLES = 4096;
-		unsigned int order[MAX_RENDERABLES];
+		// Draw order, heap-allocated and sized to the renderable pool so any object
+		// count works. One alloc/free per frame, negligible vs the draws.
+		unsigned int *order = new unsigned int[count];
 		unsigned int n = 0;
 
 		for (unsigned int i = 0; i < count; i++)
@@ -37,13 +37,14 @@ namespace Azul
 			RenderComponent &r = pool.GetData(i);
 			if (r.drawEnable && MaterialKindIs3D(r.kind))
 			{
-				assert(n < MAX_RENDERABLES);
 				order[n] = i;
 				n++;
 			}
 		}
 
-		// Stable insertion sort by layer (ascending). n is small (tens-hundreds).
+		// Stable insertion sort by layer (ascending). O(n) when everything shares a
+		// layer (the common case, incl. the stress grid); O(n^2) only with many
+		// mixed layers -- revisit with a radix/counting sort if that ever matters.
 		for (unsigned int a = 1; a < n; a++)
 		{
 			const unsigned int keyIdx = order[a];
@@ -76,6 +77,8 @@ namespace Azul
 
 			DrawObject(r, pT->world);
 		}
+
+		delete[] order;
 	}
 
 	// Per-object draw. Assumes the shader + CBV are already bound for r.pShader
@@ -114,8 +117,7 @@ namespace Azul
 		}
 	}
 
-	// (was GraphicsObject_ColorByVertex::SetState/SetDataGPU/Draw/RestoreState)
-	// MIGRATED to data-path: reads mesh/shader from RenderComponent (no GraphicsObject).
+	// 3D, per-vertex color, unlit. Reads mesh/shader from the RenderComponent.
 	void RenderSystem::privDrawColorByVertex(RenderComponent &r, Mat4 &world)
 	{
 		Mesh *pMesh = r.pMesh;
@@ -129,8 +131,7 @@ namespace Azul
 		pMesh->RenderIndexBuffer();
 	}
 
-	// (was GraphicsObject_FlatTexture::SetState/SetDataGPU/Draw/RestoreState)
-	// MIGRATED to data-path: mesh/shader/tex/uvMatrix from RenderComponent.
+	// 3D, textured. Reads mesh/shader/tex/uvMatrix from the RenderComponent.
 	void RenderSystem::privDrawFlatTexture(RenderComponent &r, Mat4 &world)
 	{
 		Mesh *pMesh = r.pMesh;
@@ -158,8 +159,7 @@ namespace Azul
 		Engine::GetInstance()->mBlendStateOff.Activate();
 	}
 
-	// (was GraphicsObject_ConstColorLight::SetState/SetDataGPU/Draw/RestoreState)
-	// MIGRATED to data-path: params from RenderComponent.
+	// 3D, constant body color + a light. Reads its params from the RenderComponent.
 	void RenderSystem::privDrawConstColorLight(RenderComponent &r, Mat4 &world)
 	{
 		Mesh *pMesh = r.pMesh;
@@ -178,8 +178,7 @@ namespace Azul
 		pMesh->RenderIndexBuffer();
 	}
 
-	// (was GraphicsObject_Wireframe::SetState/SetDataGPU/Draw/RestoreState)
-	// MIGRATED to data-path: color from RenderComponent.lightColor.
+	// 3D, wire rasterizer + a constant color (from RenderComponent.lightColor).
 	void RenderSystem::privDrawWireframe(RenderComponent &r, Mat4 &world)
 	{
 		Mesh *pMesh = r.pMesh;
@@ -202,10 +201,9 @@ namespace Azul
 		Engine::GetInstance()->mStateRasterizerSolidCull.Activate();
 	}
 
-	// (was GraphicsObject_SkinLightTexture::SetState/SetDataGPU/Draw/RestoreState)
-	// MIGRATED to data-path: mesh/shader/tex/light/ComputeBlend from RenderComponent.
-	// Consumes the SkinningSystem output: BindWorldBoneArray binds the bone-world
-	// SRV that ComputeBlend::Execute produced during Update (runs before Draw).
+	// 3D, skinned + lit. Reads mesh/shader/tex/light/ComputeBlend from the
+	// RenderComponent. BindWorldBoneArray binds the bone-world SRV that
+	// ComputeBlend::Execute (SkinningSystem, runs before Draw) produced.
 	void RenderSystem::privDrawSkinLightTexture(RenderComponent &r, Mat4 &world)
 	{
 		Mesh *pMesh = r.pMesh;

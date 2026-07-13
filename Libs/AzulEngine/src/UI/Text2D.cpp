@@ -24,7 +24,7 @@ namespace Azul
 		World &world = WorldMan::GetWorld();
 		Entity e = world.Create();
 
-		// 2D-sprite render state (was GraphicsObject_Sprite / GameObjectSprite ctor).
+		// 2D-sprite render state.
 		// texture/uvMatrix/origMatrix are per-glyph scratch that the text pass
 		// overwrites; seed them from the image so the component is well-formed.
 		Sprite2DComponent &s = world.Add<Sprite2DComponent>(e);
@@ -49,7 +49,7 @@ namespace Azul
 
 		s.color.Set(color);
 
-		// The text run itself (was FontSprite's message/glyph/x/y).
+		// The text run itself (message/glyph/x/y).
 		TextComponent &t = world.Add<TextComponent>(e);
 		t.pMessage = pMessage;   // non-owning; caller keeps the buffer alive
 		t.glyphName = glyph;

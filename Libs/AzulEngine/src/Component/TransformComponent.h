@@ -6,10 +6,8 @@
 
 namespace Azul
 {
-	// Per-entity transform. Plain data, no logic.
-	// Phase 2 bridge: for now only `world` is wired (it backs
-	// GameObject::GetWorld/SetWorld). pos/rot/scale become live when the
-	// GameObjectRigidBody trans/quat/scale members migrate here.
+	// Per-entity transform. Plain data, no logic. LocalToWorldSystem composes
+	// world = Scale * Rot * Trans from pos/rot/scale each frame.
 	struct TransformComponent
 	{
 		Vec3 pos;

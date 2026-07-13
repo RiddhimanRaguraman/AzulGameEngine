@@ -7,8 +7,8 @@ namespace Azul
 
 	World &WorldMan::GetWorld()
 	{
-		// Lazy: created on first use (e.g. the first GameObject), so callers
-		// don't need an explicit Create(). Destroy() frees it during teardown.
+		// Lazy: created on first use, so callers don't need an explicit Create().
+		// Destroy() frees it during teardown.
 		if (posWorld == nullptr)
 		{
 			posWorld = new World();

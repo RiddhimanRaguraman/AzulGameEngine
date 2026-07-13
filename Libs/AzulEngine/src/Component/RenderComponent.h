@@ -12,10 +12,9 @@ namespace Azul
 	class TextureObject;
 	class ComputeBlend;
 
-	// Per-entity 3D render data -- the source of truth for a renderable (the
-	// GraphicsObject_* hierarchy is retired). Fields are a superset across the 3D
-	// MaterialKinds; the RenderSystem branch for each kind reads the ones it needs.
-	// (2D sprites carry a Sprite2DComponent instead; kind==Null draws nothing.)
+	// Per-entity 3D render data. Fields are a superset across the 3D MaterialKinds;
+	// the RenderSystem branch for each kind reads the ones it needs. (2D sprites
+	// carry a Sprite2DComponent instead; kind==Null draws nothing.)
 	struct RenderComponent
 	{
 		MaterialKind kind;

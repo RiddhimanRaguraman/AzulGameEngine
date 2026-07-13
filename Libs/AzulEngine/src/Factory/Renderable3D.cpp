@@ -20,8 +20,7 @@ namespace Azul
 		t.rot = Quat(Identity);
 		t.world = Mat4(Identity);
 
-		// Render data: superset across the 3D kinds (was the GameObject +
-		// GameObjectRigidBody ctors). The caller fills the handles it needs.
+		// Render data: superset across the 3D kinds. The caller fills the handles it needs.
 		RenderComponent &r = w.Add<RenderComponent>(e);
 		r.kind = kind;
 		r.drawEnable = true;

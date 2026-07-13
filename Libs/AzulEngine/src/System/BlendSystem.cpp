@@ -25,7 +25,7 @@ namespace Azul
 			assert(b.pAnimB);
 			assert(b.pBlend);
 
-			// (was AnimController_TwoAnim::Update)
+			// Advance both clip timers and blend the two poses into the mixer buffer.
 			b.pTimerA->Update(b.ratioA * tDelta);
 			b.pBlend->AnimateMixerA(b.pAnimA->GetClip(), b.pTimerA->GetCurrTime());
 

@@ -73,7 +73,7 @@ namespace Azul
 		TexNodeMan::Add(TextureObject::Name::Terrain, "Terrain.t.proto.azul");
 		TexNodeMan::Add(TextureObject::Name::SkyBox, "SkyBox.t.proto.azul");
 
-		// Terrain -- pure-ECS FlatTexture renderable (RenderComponent holds the handles).
+		// Terrain -- FlatTexture renderable (RenderComponent holds the handles).
 		{
 			Entity terrain = Renderable3D::Add(MaterialKind::FlatTexture);
 
@@ -83,13 +83,12 @@ namespace Azul
 			r.pTex = TexNodeMan::Find(TextureObject::Name::Terrain);
 			r.uvMatrix = Scale(80.0f, 80.0f, 1.0f);   // was SetUVRepeat(80, 80)
 
-			// Mesh authored at 200x200x20; place it at 800x800x100 (was SetSize/
-			// SetHeight): scale = requested / authored.
+			// Mesh authored at 200x200x20; place it at 800x800x100: scale = requested / authored.
 			Renderable3D::SetScale(terrain, 800.0f / 200.0f, 100.0f / 20.0f, 800.0f / 200.0f);
 			Renderable3D::SetTrans(terrain, 0.0f, 0.0f, 0.0f);
 		}
 
-		// SkyBox -- pure-ECS FlatTexture renderable.
+		// SkyBox -- FlatTexture renderable.
 		{
 			Entity skyBox = Renderable3D::Add(MaterialKind::FlatTexture);
 			Renderable3D::SetTrans(skyBox, 0.0f, 0.0f, 0.0f);

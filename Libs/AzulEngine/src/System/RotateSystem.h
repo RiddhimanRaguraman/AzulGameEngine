@@ -7,12 +7,9 @@
 namespace Azul
 {
 	// Behavior system: for every entity with a RotateComponent + TransformComponent,
-	// advance its angle and rebuild world = Scale * baseRot * spinZ * Trans
-	// (the behavior the dead Prefab_Rotate used to do). Runs AFTER
-	// LocalToWorldSystem so its spin overwrites the plain S*R*T world.
-	//
-	// Engine system: registered centrally in SystemMan::Create (no-op in
-	// scenes without any RotateComponent).
+	// advance its angle and rebuild world = Scale * baseRot * spinZ * Trans. Runs
+	// AFTER LocalToWorldSystem so its spin overwrites the plain S*R*T world. No-op
+	// in scenes without any RotateComponent.
 	class AZUL_ENGINE_LIBRARY_API RotateSystem : public System
 	{
 	public:

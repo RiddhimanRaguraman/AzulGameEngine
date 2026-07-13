@@ -12,7 +12,7 @@ namespace Azul
 	// A single-clip animation being sampled each frame. Plain data -- NON-owning
 	// views of resources owned by AnimMan's AnimNode (which deletes them). The
 	// AnimationSystem advances pTimer by ratio*dt and samples pAnim's clip into
-	// pBlend's mixer key buffers (the logic formerly in AnimController_OneAnim).
+	// pBlend's mixer key buffers.
 	//
 	// One AnimClipComponent lives on a dedicated per-animation entity (NOT the
 	// skin entity), so a controller driving several skin meshes is still sampled

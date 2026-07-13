@@ -12,8 +12,7 @@ namespace Azul
 	// A two-clip blended animation being sampled each frame. Plain data --
 	// NON-owning views of resources owned by AnimMan's AnimNode (which deletes
 	// them). The BlendSystem advances both timers, samples both clips (MixerA/B)
-	// and blends (MixerC) into pBlend's key buffers (the logic formerly in
-	// AnimController_TwoAnim).
+	// and blends (MixerC) into pBlend's key buffers.
 	//
 	// The blend ratio itself (SPACE-key ramp) is still pushed separately via
 	// AnimMan::BlendAnimation -> pBlend->SetBlendTs; this component only drives

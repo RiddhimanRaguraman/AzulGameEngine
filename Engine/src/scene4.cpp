@@ -72,14 +72,13 @@ namespace Azul
 		// vertex colors, so ColorByVertex renders it black).
 		MeshNodeMan::Add(Mesh::Name::CUBE_COLOR, new MeshCubeColor(Mesh::Name::CUBE_COLOR));
 
-		// Three material paths, all drawn by the P4.1 RenderSystem from the
-		// component pool (each is a 3D MaterialKind).
+		// Three material paths, all drawn by the RenderSystem (each is a 3D MaterialKind).
 		ShaderObjectNodeMan::Add(ShaderObject::Name::ColorByVertex);
 		ShaderObjectNodeMan::Add(ShaderObject::Name::ConstColorLight);
 		ShaderObjectNodeMan::Add(ShaderObject::Name::ConstColor);   // wireframe uses this + wire rasterizer
 
 		// Three equally-spaced cubes, one per material, each spun by the ECS
-		// RotateComponent + RotateSystem (no Prefab, no per-object Update).
+		// RotateComponent + RotateSystem.
 		const float kSpacing = 220.0f;
 		const float kScale = 70.0f;
 		const float kSpin = 0.01f;

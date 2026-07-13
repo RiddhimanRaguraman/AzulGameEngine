@@ -9,10 +9,9 @@ namespace Azul
 	class System;
 	class World;
 
-	// The engine's per-scene ECS frame driver (replaces GameObjectMan after the
-	// PCS tree was retired). Create() builds the ordered engine system set; Run()
-	// drives the Update systems over the World each frame; Draw() runs the render
-	// passes; Destroy() frees the systems (call before WorldMan::Destroy).
+	// The engine's per-scene ECS frame driver. Create() builds the ordered engine
+	// system set; Run() drives the Update systems over the World each frame; Draw()
+	// runs the render passes; Destroy() frees the systems (call before WorldMan::Destroy).
 	class AZUL_ENGINE_LIBRARY_API SystemMan
 	{
 	public:

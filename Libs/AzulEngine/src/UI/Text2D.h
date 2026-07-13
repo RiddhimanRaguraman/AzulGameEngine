@@ -12,13 +12,12 @@
 
 namespace Azul
 {
-	// Factory + mutators for a screen-space text run (replaces FontSprite).
+	// Factory + mutators for a screen-space text run.
 	//
-	// A text run is a PURE ECS entity -- NOT a GameObject / PCS-tree node. It owns
-	// a Sprite2DComponent (mesh + shader + per-glyph scratch texture/UV/screen-rect
-	// + color) and a TextComponent (message + glyph + start x/y). SpriteRenderSystem's
-	// text pass walks the message and draws each glyph. There is no per-object
-	// Update/Draw and no new/delete: the entity + its components live in the World
+	// A text run is an entity that owns a Sprite2DComponent (mesh + shader +
+	// per-glyph scratch texture/UV/screen-rect + color) and a TextComponent
+	// (message + glyph + start x/y). SpriteRenderSystem's text pass walks the
+	// message and draws each glyph. The entity + its components live in the World
 	// and are freed wholesale by WorldMan::Destroy at scene unload.
 	//
 	// pMessage is stored NON-OWNING and is not copied -- the caller must pass a

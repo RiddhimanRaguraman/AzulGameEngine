@@ -17,7 +17,7 @@
 
 namespace Azul
 {
-	// P5.1: 2D/UI pool pass, run after the opaque 3D pass. Plain sprites (a
+	// 2D/UI pool pass, run after the opaque 3D pass. Plain sprites (a
 	// Sprite2DComponent with no TextComponent) draw one quad from their world;
 	// text entities run the per-glyph loop.
 	void SpriteRenderSystem::Draw(World &world)
@@ -25,9 +25,8 @@ namespace Azul
 		ComponentPool<Sprite2DComponent> &pool = world.Pool<Sprite2DComponent>();
 		const unsigned int count = pool.GetCount();
 
-		// P6.1: hoist the shader/CBV bind across the whole 2D pass (all sprites +
-		// every glyph typically share the Sprite shader) -- rebinding the same
-		// shader is idempotent, so this just drops the redundant binds.
+		// Hoist the shader/CBV bind across the whole 2D pass (all sprites + every
+		// glyph typically share the Sprite shader; rebinding it is idempotent).
 		ShaderObject *pLastShader = nullptr;
 
 		for (unsigned int i = 0; i < count; i++)
@@ -51,7 +50,7 @@ namespace Azul
 		}
 	}
 
-	// (was FontSprite::Draw's per-glyph loop, now driven from TextComponent) Walk the message, look each glyph
+	// Walk the message, look each glyph
 	// up, and re-fill the Sprite2DComponent (texture + UV + screen-rect) before
 	// drawing that glyph's quad at its running x position.
 	void SpriteRenderSystem::DrawText(TextComponent &t, Sprite2DComponent &s, ShaderObject *&pLastShader)
@@ -74,7 +73,7 @@ namespace Azul
 			float xTmp = xEnd + pGlyph->glyphRect.width / 2;
 			screenRect.Set(xTmp, yTmp, pGlyph->glyphRect.width, pGlyph->glyphRect.height);
 
-			// Per-glyph sprite state (was FontSprite::SetTexture/SetImage/SetScreenRect).
+			// Per-glyph sprite state.
 			s.pTexture = pGlyph->pText;
 
 			float w = pGlyph->glyphRect.width / (float)pGlyph->pText->width;
@@ -99,7 +98,6 @@ namespace Azul
 		}
 	}
 
-	// (was GraphicsObject_Sprite::SetState/SetDataGPU/Draw/RestoreState)
 	void SpriteRenderSystem::DrawSprite(Sprite2DComponent &s, Mat4 &world, ShaderObject *&pLastShader)
 	{
 		assert(s.pMesh);
@@ -115,7 +113,7 @@ namespace Azul
 			Engine::GetInstance()->mBlendStateAlpha.Activate();
 		}
 
-		// SetDataGPU -- P6.1: bind the shader/CBV only when it changes (idempotent).
+		// SetDataGPU -- bind the shader/CBV only when it changes.
 		if (s.pShader != pLastShader)
 		{
 			s.pShader->ActivateShader();

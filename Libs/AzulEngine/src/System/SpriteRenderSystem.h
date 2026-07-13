@@ -11,24 +11,21 @@ namespace Azul
 	struct Sprite2DComponent;
 	struct TextComponent;
 
-	// 2D/UI render dispatch. Owns the sprite render logic (was
-	// GraphicsObject_Sprite::SetState/SetDataGPU/Draw/RestoreState): orthographic
-	// camera, screen-rect + world + lower-left origin transform, sub-image UV, and
-	// color scale, with alpha blending.
+	// 2D/UI render dispatch: orthographic camera, screen-rect + world + lower-left
+	// origin transform, sub-image UV, and color scale, with alpha blending.
 	//
-	// P5.1: Draw() is the pool pass that draws all 2D/UI from the component pools,
-	// after the opaque 3D pass (RenderSystem::Draw). This replaced the per-object
-	// 2D draw the PCS-tree walk used to drive. Plain sprites draw one quad from
-	// their Sprite2DComponent + world; text entities (TextComponent, created via
-	// Text2D) run the per-glyph loop that FontSprite::Draw used to do imperatively.
+	// Draw() is the pool pass that draws all 2D/UI from the component pools, after
+	// the opaque 3D pass (RenderSystem::Draw). Plain sprites draw one quad from
+	// their Sprite2DComponent + world; text entities (TextComponent) run the
+	// per-glyph loop.
 	class AZUL_ENGINE_LIBRARY_API SpriteRenderSystem
 	{
 	public:
 		static void Draw(World &world);
 
 	private:
-		// Draw one 2D quad (was GraphicsObject_Sprite::SetState/.../RestoreState).
-		// pLastShader hoists the shader/CBV bind across a same-shader run (P6.1).
+		// Draw one 2D quad. pLastShader hoists the shader/CBV bind across a
+		// same-shader run.
 		static void DrawSprite(Sprite2DComponent &s, Mat4 &world, ShaderObject *&pLastShader);
 
 		// Draw one text run: walk t.pMessage, re-filling `s` per glyph.

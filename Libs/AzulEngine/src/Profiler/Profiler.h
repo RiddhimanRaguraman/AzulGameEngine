@@ -7,7 +7,7 @@
 
 namespace Azul
 {
-	// Lightweight rolling frame profiler for the Phase 6 optimization work.
+	// Lightweight rolling frame profiler.
 	//
 	// SystemMan feeds it the per-frame Update (systems) and Draw durations, and
 	// the render systems bump a draw-call counter. Every kReportEveryFrames frames

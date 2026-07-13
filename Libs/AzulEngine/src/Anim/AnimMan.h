@@ -43,8 +43,7 @@ namespace Azul
             Idle
         };
 
-        // AnimMan is gameplay glue and stays in the app, so it owns its own
-        // Name->string conversion (was a StringThis overload before the DLL split).
+        // Name -> string conversion (for logging / node names).
         static char *NameToString(Name status);
 
         static void Create(int reserveNum = 0, int reserveGrow = 1);
@@ -87,10 +86,9 @@ namespace Azul
     private:
         static AnimMan *privGetInstance();
         static HierarchyTable::Name privMapToHierarchyName(Skel::Name skelName);
-        // Creates a pure-ECS skinned entity: TransformComponent (placement),
-        // RenderComponent (SkinLightTexture mesh/shader/tex/light + the ComputeBlend
-        // handle), and GpuSkinComponent (drives the SkinningSystem dispatch). No
-        // GameObject / PCS node -- LocalToWorld/Skinning/Render systems drive it.
+        // Creates a skinned entity: TransformComponent (placement), RenderComponent
+        // (SkinLightTexture mesh/shader/tex/light + the ComputeBlend handle), and
+        // GpuSkinComponent (drives the SkinningSystem dispatch).
         static Entity privCreateSkinEntity(ComputeBlend *pBlend, Mesh::Name mesh,
             TextureObject::Name tex, Vec3 &lightColor, Vec3 &lightPos);
         AnimMan() = delete;
@@ -127,16 +125,16 @@ namespace Azul
         public:
             Name mName;
             Clip *pClip;
-            // Owned animation resources (were owned by the deleted AnimController_*):
-            // the AnimClip/AnimBlend components hold NON-owning views of these, and
-            // the Animation/Blend systems drive them. B is null for one-anim.
+            // Owned animation resources: the AnimClip/AnimBlend components hold
+            // NON-owning views of these, and the Animation/Blend systems drive
+            // them. B is null for one-anim.
             Anim *pAnimA;
             Anim *pAnimB;
             TimerController *pTimerA;
             TimerController *pTimerB;
             ComputeBlend *pComputeBlend;
-			// The skinned entities this clip drives (were GameObjectAnimSkin*). The
-			// World owns them; the AnimNode just references them by handle.
+			// The skinned entities this clip drives. The World owns them; the
+			// AnimNode just references them by handle.
 			static const unsigned int MAX_SKIN_ENTITIES = 32;
 			Entity mSkinEntities[MAX_SKIN_ENTITIES];
 			unsigned int numSkinEntities;

@@ -7,9 +7,8 @@
 namespace Azul
 {
 	// Computes world = Scale * Rot * Trans for every TransformComponent, in one
-	// cache-friendly pass over the pool (no virtual dispatch, no tree walk).
-	// Behavior objects (prefab-driven / skinned) still overwrite world in their
-	// own Update after this runs; plain objects rely entirely on this system.
+	// cache-friendly pass over the pool. Behavior systems that run after it (e.g.
+	// RotateSystem) may overwrite the world for their entities.
 	class AZUL_ENGINE_LIBRARY_API LocalToWorldSystem : public System
 	{
 	public:

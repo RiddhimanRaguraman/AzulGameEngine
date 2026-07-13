@@ -77,8 +77,8 @@ namespace Azul
 		assert(pCubeMesh);
 		assert(pCubeShader);
 
-		// 10x10x10 = 1000 cubes, centered on the origin.
-		const int   kGrid = 10;
+		// kGrid^3 cubes, centered on the origin.
+		const int   kGrid = 20;
 		const float kSpacing = 45.0f;
 		const float kScale = 15.0f;
 		const float kSpin = 0.01f;

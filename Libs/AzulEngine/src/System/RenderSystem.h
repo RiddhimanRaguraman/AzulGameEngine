@@ -9,23 +9,12 @@ namespace Azul
 	class World;
 	struct RenderComponent;
 
-	// Draw-phase render dispatch. Owns the per-MaterialKind render logic (the
-	// migrated GraphicsObject_*::SetState/SetDataGPU/Draw/RestoreState bodies).
-	//
-	// P4.2 ORDERING NOTE: this is driven per-object from GameObject::Draw, so 3D
-	// objects render in the authoritative **PCS-tree order** (the PCS tree inserts
-	// children at the front, so its DFS order is NOT the component-pool insertion
-	// order). Alpha-blended objects (e.g. the skybox drawn as a backdrop) depend on
-	// that order, so pool-order iteration produced wrong blending. Batched
-	// pool iteration + material sorting is a Phase 6 concern once ordering moves
-	// fully into the ECS (Phase 5).
+	// Draw-phase render dispatch. Owns the per-MaterialKind render logic.
 	class AZUL_ENGINE_LIBRARY_API RenderSystem
 	{
 	public:
-		// P5.0: draw all 3D renderables from the RenderComponent pool, sorted by
-		// `layer` ascending (lower = drawn first). Replaces the per-object 3D draw
-		// that the PCS-tree walk used to drive -- the sort provides the draw order
-		// the tree used to (e.g. the alpha skybox before the terrain).
+		// Draw all 3D renderables from the RenderComponent pool, sorted by `layer`
+		// ascending (lower = drawn first, e.g. the alpha skybox before the terrain).
 		static void Draw(World &world);
 
 	private:
