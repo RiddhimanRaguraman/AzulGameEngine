@@ -2,6 +2,8 @@
 #include "System.h"
 #include "WorldMan.h"
 #include "World.h"
+#include "AnimTimer.h"
+#include "Profiler.h"
 
 #include "LocalToWorldSystem.h"
 #include "RotateSystem.h"
@@ -65,19 +67,31 @@ namespace Azul
 
 	void SystemMan::Run(World &world, AnimTime tDelta)
 	{
+		AnimTimer timer;
+		timer.Tic();
+
 		SystemMan *p = SystemMan::privInstance();
 		for (unsigned int i = 0; i < p->mCount; i++)
 		{
 			p->poSystems[i]->Update(world, tDelta);
 		}
+
+		Profiler::AddUpdate(timer.Toc());
 	}
 
 	void SystemMan::Draw(World &world)
 	{
+		AnimTimer timer;
+		timer.Tic();
+
 		// Pool-driven draw (was GameObjectMan::Draw): the layer-sorted 3D pass
 		// then the 2D/UI pass (sprites + text), after the 3D pass.
 		RenderSystem::Draw(world);
 		SpriteRenderSystem::Draw(world);
+
+		Profiler::AddDraw(timer.Toc());
+		// Draw is called once per frame -> close the profiler frame here.
+		Profiler::EndFrame();
 	}
 
 	SystemMan *SystemMan::privInstance()

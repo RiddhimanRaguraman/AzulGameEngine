@@ -1273,6 +1273,64 @@ systems; visuals unchanged.
 
 ### Phase 6 — Optimize storage & iteration (only after correctness)
 
+> **P6.0 DONE (2026-07-11): instrumentation -- builds 0 errors.** Since the "do not run the program"
+> rule means Claude can't profile, the first step is to make the running build self-report so the USER
+> can measure. New `Profiler/Profiler.{h,cpp}` (rolling averages, printed via `Trace::out` every 60
+> frames -> ~1 line/sec in the VS Output/debug console). `SystemMan::Run`/`Draw` time themselves with an
+> `AnimTimer` and feed `Profiler::AddUpdate`/`AddDraw`; `RenderSystem::DrawObject` + `SpriteRenderSystem
+> ::DrawSprite` bump `Profiler::CountDraw`. `SystemMan::Draw` calls `Profiler::EndFrame()` once/frame.
+> Readout: `[PROFILE] frame X ms (~Y fps cpu) | update X ms | draw X ms | N draw calls`. Toggle via
+> `Profiler::SetEnabled(false)`. Overhead ~2 timer reads/frame.
+>
+> **P6.1 DONE (2026-07-11): redundant shader-bind batching -- builds 0 errors.** `RenderSystem::Draw`
+> and `SpriteRenderSystem::Draw` now bind the shader + its CBV **once per contiguous same-shader run**
+> instead of once per object (track `pLastShader`, skip re-`ActivateShader`/`ActivateCBV` when unchanged).
+> Re-binding the same shader is idempotent (nothing between draws unbinds VS/PS/InputLayout), so this is
+> **provably visual-identical** -- no reordering, works on the existing layer-sorted order, and merges
+> across layers when the shader matches (scene1's 7 dancers: 7->1 SkinLightTexture binds; scene3 skybox+
+> terrain: 2->1 FlatTexture binds; a ~200-glyph text pass: ~200->1 Sprite binds). Per-object mesh/
+> texture/rasterizer/blend/transform binds are unchanged. **NEEDS RUNTIME TEST:** all scenes look
+> identical; read the `[PROFILE]` line for draw-ms before/after.
+>
+> **HONEST STATUS / REALITY CHECK (Section 2):** at this object count (tens of renderables) the P6.1 win
+> is almost certainly **below the noise floor** -- 6 saved shader binds/frame is microseconds. The
+> remaining Steps pay off only at scale:
+>   - **Instancing (Step 4):** needs LARGE groups of identical mesh+material. The current scenes have NO
+>     such group (dancers = unique meshes; scene4 cubes = 3 different materials), so instancing does
+>     nothing here until there's a stress scene (e.g. 1000+ cubes sharing one mesh+material -> 1 draw
+>     call instead of 1000). **This is the recommended next step: add a stress scene, THEN instancing +
+>     re-profile become meaningful.**
+>   - **SoA/archetype (Step 2):** large `ComponentPool` refactor; ~nil payoff at hundreds of entities.
+>   - **Job-parallel (Step 3):** highest risk (threads, no-STL), low payoff per Section 2.
+> **Recommendation:** run the profiler to get the baseline, decide with real numbers. Don't do SoA/
+> parallel unless a stress scene's profile actually shows the systems loop as the bottleneck.
+>
+> **P6.2a DONE (2026-07-13): stress scene (press 5) -- builds 0 errors.** New `Engine/src/scene5.{h,cpp}`
+> wired into `GameSceneContext` (enum/fwd/member/ctor/dtor/SetState) + `Game.cpp` (the `5` key). Loads a
+> **10x10x10 = 1000-cube grid**, ALL sharing ONE mesh (`CUBE_COLOR`) + ONE material (`ColorByVertex`),
+> each with a `RotateComponent` (varied phase). This drives the systems loop (1000x LocalToWorld +
+> Rotate) and the render pass (1000 draw calls) at scale so the `[PROFILE]` line is meaningful, and it's
+> the setup for instancing. With P6.1, all 1000 cubes share the ColorByVertex shader -> **1 shader bind
+> for the whole grid** (vs 1000 pre-P6.1). **NEEDS RUNTIME TEST:** press 5 -> 1000 spinning gradient
+> cubes; read `[PROFILE]` (expect ~1000 draw calls, non-trivial update+draw ms) as the instancing baseline.
+>
+> **P6.2b PLANNED -- GPU instancing (the real win: 1000 draw calls -> 1).** Investigation done, approach
+> locked (all conventions verified clean; see below). This is the one step that is **GPU code Claude
+> cannot runtime-verify** -- isolate it to the ColorByVertex path (scenes 1-4 untouched), keep a toggle,
+> lean on the user's GPU check. Plan:
+>   - **Shader** `shaders/original/ColorByVertexInstanced.Vx.hlsl`: identical to `ColorByVertex.Vx.hlsl`
+>     but World comes from `StructuredBuffer<rowMatrix> tInstanceWorld : register(t0)` indexed by
+>     `SV_InstanceID` instead of the `vsWorldMatrix` CBV (b2). Same row_major convention, same View(b1)/
+>     Proj(b0) CBVs, same pos+color input layout (SV_InstanceID is a system value -> no input-layout
+>     change). Reuse the ColorByVertex PS. FxCompile auto-globs it -> `g_ColorByVertexInstanced_VxShader`.
+>   - **RHI:** a dynamic `StructuredBuffer<Mat4>` + SRV (raw `ID3D11Device`/`Context` from
+>     `StateDirectXMan::GetContext()`), grown to the instance count; `Map`(WRITE_DISCARD)+memcpy the world
+>     array each frame; `VSSetShaderResources(0,...)`; `Mesh` gains a virtual `RenderIndexBufferInstanced
+>     (count)` (bind IB + `DrawIndexedInstanced(numIndices, count, 0,0,0)`).
+>   - **RenderSystem:** gather the contiguous same-(mesh,shader) ColorByVertex run, upload their worlds,
+>     issue ONE instanced draw instead of N `DrawObject`s. Everything else stays the per-object path.
+>   - **Verify (user):** scene5 renders identically; `[PROFILE]` draw calls drop from ~1000 to a handful.
+
 **Goal:** turn the now-clean architecture into *measured* speed.
 
 **Steps:**

@@ -13,6 +13,7 @@
 #include "Glyph.h"
 #include "Rect.h"
 #include "Engine.h"
+#include "Profiler.h"
 
 namespace Azul
 {
@@ -24,6 +25,11 @@ namespace Azul
 		ComponentPool<Sprite2DComponent> &pool = world.Pool<Sprite2DComponent>();
 		const unsigned int count = pool.GetCount();
 
+		// P6.1: hoist the shader/CBV bind across the whole 2D pass (all sprites +
+		// every glyph typically share the Sprite shader) -- rebinding the same
+		// shader is idempotent, so this just drops the redundant binds.
+		ShaderObject *pLastShader = nullptr;
+
 		for (unsigned int i = 0; i < count; i++)
 		{
 			Sprite2DComponent &s = pool.GetData(i);
@@ -33,14 +39,14 @@ namespace Azul
 			if (pText != nullptr)
 			{
 				// Text run: the glyph loop fills `s` per glyph and draws each.
-				DrawText(*pText, s);
+				DrawText(*pText, s, pLastShader);
 			}
 			else
 			{
 				// Plain sprite: one quad from the entity's world matrix.
 				TransformComponent *pT = world.TryGet<TransformComponent>(e);
 				assert(pT);
-				DrawSprite(s, pT->world);
+				DrawSprite(s, pT->world, pLastShader);
 			}
 		}
 	}
@@ -48,7 +54,7 @@ namespace Azul
 	// (was FontSprite::Draw's per-glyph loop, now driven from TextComponent) Walk the message, look each glyph
 	// up, and re-fill the Sprite2DComponent (texture + UV + screen-rect) before
 	// drawing that glyph's quad at its running x position.
-	void SpriteRenderSystem::DrawText(TextComponent &t, Sprite2DComponent &s)
+	void SpriteRenderSystem::DrawText(TextComponent &t, Sprite2DComponent &s, ShaderObject *&pLastShader)
 	{
 		assert(t.pMessage);
 		size_t len = strlen(t.pMessage);
@@ -86,7 +92,7 @@ namespace Azul
 			Trans T(xTmp, yTmp, 0.0f);
 			Mat4 world = T;
 
-			DrawSprite(s, world);
+			DrawSprite(s, world, pLastShader);
 
 			// advance to the next character
 			xEnd = pGlyph->glyphRect.width / 2 + xTmp;
@@ -94,11 +100,13 @@ namespace Azul
 	}
 
 	// (was GraphicsObject_Sprite::SetState/SetDataGPU/Draw/RestoreState)
-	void SpriteRenderSystem::DrawSprite(Sprite2DComponent &s, Mat4 &world)
+	void SpriteRenderSystem::DrawSprite(Sprite2DComponent &s, Mat4 &world, ShaderObject *&pLastShader)
 	{
 		assert(s.pMesh);
 		assert(s.pShader);
 		assert(s.pTexture);
+
+		Profiler::CountDraw();   // one 2D draw call per sprite/glyph quad
 
 		// SetState
 		s.pTexture->ActivateTexture();
@@ -107,9 +115,13 @@ namespace Azul
 			Engine::GetInstance()->mBlendStateAlpha.Activate();
 		}
 
-		// SetDataGPU
-		s.pShader->ActivateShader();
-		s.pShader->ActivateCBV();
+		// SetDataGPU -- P6.1: bind the shader/CBV only when it changes (idempotent).
+		if (s.pShader != pLastShader)
+		{
+			s.pShader->ActivateShader();
+			s.pShader->ActivateCBV();
+			pLastShader = s.pShader;
+		}
 
 		Camera *pCam = CameraNodeMan::GetCurrent(Camera::Type::ORTHOGRAPHIC_2D);
 		assert(pCam);

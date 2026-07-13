@@ -7,6 +7,7 @@
 namespace Azul
 {
 	class World;
+	class ShaderObject;
 	struct Sprite2DComponent;
 	struct TextComponent;
 
@@ -27,10 +28,11 @@ namespace Azul
 
 	private:
 		// Draw one 2D quad (was GraphicsObject_Sprite::SetState/.../RestoreState).
-		static void DrawSprite(Sprite2DComponent &s, Mat4 &world);
+		// pLastShader hoists the shader/CBV bind across a same-shader run (P6.1).
+		static void DrawSprite(Sprite2DComponent &s, Mat4 &world, ShaderObject *&pLastShader);
 
 		// Draw one text run: walk t.pMessage, re-filling `s` per glyph.
-		static void DrawText(TextComponent &t, Sprite2DComponent &s);
+		static void DrawText(TextComponent &t, Sprite2DComponent &s, ShaderObject *&pLastShader);
 	};
 }
 

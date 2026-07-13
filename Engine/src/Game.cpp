@@ -83,6 +83,12 @@ namespace Azul
 				this->pSceneContext->SetState(*this, GameSceneContext::Scene::Scene4);
 			}
 
+			const SHORT fiveState = GetAsyncKeyState('5');
+			if (fiveState & 0x0001)
+			{
+				this->pSceneContext->SetState(*this, GameSceneContext::Scene::Scene5);
+			}
+
 			GameSceneState* pState = this->pSceneContext->GetState();
 			if (pState)
 			{

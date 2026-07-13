@@ -4,6 +4,7 @@
 #include "scene2.h"
 #include "scene3.h"
 #include "scene4.h"
+#include "scene5.h"
 
 namespace Azul
 {
@@ -13,6 +14,7 @@ namespace Azul
 		pScene2(new Scene2()),
 		pScene3(new Scene3()),
 		pScene4(new Scene4()),
+		pScene5(new Scene5()),
 		activeScene(Scene::Scene1),
 		isLoaded(false)
 	{
@@ -20,6 +22,9 @@ namespace Azul
 
 	GameSceneContext::~GameSceneContext()
 	{
+		delete this->pScene5;
+		this->pScene5 = nullptr;
+
 		delete this->pScene4;
 		this->pScene4 = nullptr;
 
@@ -64,6 +69,10 @@ namespace Azul
 
 		case Scene::Scene4:
 			this->pState = this->pScene4;
+			break;
+
+		case Scene::Scene5:
+			this->pState = this->pScene5;
 			break;
 
 		default:
