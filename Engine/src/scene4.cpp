@@ -17,7 +17,7 @@
 
 namespace Azul
 {
-	bool Scene4::Load(Game& game)
+	bool Scene4::Load(Game& game) //
 	{
 		CameraNodeMan::Create();
 		MeshNodeMan::Create();
