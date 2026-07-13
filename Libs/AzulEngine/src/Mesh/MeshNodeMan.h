@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef MESH_MAN_H
 #define MESH_MAN_H 
 #include "EngineDLLInterface.h"

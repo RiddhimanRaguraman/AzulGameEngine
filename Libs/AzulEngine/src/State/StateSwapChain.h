@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef STATE_SWAP_CHAIN_H
 #define STATE_SWAP_CHAIN_H
 #include "EngineDLLInterface.h"

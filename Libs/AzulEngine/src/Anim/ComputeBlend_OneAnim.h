@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef COMPUTE_BLEND_ONE_ANIM_H
 #define COMPUTE_BLEND_ONE_ANIM_H
 #include "EngineDLLInterface.h"

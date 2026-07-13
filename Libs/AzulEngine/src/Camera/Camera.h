@@ -1,7 +1,3 @@
-//--------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//--------------------------------------------------------------
-
 #ifndef CAMERA_H
 #define CAMERA_H
 #include "EngineDLLInterface.h"

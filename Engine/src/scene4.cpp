@@ -5,14 +5,14 @@
 #include "ShaderObjectNodeMan.h"
 #include "MeshNodeMan.h"
 #include "MeshCubeColor.h"
-#include "GameObjectMan.h"
+#include "SystemMan.h"
 #include "RotateComponent.h"
 #include "WorldMan.h"
 #include "World.h"
 #include "CameraNodeMan.h"
 #include "TexNodeMan.h"
 
-#include "GameObjectRigidBody.h"
+#include "Renderable3D.h"
 #include "RenderComponent.h"
 
 namespace Azul
@@ -23,7 +23,7 @@ namespace Azul
 		MeshNodeMan::Create();
 		TexNodeMan::Create();
 		ShaderObjectNodeMan::Create();
-		GameObjectMan::Create();
+		SystemMan::Create();
 
 		CameraNodeMan::SetMoveSpeed(1.0f);
 
@@ -88,60 +88,51 @@ namespace Azul
 		// corner -> gradient faces). DATA-PATH: no GraphicsObject; RenderComponent
 		// carries the mesh/shader handles, RenderSystem does the drawing.
 		{
-			GameObjectRigidBody* pCube = new GameObjectRigidBody(MaterialKind::ColorByVertex);
-			pCube->SetName("Cube_ColorByVertex");
-			pCube->SetTrans(-kSpacing, 0.0f, 0.0f);
-			pCube->SetScale(kScale*0.75f);
+			Entity cube = Renderable3D::Add(MaterialKind::ColorByVertex);
+			Renderable3D::SetTrans(cube, -kSpacing, 0.0f, 0.0f);
+			Renderable3D::SetScale(cube, kScale*0.75f);
 
-			RenderComponent& r = pCube->GetRender();
+			RenderComponent& r = Renderable3D::GetRender(cube);
 			r.pMesh = MeshNodeMan::Find(Mesh::Name::CUBE_COLOR);
 			r.pShader = ShaderObjectNodeMan::Find(ShaderObject::Name::ColorByVertex);
 
-			RotateComponent& rc = WorldMan::GetWorld().Add<RotateComponent>(pCube->GetEntity());
+			RotateComponent& rc = WorldMan::GetWorld().Add<RotateComponent>(cube);
 			rc.angle = 0.0f;
 			rc.speed = kSpin;
-
-			GameObjectMan::Add(pCube, GameObjectMan::GetRoot());
 		}
 
 		// MIDDLE -- ConstColorLight (constant body color + a light). DATA-PATH.
 		{
-			GameObjectRigidBody* pCube = new GameObjectRigidBody(MaterialKind::ConstColorLight);
-			pCube->SetName("Cube_ConstColorLight");
-			pCube->SetTrans(0.0f, 0.0f, 0.0f);
-			pCube->SetScale(kScale);
+			Entity cube = Renderable3D::Add(MaterialKind::ConstColorLight);
+			Renderable3D::SetTrans(cube, 0.0f, 0.0f, 0.0f);
+			Renderable3D::SetScale(cube, kScale);
 
-			RenderComponent& r = pCube->GetRender();
+			RenderComponent& r = Renderable3D::GetRender(cube);
 			r.pMesh = MeshNodeMan::Find(Mesh::Name::CUBE);
 			r.pShader = ShaderObjectNodeMan::Find(ShaderObject::Name::ConstColorLight);
 			r.lightColor.set(1.0f, 1.0f, 1.0f);
 			r.lightPos.set(150.0f, 200.0f, 300.0f);
 			r.bodyColor.set(0.2f, 0.5f, 0.95f);   // blue-ish
 
-			RotateComponent& rc = WorldMan::GetWorld().Add<RotateComponent>(pCube->GetEntity());
+			RotateComponent& rc = WorldMan::GetWorld().Add<RotateComponent>(cube);
 			rc.angle = 0.0f;
 			rc.speed = kSpin;
-
-			GameObjectMan::Add(pCube, GameObjectMan::GetRoot());
 		}
 
 		// RIGHT -- Wireframe (wire rasterizer + a constant color). DATA-PATH.
 		{
-			GameObjectRigidBody* pCube = new GameObjectRigidBody(MaterialKind::Wireframe);
-			pCube->SetName("Cube_Wireframe");
-			pCube->SetTrans(kSpacing, 0.0f, 0.0f);
-			pCube->SetScale(kScale);
+			Entity cube = Renderable3D::Add(MaterialKind::Wireframe);
+			Renderable3D::SetTrans(cube, kSpacing, 0.0f, 0.0f);
+			Renderable3D::SetScale(cube, kScale);
 
-			RenderComponent& r = pCube->GetRender();
+			RenderComponent& r = Renderable3D::GetRender(cube);
 			r.pMesh = MeshNodeMan::Find(Mesh::Name::CUBE);
 			r.pShader = ShaderObjectNodeMan::Find(ShaderObject::Name::ConstColor);
 			r.lightColor.set(0.1f, 1.0f, 0.3f);   // green wire color
 
-			RotateComponent& rc = WorldMan::GetWorld().Add<RotateComponent>(pCube->GetEntity());
+			RotateComponent& rc = WorldMan::GetWorld().Add<RotateComponent>(cube);
 			rc.angle = 0.0f;
 			rc.speed = kSpin;
-
-			GameObjectMan::Add(pCube, GameObjectMan::GetRoot());
 		}
 
 		return true;
@@ -150,9 +141,10 @@ namespace Azul
 	void Scene4::Update(Game& game, AnimTime tCurr, AnimTime tDelta)
 	{
 		AZUL_UNUSED_VAR(game);
+		AZUL_UNUSED_VAR(tCurr);
 
 		CameraNodeMan::Update();
-		GameObjectMan::Update(tCurr, tDelta);
+		SystemMan::Run(WorldMan::GetWorld(), tDelta);
 	}
 
 	void Scene4::Unload(Game& game)
@@ -161,7 +153,7 @@ namespace Azul
 
 		CameraNodeMan::SetMoveSpeed(0.1f);
 
-		GameObjectMan::Destroy();
+		SystemMan::Destroy();
 		WorldMan::Destroy();
 		ShaderObjectNodeMan::Destroy();
 		TexNodeMan::Destroy();

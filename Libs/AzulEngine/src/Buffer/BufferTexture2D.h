@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef BUFFER_TEXTURE_2D_H
 #define BUFFER_TEXTURE_2D_H
 #include "EngineDLLInterface.h"

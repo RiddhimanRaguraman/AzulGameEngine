@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef BUFFER_VBV_H
 #define BUFFER_VBV_H
 #include "EngineDLLInterface.h"

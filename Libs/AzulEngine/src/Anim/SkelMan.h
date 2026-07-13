@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef SKEL_MANAGER_H
 #define SKEL_MANAGER_H
 #include "EngineDLLInterface.h"

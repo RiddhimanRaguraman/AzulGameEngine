@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef ANIM_MAN_COMPARE_STRATEGY_ENUM_NAME_H
 #define ANIM_MAN_COMPARE_STRATEGY_ENUM_NAME_H
 

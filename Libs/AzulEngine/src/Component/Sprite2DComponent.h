@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef AZUL_SPRITE2D_COMPONENT_H
 #define AZUL_SPRITE2D_COMPONENT_H
 

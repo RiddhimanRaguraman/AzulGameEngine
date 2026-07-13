@@ -1,7 +1,3 @@
-//--------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//--------------------------------------------------------------
-
 #include "ShaderObject.h"
 #include "StringThis.h"
 #include "StateDirectXMan.h"

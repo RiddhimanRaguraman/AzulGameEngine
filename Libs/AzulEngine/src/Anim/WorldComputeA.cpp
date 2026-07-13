@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #include "WorldComputeA.h"
 #include "File.h"
 #include "HierarchyTableMan.h"

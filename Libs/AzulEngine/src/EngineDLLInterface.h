@@ -1,7 +1,3 @@
-//--------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//--------------------------------------------------------------
-
 #ifndef AZUL_ENGINE_DLL_INTERFACE_H
 #define AZUL_ENGINE_DLL_INTERFACE_H
 

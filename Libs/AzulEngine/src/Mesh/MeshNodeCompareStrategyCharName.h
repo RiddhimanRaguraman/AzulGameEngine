@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef MESH_NODE_Compare_Strategy_Char_Name_H
 #define MESH_NODE_Compare_Strategy_Char_Name_H
 #include "EngineDLLInterface.h"

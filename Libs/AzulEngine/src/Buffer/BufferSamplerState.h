@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef BUFFER_SAMPLER_STATE_H
 #define BUFFER_SAMPLER_STATE_H
 #include "EngineDLLInterface.h"

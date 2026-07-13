@@ -1,7 +1,3 @@
-//--------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//--------------------------------------------------------------
-
 #ifndef SHADER_OBJECT_SPRITE_H
 #define SHADER_OBJECT_SPRITE_H
 #include "EngineDLLInterface.h"

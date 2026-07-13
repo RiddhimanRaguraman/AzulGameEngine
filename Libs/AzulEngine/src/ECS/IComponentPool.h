@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef AZUL_ECS_ICOMPONENT_POOL_H
 #define AZUL_ECS_ICOMPONENT_POOL_H
 

@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #include <d3dcompiler.h>
 #include "StateDepthStencilView.h"
 #include "StateDirectXMan.h"

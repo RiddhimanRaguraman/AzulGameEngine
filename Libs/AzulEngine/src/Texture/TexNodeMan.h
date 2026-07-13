@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef TEX_NODE_MAN_H
 #define TEX_NODE_MAN_H 
 #include "EngineDLLInterface.h"

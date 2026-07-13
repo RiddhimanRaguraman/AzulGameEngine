@@ -4,7 +4,7 @@
 
 #include "ShaderObjectNodeMan.h"
 #include "MeshNodeMan.h"
-#include "GameObjectMan.h"
+#include "SystemMan.h"
 #include "WorldMan.h"
 #include "CameraNodeMan.h"
 #include "TexNodeMan.h"
@@ -28,7 +28,7 @@ namespace Azul
 		MeshNodeMan::Create();
 		TexNodeMan::Create();
 		ShaderObjectNodeMan::Create();
-		GameObjectMan::Create();
+		SystemMan::Create();
 		ImageMan::Create();
 		GlyphMan::Create();
 		SkelMan::Create();
@@ -299,10 +299,11 @@ namespace Azul
 	void Scene1::Update(Game& game, AnimTime tCurr, AnimTime tDelta)
 	{
 		AZUL_UNUSED_VAR(game);
+		AZUL_UNUSED_VAR(tCurr);
 
 		CameraNodeMan::Update();
 
-		GameObjectMan::Update(tCurr, tDelta);
+		SystemMan::Run(WorldMan::GetWorld(), tDelta);
 	}
 
 	void Scene1::Unload(Game& game)
@@ -316,7 +317,7 @@ namespace Azul
 		SkelMan::Destroy();
 		GlyphMan::Destroy();
 		ImageMan::Destroy();
-		GameObjectMan::Destroy();
+		SystemMan::Destroy();
 		WorldMan::Destroy();
 		ShaderObjectNodeMan::Destroy();
 		TexNodeMan::Destroy();

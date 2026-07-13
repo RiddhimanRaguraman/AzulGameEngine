@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef HierarchyTable_Compare_Strategy_Enum_Name_H
 #define HierarchyTable_Compare_Strategy_Enum_Name_H
 #include "EngineDLLInterface.h"

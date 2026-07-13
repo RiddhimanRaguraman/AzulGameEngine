@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef TEXTURE_NULL_H
 #define TEXTURE_NULL_H
 #include "EngineDLLInterface.h"

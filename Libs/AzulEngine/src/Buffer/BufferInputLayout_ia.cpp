@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #include "BufferInputLayout_ia.h"
 #include "StateDirectXMan.h"
 

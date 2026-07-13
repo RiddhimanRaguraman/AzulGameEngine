@@ -1,7 +1,3 @@
-//--------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//--------------------------------------------------------------
-
 #ifndef WINDOW_COLORS_H
 #define WINDOW_COLORS_H
 

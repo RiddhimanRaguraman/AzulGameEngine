@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #include "MeshProto.h"
 #include "MathEngine.h"
 #include "StateDirectXMan.h"

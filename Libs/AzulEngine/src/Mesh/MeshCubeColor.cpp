@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #include <d3d11.h>
 #include "MeshCubeColor.h"
 #include "ShaderMappings.h"

@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef SKELETON_H
 #define SKELETON_H
 #include "EngineDLLInterface.h"
@@ -11,7 +7,6 @@
 #include "Clip.h"
 namespace Azul
 {
-	class GameObject;
 	class AZUL_ENGINE_LIBRARY_API Skeleton
 	{
 

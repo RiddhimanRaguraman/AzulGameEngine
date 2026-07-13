@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef Image_Compare_Strategy_Enum_Name_H
 #define Image_Compare_Strategy_Enum_Name_H
 

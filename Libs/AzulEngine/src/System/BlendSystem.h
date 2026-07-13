@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef AZUL_BLEND_SYSTEM_H
 #define AZUL_BLEND_SYSTEM_H
 
@@ -15,7 +11,7 @@ namespace Azul
 	// blends into the mixer key buffers), in one flat pass over the pool.
 	// Replaces AnimMan::Update's OOP driving of the two-anim controller.
 	//
-	// Time: driven with the frame DELTA (see GameObjectMan::Update -> SystemMan::Run).
+	// Time: driven with the frame DELTA (see SystemMan::Run).
 	// Ordering: like AnimationSystem, must run BEFORE SkinningSystem (sample the
 	// mixer, then dispatch the compute skinning that consumes it).
 	class AZUL_ENGINE_LIBRARY_API BlendSystem : public System

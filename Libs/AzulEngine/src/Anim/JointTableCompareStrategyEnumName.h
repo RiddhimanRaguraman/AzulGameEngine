@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef JointTable_Compare_Strategy_Enum_Name_H
 #define JointTable_Compare_Strategy_Enum_Name_H
 #include "EngineDLLInterface.h"

@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef WORLD_COMPUTE_A_H
 #define WORLD_COMPUTE_A_H
 #include "EngineDLLInterface.h"

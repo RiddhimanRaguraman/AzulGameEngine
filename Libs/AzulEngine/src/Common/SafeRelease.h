@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef AZUL_ENGINE_SAFE_RELEASE_H
 #define AZUL_ENGINE_SAFE_RELEASE_H
 

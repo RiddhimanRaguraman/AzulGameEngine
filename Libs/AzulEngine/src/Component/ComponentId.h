@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef AZUL_COMPONENT_ID_H
 #define AZUL_COMPONENT_ID_H
 
@@ -22,7 +18,6 @@ namespace Azul
 	{
 		COMPONENT_TRANSFORM = 0,
 		COMPONENT_RENDER,
-		COMPONENT_HIERARCHY,
 		COMPONENT_LIGHT,
 		COMPONENT_GPU_SKIN,
 		COMPONENT_ANIM_CLIP,

@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #include "HierarchyTableMan.h"
 #include "DLinkMan.h"
 #include "HierarchyTableProto.h"

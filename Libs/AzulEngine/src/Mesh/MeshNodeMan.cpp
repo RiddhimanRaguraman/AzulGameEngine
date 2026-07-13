@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #include "MeshNodeMan.h"
 #include "MeshNull.h"
 #include "ManBase.h"

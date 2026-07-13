@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef MIXER_A_H
 #define MIXER_A_H
 #include "EngineDLLInterface.h"

@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef BUFFER_COMPUTE_SHADER_CS_H
 #define BUFFER_COMPUTE_SHADER_CS_H
 #include "EngineDLLInterface.h"

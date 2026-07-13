@@ -1,11 +1,5 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef AZUL_ECS_COMPONENT_POOL_H
 #define AZUL_ECS_COMPONENT_POOL_H
-
-#include <assert.h>
 #include "Entity.h"
 #include "IComponentPool.h"
 

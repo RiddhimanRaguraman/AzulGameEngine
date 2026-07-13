@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef MESH_CUBE_COLOR_H
 #define MESH_CUBE_COLOR_H
 #include "EngineDLLInterface.h"

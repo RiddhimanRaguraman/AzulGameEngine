@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef WORLD_CONSTANT_H
 #define WORLD_CONSTANT_H
 #include "EngineDLLInterface.h"

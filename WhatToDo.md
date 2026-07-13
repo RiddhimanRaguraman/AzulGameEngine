@@ -1149,8 +1149,109 @@ state changes); output matches old path; shader internals are private behind the
 >
 > **NEXT: P5.2 -- AnimSkin pivot -> ECS** (`PivotComponent` + `PivotSystem`; rework `AnimMan` to drive
 > components instead of `GameObjectAnimSkin*`; delete `GameObjectAnimSkin`/`GameObjectControlled`).
+>
+> **P5.2 DONE (2026-07-11): skins are pure ECS; `GameObjectAnimSkin`/`GameObjectControlled`/`Prefab_Pivot`
+> DELETED -- builds 0 errors.**
+> - **The pivot path was DEAD, so it was dropped, NOT ported to a PivotComponent/PivotSystem.**
+>   Investigation: `AnimMan::SetPrefabPivot`/`SetPivotRot*`/`SetPivotTotalRot`/`SetQuat` and
+>   `GameObjectAnimSkin::{cur_rot_*, poPrefab, SetPrefab}` are **never called by any scene/game code**
+>   (repo-wide grep) -- so `poPrefab` was always null and `Prefab_Pivot` was never instantiated. With
+>   `cur_rot`/delta always 0, `GameObjectAnimSkin::privUpdate` reduced to `world = S*Q*T` -- **exactly
+>   what `LocalToWorldSystem` already computes** from the TransformComponent -- and the GPU dispatch
+>   already moved to `SkinningSystem` (P3). So `GameObjectAnimSkin::Update` was 100% redundant. Adding a
+>   PivotComponent/PivotSystem would have been speculative dead code (cf. the P3 dead-`Prefab_*` purge),
+>   so P5.2 drops pivot instead of ECS-ifying it. (Reconciles the old "Prefab_Pivot is live" note --
+>   the *capability* existed in AnimMan but nothing ever invoked it.)
+> - **Skins are now pure-ECS entities** (like the AnimClip/AnimBlend entities AnimMan already made):
+>   new `AnimMan::privCreateSkinEntity` does `World::Create()` + `TransformComponent` (placement; rot
+>   identity) + `RenderComponent{SkinLightTexture, mesh/shader/tex/light/pComputeBlend, layer 0}` +
+>   `GpuSkinComponent{pBlend}`. **No GameObject, no PCS node.** LocalToWorld (transform) / Skinning
+>   (GPU dispatch) / Render (P5.0 layer-sorted 3D pass) systems drive them entirely; the tree walk no
+>   longer touches skins. (RenderSystem already drew them from the pool since P5.0, so draw is unchanged.)
+> - **AnimMan reworked to hold `Entity` handles**, not `GameObjectAnimSkin*`: `AnimNode` stores
+>   `Entity mSkinEntities[MAX_SKIN_ENTITIES]` (`GetSkinEntity`/`GetNumSkinEntities`); the 3 `Add`
+>   overloads call `privCreateSkinEntity`; `SetScale`/`SetUniformScale`/`SetPos` write each skin
+>   entity's `TransformComponent` via `World::TryGet`. Removed the dead `SetPivotRot*`/`SetPivotTotalRot`/
+>   `SetPrefabPivot` API and `privFillSkinRender`.
+> - **Deleted** `GameObjectAnimSkin.{h,cpp}`, `GameObjectControlled.{h,cpp}`, `Prefab_Pivot.{h,cpp}`;
+>   removed their includes from `GameObjectMan.h`; removed `Prefab::SetData(GameObjectAnimSkin&)` +
+>   its include/fwd-decl (Prefab base stays for GameObjectRigidBody until P5.3, though its prefab path
+>   is now also dead). Updated GpuSkin/Skinning comments. (`.cd` class-diagram docs still name the old
+>   classes -- non-compiled, left as-is.)
+> - **Lifetime:** skin entities live in the World, freed by `WorldMan::Destroy` at scene unload (the
+>   ComputeBlend is freed first by `AnimMan::Destroy`, same non-owning order as the anim-clip entities).
+> - **NEEDS RUNTIME TEST:** press 1 (7 dancers: Ward/Drax/Maw/Pirate/Halo[2-mesh]/Crownboi[multi-mesh]/
+>   + labels) and 2 (Silly/Gangnam + spacebar blend) -- all skinned dancers at the right pos/scale,
+>   animating, identical to before; 3/4 unchanged. Watch the leak check at unload.
+>
+> **NEXT: P5.3 -- RigidBody/Terrain -> ECS** (scenes create entities+components directly via thin
+> helpers; delete `GameObjectRigidBody`/`GameObjectTerrain` + the now-dead `Prefab` base). Then P5.4
+> deletes `GameObject`/`GameObjectMan`/PCSTree usage.
+>
+> **P5.2 RUNTIME-VERIFIED (2026-07-11, user):** scenes 1/2 dancers + labels + spacebar blend all correct.
+>
+> **P5.3 DONE (2026-07-11): RigidBody/Terrain -> pure ECS; `GameObjectRigidBody`/`GameObjectTerrain` +
+> the whole `Prefab` hierarchy DELETED -- builds 0 errors. Nothing is added to the PCS tree anymore.**
+> - New `Factory/Renderable3D.{h,cpp}` (exported; premake auto-globs the new `src/Factory/` folder):
+>   `Renderable3D::Add(MaterialKind) -> Entity` creates a **pure-ECS 3D renderable** -- `TransformComponent`
+>   (seeded identity) + `RenderComponent` (kind + null handles, same field init as the old GameObject +
+>   RigidBody ctors). Accessors `GetTransform`/`GetRender` + `SetTrans`/`SetScale(s)`/`SetScale(sx,sy,sz)`.
+>   No GameObject/PCS node; LocalToWorld/Render (+ Rotate) systems drive it (like the P5.2 skins).
+> - **`GameObjectTerrain` collapsed into scene3** -- its authored-size->scale + uv-repeat logic was
+>   trivial, so scene3 sets it inline: `SetScale(800/200, 100/20, 800/200)` (= 4,5,4, the old
+>   SetSize/SetHeight result) and `r.uvMatrix = Scale(80,80,1)` (old SetUVRepeat). Skybox likewise
+>   (`r.layer = -1`). **scene4** three cubes -> `Renderable3D::Add(kind)` + `RotateComponent` (unchanged
+>   spin). No `GameObjectMan::Add`/`GetRoot`/`SetName` anywhere now.
+> - **The PCS-tree root** is now `new GameObject(MaterialKind::Null)` -- `GameObject` was made concrete
+>   (pure-virtual `Update` -> no-op body; dropped the `Prefab.h` include; ctor now seeds pos/scale/rot).
+>   It is the ONLY live GameObject; the tree holds just the root (nothing is inserted). Removed the
+>   `GameObjectRigidBody.h` include from `GameObjectMan.h`.
+> - **Deleted** `GameObjectRigidBody.{h,cpp}`, `GameObjectTerrain.{h,cpp}`, and the entire `Prefab/`
+>   folder (`Prefab`/`Prefab_Abstract`/`Prefab_Pivot`) -- the Prefab hierarchy was fully dead once the
+>   pivot path went (P5.2) and RigidBody's unused `SetPrefab` went with the class.
+> - **Lifetime:** the renderable entities live in the World (freed by `WorldMan::Destroy`); only the
+>   Null root is a heap GameObject (freed by `GameObjectMan::Destroy` before `WorldMan::Destroy`).
+> - **NEEDS RUNTIME TEST:** press 3 (skybox behind the scaled terrain, unchanged) and 4 (three cubes --
+>   ColorByVertex/ConstColorLight/Wireframe -- at +/-220 spacing, spinning); 1/2 unchanged. Leak check at unload.
+>
+> **P5.3 RUNTIME-VERIFIED (2026-07-11, user):** scenes 3/4 (terrain+skybox, spinning cubes) all correct.
+>
+> **P5.4 DONE (2026-07-11): `GameObject` + `GameObjectMan` + the PCS tree DELETED -- builds 0 errors.
+> => PHASE 5 COMPLETE. The game path is now 100% pure ECS (no GameObject, no PCSTree).**
+> - **`SystemMan` is now the per-scene ECS frame driver** (absorbed GameObjectMan's remaining role):
+>   `Create()` allocates + adds the standard engine systems (LocalToWorld/Rotate/Animation/Blend/
+>   Skinning -- moved from GameObjectMan::Create); `Run(world, tDelta)` runs the Update systems (was
+>   GameObjectMan::Update minus the tree walk); new `Draw(world)` does `RenderSystem::Draw` then
+>   `SpriteRenderSystem::Draw` (was GameObjectMan::Draw). `Destroy()` frees the systems.
+> - **Scenes repointed:** `GameObjectMan::Create/Update/Destroy` -> `SystemMan::Create` /
+>   `SystemMan::Run(WorldMan::GetWorld(), tDelta)` / `SystemMan::Destroy`; `Game.cpp` `GameObjectMan::Draw()`
+>   -> `SystemMan::Draw(WorldMan::GetWorld())`. (`tCurr` is now unused in scene Update -> AZUL_UNUSED_VAR.)
+> - **Deleted** `GameObject.{h,cpp}` + `GameObjectMan.{h,cpp}` -- the whole `src/GameObject/` folder is
+>   gone. The **PCS tree/root is entirely removed**: no root entity is created (the old Null-root
+>   `MeshNull`/`ShaderObject_Null` registration was vestigial -- the root's RenderComponent handles were
+>   always null and nothing Finds NULL_MESH/NullShader at runtime; the node managers self-register their
+>   own null compare-node). Removed a stale `class GameObject;` fwd-decl from `Skeleton.h`.
+> - **Bonus cleanup:** `HierarchyComponent` was orphaned once GameObject went (it was only the PCS-parent
+>   mirror; nothing adds/reads it now) -- deleted `HierarchyComponent.h` and its `COMPONENT_HIERARCHY` id.
+>   (Section 9 open-decision #1 resolves to **flatten to world transforms** -- scenes are flat, so no
+>   `TransformPropagationSystem` was ever needed; the Steps below that call for one are superseded.)
+> - **`PCSTree`/`PCSNode` stay in `Libs/` (still linked, now unused by the game)**, per plan.
+> - **Lifetime:** all entities live in the World, freed wholesale by `WorldMan::Destroy` at unload; no
+>   per-object heap owner remains (no root GameObject). Scene Unload order: `SystemMan::Destroy()` then
+>   `WorldMan::Destroy()`.
+> - **NEEDS RUNTIME TEST:** all four scenes (1 dancers+labels, 2 blend, 3 terrain+skybox, 4 cubes) and
+>   scene switching identical to before; leak check clean at every unload.
+>
+> **=> Phase 5 complete. NEXT: Phase 6 (optimize -- profile vs baseline, SoA/archetype storage,
+> job-parallel systems, instancing) OR stop here (architecture goal met; Phase 6 is the perf-only phase
+> and is optional per Section 2).**
 
 **Goal:** remove the bridge and the tree; the world is now pure ECS.
+
+> **NOTE (2026-07-11): the Steps below are the ORIGINAL P5 plan and are now superseded by the P5.0-P5.4
+> increment notes above.** In particular Step 2's `HierarchyComponent`-authoritative +
+> `TransformPropagationSystem` did NOT happen: the scenes are 100% flat (every object was a direct child
+> of the root), so hierarchy flattens to world transforms and no propagation system is needed.
 
 **Files:** delete/retire `GameObject*`, `GameObjectMan`, `PCSTree`/`PCSNode` game usage; edits
 to `Game.cpp` and `GameObjectMan` call sites.

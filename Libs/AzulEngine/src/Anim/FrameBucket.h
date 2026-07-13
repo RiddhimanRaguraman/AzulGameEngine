@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef FRAME_BUCKET_H
 #define FRAME_BUCKET_H
 #include "EngineDLLInterface.h"

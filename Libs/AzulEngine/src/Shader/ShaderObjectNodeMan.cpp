@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #include "ShaderObjectNodeMan.h"
 #include "ShaderObject_Null.h"
 #include "ManBase.h"

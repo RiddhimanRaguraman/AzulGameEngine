@@ -1,7 +1,3 @@
-//--------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//--------------------------------------------------------------
-
 // DirectX includes
 #include <d3d11.h>
 #include <d3dcompiler.h>

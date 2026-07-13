@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #include "CameraMan.h"
 #include "CameraNull.h"
 #include "ManBase.h"

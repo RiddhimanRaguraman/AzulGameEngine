@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef AZUL_ANIM_CLIP_COMPONENT_H
 #define AZUL_ANIM_CLIP_COMPONENT_H
 

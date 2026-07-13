@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #include "SkinningSystem.h"
 #include "World.h"
 #include "GpuSkinComponent.h"

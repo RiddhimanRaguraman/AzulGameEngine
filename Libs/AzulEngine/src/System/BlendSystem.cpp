@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #include "BlendSystem.h"
 #include "World.h"
 #include "AnimBlendComponent.h"

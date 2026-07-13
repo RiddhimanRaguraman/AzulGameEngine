@@ -1,7 +1,3 @@
-//--------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//--------------------------------------------------------------
-
 #include "ShaderObject_MixerA.h"
 #include "Mesh.h"
 #include "StateDirectXMan.h"

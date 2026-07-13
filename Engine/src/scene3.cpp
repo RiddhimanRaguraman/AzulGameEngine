@@ -4,14 +4,14 @@
 
 #include "ShaderObjectNodeMan.h"
 #include "MeshNodeMan.h"
-#include "GameObjectMan.h"
+#include "SystemMan.h"
 #include "WorldMan.h"
 #include "CameraNodeMan.h"
 #include "TexNodeMan.h"
 
-#include "GameObjectRigidBody.h"
-#include "GameObjectTerrain.h"
+#include "Renderable3D.h"
 #include "RenderComponent.h"
+#include "MathEngine.h"
 
 namespace Azul
 {
@@ -21,7 +21,7 @@ namespace Azul
 		MeshNodeMan::Create();
 		TexNodeMan::Create();
 		ShaderObjectNodeMan::Create();
-		GameObjectMan::Create();
+		SystemMan::Create();
 
 		CameraNodeMan::SetMoveSpeed(1.0f);
 
@@ -73,34 +73,32 @@ namespace Azul
 		TexNodeMan::Add(TextureObject::Name::Terrain, "Terrain.t.proto.azul");
 		TexNodeMan::Add(TextureObject::Name::SkyBox, "SkyBox.t.proto.azul");
 
-		// Terrain -- data-path FlatTexture (RenderComponent holds the handles).
+		// Terrain -- pure-ECS FlatTexture renderable (RenderComponent holds the handles).
 		{
-			GameObjectTerrain* pTerrain = new GameObjectTerrain(
-				Mesh::Name::Terrain,
-				ShaderObject::Name::FlatTexture,
-				TextureObject::Name::Terrain,
-				200.0f, 200.0f, 20.0f);
-			pTerrain->SetName("Terrain");
-			pTerrain->SetTrans(0.0f, 0.0f, 0.0f);
-			pTerrain->SetSize(800.0f, 800.0f);
-			pTerrain->SetHeight(100.0f);
-			pTerrain->SetUVRepeat(80.0f, 80.0f);
-			GameObjectMan::Add(pTerrain, GameObjectMan::GetRoot());
+			Entity terrain = Renderable3D::Add(MaterialKind::FlatTexture);
+
+			RenderComponent& r = Renderable3D::GetRender(terrain);
+			r.pMesh = MeshNodeMan::Find(Mesh::Name::Terrain);
+			r.pShader = ShaderObjectNodeMan::Find(ShaderObject::Name::FlatTexture);
+			r.pTex = TexNodeMan::Find(TextureObject::Name::Terrain);
+			r.uvMatrix = Scale(80.0f, 80.0f, 1.0f);   // was SetUVRepeat(80, 80)
+
+			// Mesh authored at 200x200x20; place it at 800x800x100 (was SetSize/
+			// SetHeight): scale = requested / authored.
+			Renderable3D::SetScale(terrain, 800.0f / 200.0f, 100.0f / 20.0f, 800.0f / 200.0f);
+			Renderable3D::SetTrans(terrain, 0.0f, 0.0f, 0.0f);
 		}
 
-		// SkyBox -- data-path FlatTexture.
+		// SkyBox -- pure-ECS FlatTexture renderable.
 		{
-			GameObjectRigidBody* pSkyBox = new GameObjectRigidBody(MaterialKind::FlatTexture);
-			pSkyBox->SetName("SkyBox");
-			pSkyBox->SetTrans(0.0f, 0.0f, 0.0f);
+			Entity skyBox = Renderable3D::Add(MaterialKind::FlatTexture);
+			Renderable3D::SetTrans(skyBox, 0.0f, 0.0f, 0.0f);
 
-			RenderComponent& r = pSkyBox->GetRender();
+			RenderComponent& r = Renderable3D::GetRender(skyBox);
 			r.pMesh = MeshNodeMan::Find(Mesh::Name::SkyBox);
 			r.pShader = ShaderObjectNodeMan::Find(ShaderObject::Name::FlatTexture);
 			r.pTex = TexNodeMan::Find(TextureObject::Name::SkyBox);
 			r.layer = -1;   // background: draw before the terrain (alpha-blended skybox)
-
-			GameObjectMan::Add(pSkyBox, GameObjectMan::GetRoot());
 		}
 
 		return true;
@@ -109,9 +107,10 @@ namespace Azul
 	void Scene3::Update(Game& game, AnimTime tCurr, AnimTime tDelta)
 	{
 		AZUL_UNUSED_VAR(game);
+		AZUL_UNUSED_VAR(tCurr);
 
 		CameraNodeMan::Update();
-		GameObjectMan::Update(tCurr, tDelta);
+		SystemMan::Run(WorldMan::GetWorld(), tDelta);
 	}
 
 	void Scene3::Unload(Game& game)
@@ -120,7 +119,7 @@ namespace Azul
 
 		CameraNodeMan::SetMoveSpeed(0.1f);
 
-		GameObjectMan::Destroy();
+		SystemMan::Destroy();
 		WorldMan::Destroy();
 		ShaderObjectNodeMan::Destroy();
 		TexNodeMan::Destroy();

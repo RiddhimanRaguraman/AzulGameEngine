@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef BUFFER_SHADER_RESOURCE_VIEW_H
 #define BUFFER_SHADER_RESOURCE_VIEW_H
 #include "EngineDLLInterface.h"

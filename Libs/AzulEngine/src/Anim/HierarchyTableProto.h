@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef HIERARCHY_TABLE_PROTO_H
 #define HIERARCHY_TABLE_PROTO_H
 #include "EngineDLLInterface.h"

@@ -1,28 +1,22 @@
-//----------------------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #include "AnimMan.h"
 #include "StringThis.h"
 #include "ClipMan.h"
 #include "SkelMan.h"
 #include "Anim.h"
 #include "AnimManCompareStrategyEnumName.h"
-#include "GameObjectMan.h"
-#include "GameObjectAnimSkin.h"
 #include "Skeleton.h"
 #include "ShaderObject.h"
 #include "MeshNodeMan.h"
 #include "ShaderObjectNodeMan.h"
 #include "TexNodeMan.h"
 #include "RenderComponent.h"
+#include "TransformComponent.h"
+#include "GpuSkinComponent.h"
 #include "MathEngine.h"
 #include "HierarchyTableMan.h"
-#include "Prefab_Pivot.h"
 #include "ComputeBlend_OneAnim.h"
 #include "ComputeBlend_TwoAnim.h"
 #include "TimerController.h"
-#include "PCSNode.h"
 #include "WorldMan.h"
 #include "World.h"
 #include "AnimClipComponent.h"
@@ -38,7 +32,7 @@ namespace Azul
     AnimMan::AnimNode::AnimNode()
         : DLink(), mName(Name::Uninitialized), pClip(nullptr),
           pAnimA(nullptr), pAnimB(nullptr), pTimerA(nullptr), pTimerB(nullptr),
-          pComputeBlend(nullptr), pGameSkins{ nullptr }, numGameSkins(0)
+          pComputeBlend(nullptr), numSkinEntities(0)
     {
         this->privClear();
     }
@@ -65,56 +59,56 @@ namespace Azul
         this->pComputeBlend = nullptr;
 
         pClip = nullptr;
-		for (unsigned int i = 0; i < AnimNode::MAX_GAME_SKINS; i++)
+		for (unsigned int i = 0; i < AnimNode::MAX_SKIN_ENTITIES; i++)
 		{
-			this->pGameSkins[i] = nullptr;
+			this->mSkinEntities[i] = EntityNull();
 		}
-		this->numGameSkins = 0;
+		this->numSkinEntities = 0;
         mName = Name::Uninitialized;
     }
 
-    void AnimMan::AnimNode::Set(Name inName, Clip *clip, GameObjectAnimSkin *gameSkin)
+    void AnimMan::AnimNode::Set(Name inName, Clip *clip, const Entity &skinEntity)
     {
         this->privClear();
         this->mName = inName;
         this->pClip = clip;
-		if (gameSkin != nullptr)
+		if (!EntityIsNull(skinEntity))
 		{
-			this->pGameSkins[0] = gameSkin;
-			this->numGameSkins = 1;
+			this->mSkinEntities[0] = skinEntity;
+			this->numSkinEntities = 1;
 		}
     }
 
-	void AnimMan::AnimNode::Set(Name inName, Clip *clip, GameObjectAnimSkin *const *pSkins, unsigned int numSkins)
+	void AnimMan::AnimNode::Set(Name inName, Clip *clip, const Entity *pSkins, unsigned int numSkins)
 	{
 		this->privClear();
 		this->mName = inName;
 		this->pClip = clip;
 
 		assert(pSkins != nullptr);
-		assert(numSkins <= AnimNode::MAX_GAME_SKINS);
+		assert(numSkins <= AnimNode::MAX_SKIN_ENTITIES);
 
 		unsigned int outCount = 0;
 		for (unsigned int i = 0; i < numSkins; i++)
 		{
-			if (pSkins[i] != nullptr)
+			if (!EntityIsNull(pSkins[i]))
 			{
-				this->pGameSkins[outCount] = pSkins[i];
+				this->mSkinEntities[outCount] = pSkins[i];
 				outCount++;
 			}
 		}
-		this->numGameSkins = outCount;
+		this->numSkinEntities = outCount;
 	}
 
-	unsigned int AnimMan::AnimNode::GetNumGameSkins() const
+	unsigned int AnimMan::AnimNode::GetNumSkinEntities() const
 	{
-		return this->numGameSkins;
+		return this->numSkinEntities;
 	}
 
-	GameObjectAnimSkin *AnimMan::AnimNode::GetGameSkin(unsigned int index) const
+	const Entity &AnimMan::AnimNode::GetSkinEntity(unsigned int index) const
 	{
-		assert(index < this->numGameSkins);
-		return this->pGameSkins[index];
+		assert(index < this->numSkinEntities);
+		return this->mSkinEntities[index];
 	}
 
     char *AnimMan::NameToString(AnimMan::Name status)
@@ -456,11 +450,24 @@ namespace Azul
         }
     }
 
-    void AnimMan::privFillSkinRender(GameObjectAnimSkin *pSkin, Mesh::Name mesh,
-        TextureObject::Name tex, ComputeBlend *pBlend, Vec3 &lightColor, Vec3 &lightPos)
+    Entity AnimMan::privCreateSkinEntity(ComputeBlend *pBlend, Mesh::Name mesh,
+        TextureObject::Name tex, Vec3 &lightColor, Vec3 &lightPos)
     {
-        assert(pSkin);
-        RenderComponent &rc = pSkin->GetRender();
+        World &w = WorldMan::GetWorld();
+        Entity e = w.Create();
+
+        // Placement transform; LocalToWorldSystem computes world = S*R*T each frame
+        // (rot stays identity -- animation is on the GPU bones, not the world matrix).
+        TransformComponent &t = w.Add<TransformComponent>(e);
+        t.pos.set(0.0f, 0.0f, 0.0f);
+        t.scale.set(1.0f, 1.0f, 1.0f);
+        t.rot.set(0.0f, 0.0f, 0.0f, 1.0f);
+
+        // SkinLightTexture render data (was privFillSkinRender on the GameObject).
+        RenderComponent &rc = w.Add<RenderComponent>(e);
+        rc.kind = MaterialKind::SkinLightTexture;
+        rc.drawEnable = true;
+        rc.layer = 0;
         rc.pMesh = MeshNodeMan::Find(mesh);
         rc.pShader = ShaderObjectNodeMan::Find(ShaderObject::Name::SkinLightTexture);
         rc.pTex = TexNodeMan::Find(tex);
@@ -470,6 +477,12 @@ namespace Azul
         assert(rc.pMesh);
         assert(rc.pShader);
         assert(rc.pTex);
+
+        // GPU compute-skinning handle; the SkinningSystem dispatches pBlend->Execute().
+        GpuSkinComponent &skin = w.Add<GpuSkinComponent>(e);
+        skin.pBlend = pBlend;
+
+        return e;
     }
 
     DLink *AnimMan::Add(Name name, const char *clipFileName, Skel::Name skelName, TextureObject::Name texName, Mesh::Name meshName, Vec3 &_pLightColor, Vec3 &_pLightPos)
@@ -503,19 +516,15 @@ namespace Azul
             ac.ratio = 1.0f;
         }
 
-		// Data-path SkinLightTexture: no GraphicsObject; fill the RenderComponent.
-		GameObjectAnimSkin *pGameSkin = new GameObjectAnimSkin(MaterialKind::SkinLightTexture, pBlend);
-		assert(pGameSkin);
-		privFillSkinRender(pGameSkin, meshName, texName, pBlend, _pLightColor, _pLightPos);
-		pGameSkin->SetName(AnimMan::NameToString(name));
-		GameObjectMan::Add(pGameSkin, GameObjectMan::GetRoot());
+		// Pure-ECS skinned entity (was GameObjectAnimSkin + GameObjectMan::Add).
+		Entity skinEnt = privCreateSkinEntity(pBlend, meshName, texName, _pLightColor, _pLightPos);
 
         Clip *pClip = ClipMan::Find(clipName);
         assert(pClip);
 
         AnimNode *pNode = (AnimNode *)pMan->baseAddToFront();
         assert(pNode);
-        pNode->Set(name, pClip, pGameSkin);
+        pNode->Set(name, pClip, skinEnt);
         pNode->pAnimA = ptAnim;
         pNode->pTimerA = pTimer;
         pNode->pComputeBlend = pBlend;
@@ -533,7 +542,7 @@ namespace Azul
 	{
 		assert(pMeshNames != nullptr);
 		assert(numMeshes > 0);
-		assert(numMeshes <= AnimNode::MAX_GAME_SKINS);
+		assert(numMeshes <= AnimNode::MAX_SKIN_ENTITIES);
 
 		AnimMan *pMan = AnimMan::privGetInstance();
 		assert(pMan != nullptr);
@@ -565,23 +574,13 @@ namespace Azul
 			ac.ratio = 1.0f;
 		}
 
-		GameObjectAnimSkin *pSkins[AnimNode::MAX_GAME_SKINS]{ nullptr };
+		// One clip drives every mesh; each mesh is its own pure-ECS skinned entity
+		// sharing the same ComputeBlend (was N GameObjectAnimSkins).
+		Entity skinEnts[AnimNode::MAX_SKIN_ENTITIES];
 
 		for (unsigned int i = 0; i < numMeshes; i++)
 		{
-			GameObjectAnimSkin *pGameSkin = new GameObjectAnimSkin(MaterialKind::SkinLightTexture, pBlend);
-			assert(pGameSkin);
-			privFillSkinRender(pGameSkin, pMeshNames[i], texName, pBlend, _pLightColor, _pLightPos);
-
-			char goName[PCSNode::NAME_SIZE]{ 0 };
-			strcpy_s(goName, PCSNode::NAME_SIZE, AnimMan::NameToString(name));
-			char suffix[12]{ 0 };
-			sprintf_s(suffix, sizeof(suffix), "_%u", i);
-			strcat_s(goName, PCSNode::NAME_SIZE, suffix);
-			pGameSkin->SetName(goName);
-
-			GameObjectMan::Add(pGameSkin, GameObjectMan::GetRoot());
-			pSkins[i] = pGameSkin;
+			skinEnts[i] = privCreateSkinEntity(pBlend, pMeshNames[i], texName, _pLightColor, _pLightPos);
 		}
 
 		Clip *pClip = ClipMan::Find(clipName);
@@ -589,7 +588,7 @@ namespace Azul
 
 		AnimNode *pNode = (AnimNode *)pMan->baseAddToFront();
 		assert(pNode);
-		pNode->Set(name, pClip, pSkins, numMeshes);
+		pNode->Set(name, pClip, skinEnts, numMeshes);
 		pNode->pAnimA = ptAnim;
 		pNode->pTimerA = pTimer;
 		pNode->pComputeBlend = pBlend;
@@ -641,18 +640,15 @@ namespace Azul
             bc.pBlend = pBlend;
         }
 
-        GameObjectAnimSkin* pGameSkin = new GameObjectAnimSkin(MaterialKind::SkinLightTexture, pBlend);
-        assert(pGameSkin);
-        privFillSkinRender(pGameSkin, meshName, texName, pBlend, _pLightColor, _pLightPos);
-        pGameSkin->SetName(AnimMan::NameToString(name));
-        GameObjectMan::Add(pGameSkin, GameObjectMan::GetRoot());
+        // Pure-ECS skinned entity (was GameObjectAnimSkin + GameObjectMan::Add).
+        Entity skinEnt = privCreateSkinEntity(pBlend, meshName, texName, _pLightColor, _pLightPos);
 
         Clip* pClip = ClipMan::Find(clipName1);
         assert(pClip);
 
         AnimNode* pNode = (AnimNode*)pMan->baseAddToFront();
         assert(pNode);
-        pNode->Set(name, pClip, pGameSkin);
+        pNode->Set(name, pClip, skinEnt);
         pNode->pAnimA = pAnimA;
         pNode->pAnimB = pAnimB;
         pNode->pTimerA = pTimerA;
@@ -735,6 +731,11 @@ namespace Azul
         pMan->baseDump();
     }
 
+    // The setters below write each skinned entity's TransformComponent; the
+    // LocalToWorldSystem folds pos/rot/scale into the world matrix each frame.
+    // (The old pivot/quat setters manipulated GameObjectAnimSkin's cur_rot/prefab,
+    // which no scene ever drove -- that path was deleted with the class in P5.2.)
+
     void AnimMan::SetScale(Name name, float sx, float sy, float sz)
     {
 		AnimMan *pMan = AnimMan::privGetInstance();
@@ -745,13 +746,12 @@ namespace Azul
 		AnimNode *pNode = (AnimNode *)pMan->baseFind(pMan->poNodeCompare);
 		if (pNode)
 		{
-			for (unsigned int i = 0; i < pNode->GetNumGameSkins(); i++)
+			World &w = WorldMan::GetWorld();
+			for (unsigned int i = 0; i < pNode->GetNumSkinEntities(); i++)
 			{
-				GameObjectAnimSkin *pSkin = pNode->GetGameSkin(i);
-				if (pSkin)
-				{
-					pSkin->SetScale(sx, sy, sz);
-				}
+				TransformComponent *pT = w.TryGet<TransformComponent>(pNode->GetSkinEntity(i));
+				assert(pT);
+				pT->scale.set(sx, sy, sz);
 			}
 		}
     }
@@ -766,13 +766,12 @@ namespace Azul
 		AnimNode *pNode = (AnimNode *)pMan->baseFind(pMan->poNodeCompare);
 		if (pNode)
 		{
-			for (unsigned int i = 0; i < pNode->GetNumGameSkins(); i++)
+			World &w = WorldMan::GetWorld();
+			for (unsigned int i = 0; i < pNode->GetNumSkinEntities(); i++)
 			{
-				GameObjectAnimSkin *pSkin = pNode->GetGameSkin(i);
-				if (pSkin)
-				{
-					pSkin->SetScale(s, s, s);
-				}
+				TransformComponent *pT = w.TryGet<TransformComponent>(pNode->GetSkinEntity(i));
+				assert(pT);
+				pT->scale.set(s, s, s);
 			}
 		}
     }
@@ -787,122 +786,12 @@ namespace Azul
 		AnimNode *pNode = (AnimNode *)pMan->baseFind(pMan->poNodeCompare);
 		if (pNode)
 		{
-			for (unsigned int i = 0; i < pNode->GetNumGameSkins(); i++)
+			World &w = WorldMan::GetWorld();
+			for (unsigned int i = 0; i < pNode->GetNumSkinEntities(); i++)
 			{
-				GameObjectAnimSkin *pSkin = pNode->GetGameSkin(i);
-				if (pSkin)
-				{
-					pSkin->SetTrans(x, y, z);
-				}
-			}
-		}
-    }
-
-	void AnimMan::SetPrefabPivot(Name name)
-	{
-		AnimMan *pMan = AnimMan::privGetInstance();
-		pMan->pCompareStrategy = AnimMan::posEnumNameCompare;
-		assert(pMan->pCompareStrategy);
-
-		pMan->poNodeCompare->mName = name;
-		AnimNode *pNode = (AnimNode *)pMan->baseFind(pMan->poNodeCompare);
-		if (pNode)
-		{
-			for (unsigned int i = 0; i < pNode->GetNumGameSkins(); i++)
-			{
-				GameObjectAnimSkin *pSkin = pNode->GetGameSkin(i);
-				if (pSkin)
-				{
-					pSkin->SetPrefab(new Prefab_Pivot());
-				}
-			}
-		}
-	}
-
-    void AnimMan::SetPivotRotX(Name name, float angle)
-    {
-		AnimMan *pMan = AnimMan::privGetInstance();
-		pMan->pCompareStrategy = AnimMan::posEnumNameCompare;
-		assert(pMan->pCompareStrategy);
-
-		pMan->poNodeCompare->mName = name;
-		AnimNode *pNode = (AnimNode *)pMan->baseFind(pMan->poNodeCompare);
-		if (pNode)
-		{
-			for (unsigned int i = 0; i < pNode->GetNumGameSkins(); i++)
-			{
-				GameObjectAnimSkin *pSkin = pNode->GetGameSkin(i);
-				if (pSkin)
-				{
-					pSkin->cur_rot_x = angle;
-				}
-			}
-		}
-    }
-
-    void AnimMan::SetPivotRotY(Name name, float angle)
-    {
-		AnimMan *pMan = AnimMan::privGetInstance();
-		pMan->pCompareStrategy = AnimMan::posEnumNameCompare;
-		assert(pMan->pCompareStrategy);
-
-		pMan->poNodeCompare->mName = name;
-		AnimNode *pNode = (AnimNode *)pMan->baseFind(pMan->poNodeCompare);
-		if (pNode)
-		{
-			for (unsigned int i = 0; i < pNode->GetNumGameSkins(); i++)
-			{
-				GameObjectAnimSkin *pSkin = pNode->GetGameSkin(i);
-				if (pSkin)
-				{
-					pSkin->cur_rot_y = angle;
-				}
-			}
-		}
-    }
-
-    void AnimMan::SetPivotRotZ(Name name, float angle)
-    {
-		AnimMan *pMan = AnimMan::privGetInstance();
-		pMan->pCompareStrategy = AnimMan::posEnumNameCompare;
-		assert(pMan->pCompareStrategy);
-
-		pMan->poNodeCompare->mName = name;
-		AnimNode *pNode = (AnimNode *)pMan->baseFind(pMan->poNodeCompare);
-		if (pNode)
-		{
-			for (unsigned int i = 0; i < pNode->GetNumGameSkins(); i++)
-			{
-				GameObjectAnimSkin *pSkin = pNode->GetGameSkin(i);
-				if (pSkin)
-				{
-					pSkin->cur_rot_z = angle;
-				}
-			}
-		}
-    }
-
-    void AnimMan::SetPivotTotalRot(Name name, const Rot3 mode, float x, float y, float z)
-    {
-		AnimMan *pMan = AnimMan::privGetInstance();
-		pMan->pCompareStrategy = AnimMan::posEnumNameCompare;
-		assert(pMan->pCompareStrategy);
-
-		pMan->poNodeCompare->mName = name;
-		AnimNode *pNode = (AnimNode *)pMan->baseFind(pMan->poNodeCompare);
-		if (pNode)
-		{
-			Quat q(mode, x, y, z);
-			for (unsigned int i = 0; i < pNode->GetNumGameSkins(); i++)
-			{
-				GameObjectAnimSkin *pSkin = pNode->GetGameSkin(i);
-				if (pSkin)
-				{
-					pSkin->SetQuat(q);
-					pSkin->cur_rot_x = 0.0f;
-					pSkin->cur_rot_y = 0.0f;
-					pSkin->cur_rot_z = 0.0f;
-				}
+				TransformComponent *pT = w.TryGet<TransformComponent>(pNode->GetSkinEntity(i));
+				assert(pT);
+				pT->pos.set(x, y, z);
 			}
 		}
     }

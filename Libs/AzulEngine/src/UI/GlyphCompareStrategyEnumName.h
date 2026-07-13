@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef Glyph_Compare_Strategy_Enum_Name_H
 #define Glyph_Compare_Strategy_Enum_Name_H
 

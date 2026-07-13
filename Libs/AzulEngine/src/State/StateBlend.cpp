@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #include <d3dcompiler.h>
 #include "StateBlend.h"
 #include "StateDirectXMan.h"

@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef AZUL_LOCAL_TO_WORLD_SYSTEM_H
 #define AZUL_LOCAL_TO_WORLD_SYSTEM_H
 

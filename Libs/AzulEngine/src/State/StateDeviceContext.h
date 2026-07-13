@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef STATE_DEVICE_CONTEXT_H
 #define STATE_DEVICE_CONTEXT_H
 #include "EngineDLLInterface.h"

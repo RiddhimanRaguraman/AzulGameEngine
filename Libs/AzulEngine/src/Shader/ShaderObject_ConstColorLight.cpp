@@ -1,7 +1,3 @@
-//--------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//--------------------------------------------------------------
-
 #include "ShaderObject_ConstColorLight.h"
 #include "Mesh.h"
 #include "StateDirectXMan.h"

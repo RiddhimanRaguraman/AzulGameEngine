@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef STATE_DEPTH_STENCIL_BUFFER_H
 #define STATE_DEPTH_STENCIL_BUFFER_H
 #include "EngineDLLInterface.h"

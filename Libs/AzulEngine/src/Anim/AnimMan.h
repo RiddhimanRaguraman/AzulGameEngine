@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef ANIM_MAN_H
 #define ANIM_MAN_H 
 
@@ -14,12 +10,12 @@
 #include "TextureObject.h"
 #include "Skel.h"
 #include "HierarchyTable.h"
+#include "Entity.h"
 
 #include "EngineDLLInterface.h"
 
 namespace Azul
 {
-	class GameObjectAnimSkin;
 	class Anim;
 	class TimerController;
 	class ComputeBlend;
@@ -83,11 +79,6 @@ namespace Azul
         static void SetScale(Name name, float sx, float sy, float sz);
         static void SetUniformScale(Name name, float s);
         static void SetPos(Name name, float x, float y, float z);
-        static void SetPivotRotX(Name name, float angle);
-        static void SetPivotRotY(Name name, float angle);
-        static void SetPivotRotZ(Name name, float angle);
-        static void SetPivotTotalRot(Name name, const Rot3 mode, float x, float y, float z);
-		static void SetPrefabPivot(Name name);
         static Clip *GetClip(Name name);
 
         static void Remove(DLink *pNode);
@@ -96,9 +87,12 @@ namespace Azul
     private:
         static AnimMan *privGetInstance();
         static HierarchyTable::Name privMapToHierarchyName(Skel::Name skelName);
-        // Fills a data-path skin's RenderComponent (mesh/shader/tex/light/blend).
-        static void privFillSkinRender(GameObjectAnimSkin *pSkin, Mesh::Name mesh,
-            TextureObject::Name tex, ComputeBlend *pBlend, Vec3 &lightColor, Vec3 &lightPos);
+        // Creates a pure-ECS skinned entity: TransformComponent (placement),
+        // RenderComponent (SkinLightTexture mesh/shader/tex/light + the ComputeBlend
+        // handle), and GpuSkinComponent (drives the SkinningSystem dispatch). No
+        // GameObject / PCS node -- LocalToWorld/Skinning/Render systems drive it.
+        static Entity privCreateSkinEntity(ComputeBlend *pBlend, Mesh::Name mesh,
+            TextureObject::Name tex, Vec3 &lightColor, Vec3 &lightPos);
         AnimMan() = delete;
         AnimMan(const AnimMan &) = delete;
         AnimMan &operator = (const AnimMan &) = delete;
@@ -118,10 +112,10 @@ namespace Azul
             AnimNode &operator=(const AnimNode &) = delete;
             virtual ~AnimNode();
 
-            void Set(Name inName, Clip *pClip, GameObjectAnimSkin *pGameSkin);
-			void Set(Name inName, Clip *pClip, GameObjectAnimSkin *const *pGameSkins, unsigned int numGameSkins);
-			unsigned int GetNumGameSkins() const;
-			GameObjectAnimSkin *GetGameSkin(unsigned int index) const;
+            void Set(Name inName, Clip *pClip, const Entity &skinEntity);
+			void Set(Name inName, Clip *pClip, const Entity *pSkinEntities, unsigned int numSkinEntities);
+			unsigned int GetNumSkinEntities() const;
+			const Entity &GetSkinEntity(unsigned int index) const;
 
             char *GetName() override;
             void Wash() override;
@@ -141,9 +135,11 @@ namespace Azul
             TimerController *pTimerA;
             TimerController *pTimerB;
             ComputeBlend *pComputeBlend;
-			static const unsigned int MAX_GAME_SKINS = 32;
-			GameObjectAnimSkin *pGameSkins[MAX_GAME_SKINS];
-			unsigned int numGameSkins;
+			// The skinned entities this clip drives (were GameObjectAnimSkin*). The
+			// World owns them; the AnimNode just references them by handle.
+			static const unsigned int MAX_SKIN_ENTITIES = 32;
+			Entity mSkinEntities[MAX_SKIN_ENTITIES];
+			unsigned int numSkinEntities;
         };
 
     private:

@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef ROTATE_SYSTEM_H
 #define ROTATE_SYSTEM_H
 
@@ -15,7 +11,7 @@ namespace Azul
 	// (the behavior the dead Prefab_Rotate used to do). Runs AFTER
 	// LocalToWorldSystem so its spin overwrites the plain S*R*T world.
 	//
-	// Engine system: registered centrally in GameObjectMan::Create (no-op in
+	// Engine system: registered centrally in SystemMan::Create (no-op in
 	// scenes without any RotateComponent).
 	class AZUL_ENGINE_LIBRARY_API RotateSystem : public System
 	{

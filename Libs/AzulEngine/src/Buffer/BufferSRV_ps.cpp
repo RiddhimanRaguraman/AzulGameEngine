@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #include "BufferSRV_ps.h"
 #include "StateDirectXMan.h"
 #include "BufferTexture2D.h"

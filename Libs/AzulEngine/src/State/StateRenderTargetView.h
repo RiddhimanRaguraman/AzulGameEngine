@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef STATE_RENDER_TARGET_VIEW_H
 #define STATE_RENDER_TARGET_VIEW_H
 #include "EngineDLLInterface.h"

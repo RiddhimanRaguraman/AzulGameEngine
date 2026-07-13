@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef STATE_FACTORY_H
 #define STATE_FACTORY_H
 #include "EngineDLLInterface.h"

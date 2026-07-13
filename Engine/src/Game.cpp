@@ -1,11 +1,8 @@
-//--------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//--------------------------------------------------------------
-
 #include "Game.h"
 
 #include "GameSceneContext.h"
-#include "GameObjectMan.h"
+#include "SystemMan.h"
+#include "WorldMan.h"
 
  
 namespace Azul
@@ -106,7 +103,7 @@ namespace Azul
 	{
 		this->SetDefaultTargetMode();
 
-		GameObjectMan::Draw();
+		SystemMan::Draw(WorldMan::GetWorld());
 	}
 
 	//-----------------------------------------------------------------------------

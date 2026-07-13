@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef BUFFER_CBV_PS_H
 #define BUFFER_CBV_PS_H
 #include "EngineDLLInterface.h"

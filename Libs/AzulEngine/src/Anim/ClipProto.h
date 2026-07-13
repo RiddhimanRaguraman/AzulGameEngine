@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef CLIP_PROTO_H
 #define CLIP_PROTO_H
 #include "EngineDLLInterface.h"

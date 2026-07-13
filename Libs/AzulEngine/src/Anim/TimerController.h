@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef TIMER_CONTROLLER_H
 #define TIMER_CONTROLLER_H
 #include "EngineDLLInterface.h"

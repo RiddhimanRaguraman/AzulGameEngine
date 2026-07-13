@@ -1,7 +1,3 @@
-//--------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//--------------------------------------------------------------
-
 #ifndef SHADER_MAPPINGS_H
 #define SHADER_MAPPINGS_H
 

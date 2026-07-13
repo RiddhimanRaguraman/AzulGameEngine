@@ -1,7 +1,3 @@
-//--------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//--------------------------------------------------------------
-
 #ifndef TEXTURE_OBJECT_H
 #define TEXTURE_OBJECT_H
 #include "EngineDLLInterface.h"

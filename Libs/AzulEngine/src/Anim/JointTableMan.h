@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #ifndef JOINT_TABLE_MANAGER_H
 #define JOINT_TABLE_MANAGER_H
 #include "EngineDLLInterface.h"

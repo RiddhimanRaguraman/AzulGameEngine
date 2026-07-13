@@ -1,6 +1,3 @@
-//--------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//--------------------------------------------------------------
 #ifndef STATE_DIRECT_X_MAN_H
 #define STATE_DIRECT_X_MAN_H
 #include "EngineDLLInterface.h"

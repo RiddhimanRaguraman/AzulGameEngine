@@ -1,7 +1,3 @@
-//--------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//--------------------------------------------------------------
-
 #ifndef SHADER_OBJECT_CONST_COLOR_H
 #define SHADER_OBJECT_CONST_COLOR_H
 #include "EngineDLLInterface.h"

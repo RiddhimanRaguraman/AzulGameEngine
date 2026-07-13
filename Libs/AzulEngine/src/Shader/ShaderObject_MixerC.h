@@ -1,7 +1,3 @@
-//--------------------------------------------------------------
-// Copyright 2026, Ed Keenan, all rights reserved.
-//--------------------------------------------------------------
-
 #ifndef SHADER_OBJECT_MIXER_C_H
 #define SHADER_OBJECT_MIXER_C_H
 #include "EngineDLLInterface.h"

@@ -1,7 +1,3 @@
-//----------------------------------------------------------------------------
-// Copyright 2025, Ed Keenan, all rights reserved.
-//----------------------------------------------------------------------------
-
 #include "StateDirectXMan.h"
 #include "StateAdapter.h"
 #include "StateAdapterOutput.h"
