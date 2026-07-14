@@ -237,6 +237,22 @@ namespace Azul
 		StateDirectXMan::GetContext()->DrawIndexed(numIndices, 0, 0);
 	}
 
+	void MeshProto::RenderIndexBufferInstanced(unsigned int instanceCount)
+	{
+		this->IBVBuffer.SetActive();
+		StateDirectXMan::GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		StateDirectXMan::GetContext()->DrawIndexedInstanced(numIndices, instanceCount, 0, 0, 0);
+	}
+
+	void MeshProto::SetVertexColors(const void *pColorData, unsigned int numBytes, unsigned int stride)
+	{
+		// The proto cube ships without a color stream, so the color VBV is
+		// uninitialized -- fill it here (Initialize is one-shot; the data is copied
+		// into the GPU buffer, so the caller may free it afterward).
+		assert(pColorData);
+		this->VBVBuffer_color.Initialize((uint32_t)numBytes, (uint32_t)stride, (void *)pColorData);
+	}
+
 	MeshProto::~MeshProto()
 	{
 

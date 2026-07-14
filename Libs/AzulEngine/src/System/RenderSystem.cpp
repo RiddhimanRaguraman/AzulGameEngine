@@ -58,7 +58,8 @@ namespace Azul
 			order[b + 1] = keyIdx;
 		}
 
-		// Draw, hoisting the shader/CBV bind across same-shader runs.
+		// Draw each renderable per object, hoisting the shader/CBV bind across
+		// same-shader runs (re-binding the same shader is idempotent).
 		ShaderObject *pLastShader = nullptr;
 		for (unsigned int k = 0; k < n; k++)
 		{

@@ -22,6 +22,8 @@ namespace Azul
 
 		virtual void ActivateMesh() override;
 		virtual void RenderIndexBuffer() override;
+		virtual void RenderIndexBufferInstanced(unsigned int instanceCount) override;
+		virtual void SetVertexColors(const void *pColorData, unsigned int numBytes, unsigned int stride) override;
 		virtual void ActivateSRVBuffers() override;
 	private:
 		// Data

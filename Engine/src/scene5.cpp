@@ -4,7 +4,6 @@
 
 #include "ShaderObjectNodeMan.h"
 #include "MeshNodeMan.h"
-#include "MeshCubeColor.h"
 #include "SystemMan.h"
 #include "RotateComponent.h"
 #include "WorldMan.h"
@@ -67,18 +66,50 @@ namespace Azul
 			CameraNodeMan::SetCurrent(Camera::Name::CAMERA_1, Camera::Type::ORTHOGRAPHIC_2D);
 		}
 
-		// One shared mesh + one shared material for every cube (so they batch and,
-		// later, instance). The procedural colored cube gives per-corner gradients.
-		MeshNodeMan::Add(Mesh::Name::CUBE_COLOR, new MeshCubeColor(Mesh::Name::CUBE_COLOR));
+		// One shared mesh + material for every cube. The cube geometry is loaded
+		// from disk (protobuf serialization); it ships without vertex colors, so we
+		// set the per-vertex colors here on the client side (ColorByVertex reads
+		// them). Every cube is a separate ECS entity drawn per-object -- no
+		// instancing -- to show the ECS handles a huge object count.
+		MeshNodeMan::Add(Mesh::Name::CUBE, "CubeMesh.m.proto.azul");
 		ShaderObjectNodeMan::Add(ShaderObject::Name::ColorByVertex);
 
-		Mesh* pCubeMesh = MeshNodeMan::Find(Mesh::Name::CUBE_COLOR);
+		Mesh* pCubeMesh = MeshNodeMan::Find(Mesh::Name::CUBE);
 		ShaderObject* pCubeShader = ShaderObjectNodeMan::Find(ShaderObject::Name::ColorByVertex);
 		assert(pCubeMesh);
 		assert(pCubeShader);
 
+		// Client-chosen per-vertex colors (RGBA, one per mesh vertex). A vivid
+		// palette cycled over the cube's vertices -> each vertex a different color.
+		{
+			const float palette[8][4] =
+			{
+				{ 1.0f, 0.0f, 0.0f, 1.0f },   // red
+				{ 1.0f, 1.0f, 0.0f, 1.0f },   // yellow
+				{ 0.0f, 1.0f, 0.0f, 1.0f },   // green
+				{ 0.0f, 1.0f, 1.0f, 1.0f },   // cyan
+				{ 0.0f, 0.0f, 1.0f, 1.0f },   // blue
+				{ 1.0f, 0.0f, 1.0f, 1.0f },   // magenta
+				{ 1.0f, 1.0f, 1.0f, 1.0f },   // white
+				{ 1.0f, 0.5f, 0.0f, 1.0f },   // orange
+			};
+
+			const unsigned int numVerts = pCubeMesh->numVerts;
+			float* pColors = new float[numVerts * 4];
+			for (unsigned int v = 0; v < numVerts; v++)
+			{
+				const float* c = palette[v % 8];
+				pColors[v * 4 + 0] = c[0];
+				pColors[v * 4 + 1] = c[1];
+				pColors[v * 4 + 2] = c[2];
+				pColors[v * 4 + 3] = c[3];
+			}
+			pCubeMesh->SetVertexColors(pColors, numVerts * 4 * (unsigned int)sizeof(float), 4 * (unsigned int)sizeof(float));
+			delete[] pColors;
+		}
+
 		// kGrid^3 cubes, centered on the origin.
-		const int   kGrid = 20;
+		const int   kGrid = 30;
 		const float kSpacing = 45.0f;
 		const float kScale = 15.0f;
 		const float kSpin = 0.01f;

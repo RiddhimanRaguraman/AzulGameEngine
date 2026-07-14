@@ -287,6 +287,11 @@ namespace Azul
 		virtual void ActivateMesh() = 0;
 		virtual void RenderIndexBuffer() = 0;
 		// optional override
+		virtual void RenderIndexBufferInstanced(unsigned int instanceCount);
+		// Fill the per-vertex color stream client-side (for meshes loaded without
+		// one, e.g. the proto cube used with ColorByVertex). numBytes/stride are the
+		// color buffer's size and per-vertex stride.
+		virtual void SetVertexColors(const void *pColorData, unsigned int numBytes, unsigned int stride);
 		virtual void ActivateSRVBuffers();
 		virtual void ActivateConstantBuffers();
 		virtual void TransferConstantBuffers();

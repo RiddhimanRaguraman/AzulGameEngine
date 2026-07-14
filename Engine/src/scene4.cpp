@@ -4,7 +4,6 @@
 
 #include "ShaderObjectNodeMan.h"
 #include "MeshNodeMan.h"
-#include "MeshCubeColor.h"
 #include "SystemMan.h"
 #include "RotateComponent.h"
 #include "WorldMan.h"
@@ -68,32 +67,28 @@ namespace Azul
 		}
 
 		MeshNodeMan::Add(Mesh::Name::CUBE, "CubeMesh.m.proto.azul");
-		// Procedural cube with a unique color per corner (the proto cube has no
-		// vertex colors, so ColorByVertex renders it black).
-		MeshNodeMan::Add(Mesh::Name::CUBE_COLOR, new MeshCubeColor(Mesh::Name::CUBE_COLOR));
 
-		// Three material paths, all drawn by the RenderSystem (each is a 3D MaterialKind).
-		ShaderObjectNodeMan::Add(ShaderObject::Name::ColorByVertex);
+		// Material paths, all drawn by the RenderSystem (each is a 3D MaterialKind).
 		ShaderObjectNodeMan::Add(ShaderObject::Name::ConstColorLight);
 		ShaderObjectNodeMan::Add(ShaderObject::Name::ConstColor);   // wireframe uses this + wire rasterizer
 
-		// Three equally-spaced cubes, one per material, each spun by the ECS
-		// RotateComponent + RotateSystem.
+		// Three equally-spaced cubes, each spun by the ECS RotateComponent + RotateSystem.
 		const float kSpacing = 220.0f;
 		const float kScale = 70.0f;
 		const float kSpin = 0.01f;
 
-		// LEFT -- ColorByVertex on the procedural colored cube (unique color per
-		// corner -> gradient faces). DATA-PATH: no GraphicsObject; RenderComponent
-		// carries the mesh/shader handles, RenderSystem does the drawing.
+		// LEFT -- ConstColorLight (constant body color + a light), orange.
 		{
-			Entity cube = Renderable3D::Add(MaterialKind::ColorByVertex);
+			Entity cube = Renderable3D::Add(MaterialKind::ConstColorLight);
 			Renderable3D::SetTrans(cube, -kSpacing, 0.0f, 0.0f);
 			Renderable3D::SetScale(cube, kScale*0.75f);
 
 			RenderComponent& r = Renderable3D::GetRender(cube);
-			r.pMesh = MeshNodeMan::Find(Mesh::Name::CUBE_COLOR);
-			r.pShader = ShaderObjectNodeMan::Find(ShaderObject::Name::ColorByVertex);
+			r.pMesh = MeshNodeMan::Find(Mesh::Name::CUBE);
+			r.pShader = ShaderObjectNodeMan::Find(ShaderObject::Name::ConstColorLight);
+			r.lightColor.set(1.0f, 1.0f, 1.0f);
+			r.lightPos.set(150.0f, 200.0f, 300.0f);
+			r.bodyColor.set(0.95f, 0.5f, 0.15f);   // orange
 
 			RotateComponent& rc = WorldMan::GetWorld().Add<RotateComponent>(cube);
 			rc.angle = 0.0f;

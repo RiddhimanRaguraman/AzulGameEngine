@@ -1314,22 +1314,61 @@ systems; visuals unchanged.
 > for the whole grid** (vs 1000 pre-P6.1). **NEEDS RUNTIME TEST:** press 5 -> 1000 spinning gradient
 > cubes; read `[PROFILE]` (expect ~1000 draw calls, non-trivial update+draw ms) as the instancing baseline.
 >
-> **P6.2b PLANNED -- GPU instancing (the real win: 1000 draw calls -> 1).** Investigation done, approach
-> locked (all conventions verified clean; see below). This is the one step that is **GPU code Claude
-> cannot runtime-verify** -- isolate it to the ColorByVertex path (scenes 1-4 untouched), keep a toggle,
-> lean on the user's GPU check. Plan:
+> **P6.2b DONE (2026-07-13): GPU instancing for the ColorByVertex path -- builds 0 errors (incl. the new
+> HLSL). NOT runtime-verified by Claude (GPU code) -- needs the user's eyes.**
 >   - **Shader** `shaders/original/ColorByVertexInstanced.Vx.hlsl`: identical to `ColorByVertex.Vx.hlsl`
 >     but World comes from `StructuredBuffer<rowMatrix> tInstanceWorld : register(t0)` indexed by
->     `SV_InstanceID` instead of the `vsWorldMatrix` CBV (b2). Same row_major convention, same View(b1)/
->     Proj(b0) CBVs, same pos+color input layout (SV_InstanceID is a system value -> no input-layout
->     change). Reuse the ColorByVertex PS. FxCompile auto-globs it -> `g_ColorByVertexInstanced_VxShader`.
->   - **RHI:** a dynamic `StructuredBuffer<Mat4>` + SRV (raw `ID3D11Device`/`Context` from
->     `StateDirectXMan::GetContext()`), grown to the instance count; `Map`(WRITE_DISCARD)+memcpy the world
->     array each frame; `VSSetShaderResources(0,...)`; `Mesh` gains a virtual `RenderIndexBufferInstanced
->     (count)` (bind IB + `DrawIndexedInstanced(numIndices, count, 0,0,0)`).
->   - **RenderSystem:** gather the contiguous same-(mesh,shader) ColorByVertex run, upload their worlds,
->     issue ONE instanced draw instead of N `DrawObject`s. Everything else stays the per-object path.
->   - **Verify (user):** scene5 renders identically; `[PROFILE]` draw calls drop from ~1000 to a handful.
+>     `SV_InstanceID` (not the vsWorldMatrix CBV). Same row_major convention, same View(b1)/Proj(b0)
+>     CBVs, same pos+color input layout. Reuses the ColorByVertex PS. FxCompile emitted
+>     `g_ColorByVertexInstanced_VxShader`.
+>   - **`Instance/InstanceRenderer.{h,cpp}`** (new, DLL): owns the instanced shader (VS/PS/input-layout)
+>     + View/Proj CBVs + a dynamic structured buffer of world matrices (+SRV), grown on demand.
+>     `BeginUpload(count)` = ensure capacity + `Map`(WRITE_DISCARD) -> mapped `Mat4*`; caller fills it;
+>     `EndUploadAndDraw(mesh, count, cam)` = Unmap, bind shader/CBVs/SRV(t0)/mesh, one
+>     `DrawIndexedInstanced`. Lazy singleton; freed in `SystemMan::Destroy` (leak-safe at scene unload).
+>   - **`Mesh::RenderIndexBufferInstanced(count)`** virtual (default asserts); `MeshCubeColor` overrides
+>     it -> bind IB + `DrawIndexedInstanced(numIndices, count, 0,0,0)`.
+>   - **`RenderSystem::Draw`:** after the layer sort, a run of >= 2 consecutive ColorByVertex entities
+>     sharing one mesh is uploaded + drawn in ONE instanced call (`pDst[j] = TransformComponent.world`);
+>     everything else stays the per-object path (scenes 1-4 unchanged; scene4's lone ColorByVertex cube
+>     is a run of 1 -> still per-object). `Profiler::CountDraw()` is bumped ONCE per instanced batch.
+>   - **NEEDS RUNTIME TEST (GPU):** press 5 -> the cube grid renders identically to before, but
+>     `[PROFILE]` draw calls collapse from N (e.g. 1000 / 1,000,000) to ~1, and frame/draw ms should drop
+>     massively (this is the ECS-vs-OOP headline). If cubes are wrong (blank / garbled / mis-transformed)
+>     the likely culprit is the structured-buffer matrix layout or the t0 SRV bind -- report back and it's
+>     a quick fix. Isolated to ColorByVertex, so 1-4 are safe regardless.
+
+> **P6.2c DONE (2026-07-13): instanced path uses the serialized proto cube + a client-set solid color
+> -- builds 0 errors. NOT runtime-verified by Claude.**
+>   - Deleted `MeshCubeColor.{h,cpp}` (the procedural colored cube). scene5 now loads the serialized
+>     `CubeMesh.m.proto.azul` (protobuf) via `MeshNodeMan::Add(Mesh::Name::CUBE, ...)` and picks the color
+>     client-side (`r.bodyColor` = blue) -- the proto cube has no usable vertex color.
+>   - Instanced shader retooled: `ColorByVertexInstanced.Vx.hlsl` -> `ColorInstanced.Vx.hlsl` -- reads
+>     POSITION only + per-instance world (StructuredBuffer/SV_InstanceID) + a single color from a CBV
+>     (b2), so it works with any mesh. `InstanceRenderer` gained a color CBV; `RenderSystem` passes the
+>     run's `bodyColor`; `MeshProto` gained `RenderIndexBufferInstanced`. `kInstanceMin` lowered to 1.
+>   - scene4's old ColorByVertex/`MeshCubeColor` cube -> `ConstColorLight` (orange) on the proto cube.
+>   - **NEEDS RUNTIME TEST:** press 5 -> a grid of BLUE (proto) cubes, still 1 draw call; press 4 -> orange
+>     ConstColorLight + blue ConstColorLight + green wireframe cubes.
+
+> **P6.2d DONE (2026-07-13): instancing REVERTED to per-object rendering (user's call) -- builds 0 errors.**
+> The goal shifted from "draw 1 mesh a million times cheaply" to "prove the ECS can brute-force render
+> ~1,000,000 individual objects" (what the old OOP engine couldn't). So:
+>   - `RenderSystem::Draw` reverted to the pure per-object loop (heap order buffer + layer sort + shader
+>     hoist); removed the instanced fast-path + the `InstanceRenderer` calls from `RenderSystem`/`SystemMan`.
+>   - Deleted the instancing shaders (`ColorByVertexInstanced`/`ColorInstanced` .hlsl). **`InstanceRenderer.
+>     {h,cpp}` KEPT as a reference** but EXCLUDED from the build via premake (`removefiles
+>     Libs/AzulEngine/src/Instance/**`) -- it won't compile without its shader; header notes this.
+>   - **scene5 uses the serialized proto cube** (`CubeMesh.m.proto.azul`) with **ColorByVertex**. The proto
+>     cube ships no color stream, so scene5 sets per-vertex colors client-side: new
+>     `Mesh::SetVertexColors` (virtual; `MeshProto` overrides -> one-shot `Initialize` of the color VBV,
+>     since `bCreate==false` for the colorless cube). scene5 fills an RGBA-per-vertex palette and calls it.
+>     All cubes share the mesh, drawn per-object (kind ColorByVertex -> `privDrawColorByVertex`). No
+>     instancing -> draw calls = cube count again (the intended brute-force stress).
+>   - `MeshCubeColor` already deleted (P6.2c); `Mesh`/`MeshProto` keep `RenderIndexBufferInstanced` (unused
+>     now, pairs with the reference InstanceRenderer). `CUBE_COLOR` enum value left (harmless).
+>   - **NEEDS RUNTIME TEST:** press 5 -> a grid of multicolored (per-vertex palette) proto cubes; `[PROFILE]`
+>     draw calls == kGrid^3 again. Crank kGrid up to stress the per-object renderer (use a Release build).
 
 **Goal:** turn the now-clean architecture into *measured* speed.
 

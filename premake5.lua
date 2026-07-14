@@ -426,7 +426,12 @@ if wsName == "engine" then
             "Libs/AzulEngine/shaders/original/**.hlsl",
             "Libs/AzulEngine/shaders/original/**.hlsli"
         }
-        removefiles { "Libs/AzulEngine/**.vcxproj*" }
+        -- Instance/ (InstanceRenderer) is kept on disk as a GPU-instancing
+        -- reference but is NOT built (its shader was removed).
+        removefiles {
+            "Libs/AzulEngine/**.vcxproj*",
+            "Libs/AzulEngine/src/Instance/**"
+        }
 
         -- Mirror the on-disk layout (include/, src/) in Solution Explorer
         vpaths { ["*"] = "Libs/AzulEngine" }

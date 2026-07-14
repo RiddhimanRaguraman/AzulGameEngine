@@ -59,6 +59,22 @@ namespace Azul
 		assert(false);
 	}
 
+	void Mesh::RenderIndexBufferInstanced(unsigned int instanceCount)
+	{
+		// Only meshes used with the instanced draw path override this.
+		AZUL_UNUSED_VAR(instanceCount);
+		assert(false);
+	}
+
+	void Mesh::SetVertexColors(const void *pColorData, unsigned int numBytes, unsigned int stride)
+	{
+		// Only proto meshes carry a settable color stream.
+		AZUL_UNUSED_VAR(pColorData);
+		AZUL_UNUSED_VAR(numBytes);
+		AZUL_UNUSED_VAR(stride);
+		assert(false);
+	}
+
 	void Mesh::ActivateConstantBuffers()
 	{
 		// Default - false
